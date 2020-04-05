@@ -1,15 +1,27 @@
 const express = require('express');
-const server = express();
+const app = express();
 const port = 4000;
 
-server.get("/", (req, res) => {
-        res.sendFile(__dirname + '/index.html');
-        });
+app.use(express.static(__dirname + '/public'));
 
-server.get("/json", (req, res) => {
-        res.json({ message: "Hello world" });
-        });
+app.get('/',function(req,res){
+        res.sendFile("public/index.html");
+});
 
-server.listen(port, () => {
+/*app.get('/signin', function (req, res) {
+      //  res.render('signin');
+});
+*/
+app.get('/signin', function (req, res) {
+        if (!req.body.id || !req.body.password) {
+                res.status("400");
+                res.send("Invalid details!");
+        } else {
+                Users.push(req.body.id);
+                res.body.error = "yuhhhh";
+        }
+});
+
+app.listen(port, () => {
         console.log(`Server listening at ${port}`);
-        });
+});

@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "react": "^16.13.1",
     "express": "^4.17.1"
   },
   "devDependencies": {},

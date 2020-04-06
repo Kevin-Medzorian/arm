@@ -17,7 +17,7 @@ body {
   padding-bottom: 40px;
   background-color: rgba(99, 99, 99, 0);
   background-image: url("images/capture.png");
-  background-size: 100% 100%;
+  background-size: cover;
 }
 
 .form-signin {
@@ -27,7 +27,7 @@ body {
   background-color: rgba(230, 230, 230, 0.90);
   border-radius: 30px;
   margin: 0 30%;
-  box-shadow: 0 2px 30px black;
+  box-shadow: 0 10px 30px black;
 }
 .form-signin .checkbox {
   opacity: 100%;

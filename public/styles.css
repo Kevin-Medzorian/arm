@@ -15,8 +15,8 @@ body {
   justify-content: center;
   padding-top: 10px;
   padding-bottom: 40px;
-  background-color: rgb(99, 99, 99);
-  background-image: url("images/world_map.png");
+  background-color: rgba(99, 99, 99, 0);
+  background-image: url("images/capture.png");
   background-size: 100% 100%;
 }
 
@@ -24,9 +24,10 @@ body {
   width: 100%;
   max-width: 300px;
   padding: 15px;
-  background-color: rgba(230, 230, 230, 0.80);
+  background-color: rgba(230, 230, 230, 0.90);
   border-radius: 30px;
   margin: 0 30%;
+  box-shadow: 0 2px 30px black;
 }
 .form-signin .checkbox {
   opacity: 100%;

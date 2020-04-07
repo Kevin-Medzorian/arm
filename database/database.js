@@ -5,16 +5,20 @@ var db = new sqlite3.Database('./database/cme-data.db');
 db.serialize(function () {
     // Create basic, generic table if it doesnt exist.
     db.run('CREATE TABLE IF NOT EXISTS users (email text, password text)');
-
     console.log("[DATABASE]\tInitialized sqlite3 Database");
 
+
+    // NOTE: The syntax:
+    //      'module.exports.********* = function() {}'
+    // Is to allow external JS files to use this function.
+
     // Inserts a user into the 'users' table of our database
-    function insertUser(email, password) {
+    module.exports.insertUser = function(email, password) {
         db.run('INSERT INTO users (email, password) VALUES (?, ?)', [email, password]);
     }
 
     // Prints out the 'users' table of our database
-    function printTable() {
+    module.exports.printTable = function () {
         // This just prints all rows
         db.each('SELECT rowid AS id, email, password FROM users', function (err, row) {
             console.log("[DATABASE]\tRow " + row.id + ": " + row.email + "\t" + row.password);
@@ -22,17 +26,10 @@ db.serialize(function () {
     }
 
     // Checks if the email and password combination exist in the 'users' table.
-    function verifyUser(email, password) {
+    module.exports.verifyUser = function (email, password) {
         // TODO
         //  db.each('SELECT rowid AS id, email, password FROM users', function (err, row) {
         //    console.log(row.id + ": "+ row.email + "\t" + row.password);
         //});
     }
-
-    // This is just for debug testing, with generic parameters.
-    var email = "whatever@gmail.com";
-    var password = "password123";
-    insertUser(email, password);
-    printTable();
 });
-

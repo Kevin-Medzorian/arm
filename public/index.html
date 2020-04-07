@@ -16,29 +16,58 @@
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <title>CMe</title>
+    <title>C-Me Covid Map</title>
 
     <!-- Custom styles for this template -->
     <link href="css/styles.css" rel="stylesheet">
     <script src="js/client.js"></script>
 </head>
 <body class="text-center">
-    <form class="form-signin">
-        <!-- <img class="mb-4" src="path/to/logo" alt="" width="72" height="72"> !-->
-        <h1 class="h1 mb-3 font-weight-light">Covid Map</h1>
+
+    <!-- Fixed navbar from Bootstrap4 examples -->
+    <nav class="navbar navbar-expand-md navbar-primary fixed-top bg-light">
+        <a href="/">
+            <div class="trapezoid ">
+                <img class="img-fluid float-left" src="images/logo2.png" alt="">
+            </div>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" id="login-tab" href="#">Login<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="other-tab" href="#">Symptoms?</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+    <form class="form-signin" id="login-form">
+        <button class="btn close" id="login-close">x</button>
+        <img class="img-fluid mb-3" src="images/logo2.png" alt="">
+        <!--<h1 class="h1 mb-3 font-weight-light">Covid Map</h1> -->
         <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+        <input type="email" id="email" class="form-control" placeholder="Email address" autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <div class="checkbox mb-3">
+        <input type="password" id="password" class="form-control" placeholder="Password">
+        <div class="checkbox mb-1">
             <label>
-                <input type="checkbox" value="remember-me"> Remember me
+                <input type="checkbox" value="remember-me"> Remember me!
             </label>
         </div>
         <button class="btn btn-lg btn-primary btn-block" onclick="login()" type="submit">Sign in</button>
-        Not registered? <a href="signup" type="link">Sign up!</a>
+        <p class="text-center mt-2">
+            Not registered? 
+            <a onclick="register()" href="#" type="link">Sign up!</a>
+         </p>
         <div class="error"></div>
-        <p class="mt-3 mb-0 text-muted">C-Me &copy; 2020-2020</p>
+        <p class="mt-3 mb-0 text-muted">
+            C-Me &copy; 2020-2020
+        </p>
     </form>
 </body>
 

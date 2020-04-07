@@ -20,7 +20,26 @@ body {
   background-size: cover;
 }
 
+.trapezoid {
+  border-bottom: 50px solid rgb(184, 184, 184);
+	border-left: -25px solid transparent;
+  border-right: 25px solid transparent;
+	height: 0;
+  width: 155px;
+}
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+.navbar {
+	margin:0 !important;
+	padding: 0px !important;
+}
+
 .form-signin {
+  display: none; /* Hide on startup */
   width: 100%;
   max-width: 300px;
   padding: 15px;
@@ -34,6 +53,16 @@ body {
   font-weight: 400;
 }
 
+.form-signin .close{
+  border-top-right-radius: 30px;
+  border-top-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 10px;
+  background-color: rgb(146, 48, 48);
+  margin: -15px -15px 0 0;
+  width: 40px;
+  height: 40px;
+}
 .form-signin .error{
   color: red;
 }

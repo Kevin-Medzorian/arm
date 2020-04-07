@@ -17,11 +17,11 @@ db.serialize(function () {
     function printTable() {
         // This just prints all rows
         db.each('SELECT rowid AS id, email, password FROM users', function (err, row) {
-            console.log("[DATABASE]\t" + row.id + ": " + row.email + "\t" + row.password);
+            console.log("[DATABASE]\tRow " + row.id + ": " + row.email + "\t" + row.password);
         });
     }
 
-    // Checks if the email and password combination exists in the 'users' table.
+    // Checks if the email and password combination exist in the 'users' table.
     function verifyUser(email, password) {
         // TODO
         //  db.each('SELECT rowid AS id, email, password FROM users', function (err, row) {
@@ -29,10 +29,10 @@ db.serialize(function () {
         //});
     }
 
+    // This is just for debug testing, with generic parameters.
     var email = "whatever@gmail.com";
     var password = "password123";
     insertUser(email, password);
     printTable();
-
 });
 

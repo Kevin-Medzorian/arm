@@ -1,6 +1,6 @@
 
 // Client-side login function, called from the index.html's 'login' button.
-function login(){
+function login() {
     // Create an HTTP Request object
     const httpRequest = new XMLHttpRequest();
 
@@ -14,17 +14,31 @@ function login(){
     // Send a "stringified" JSON structure on the POST request
     httpRequest.send(JSON.stringify(
         { // This is the JSON structure we are sending.
-            email: document.getElementById("inputEmail").value,
-            password: document.getElementById("inputPassword").value
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value
         }
     ));
-    
+
     // Alert the web-browser/html file that we successfully ran this method.
     alert("Ran!");
 }
 
 // TODO
-function signup(){
+function signup() {
     // shouldn't be too hard... same thing as login but server has to check 
     // if it already exists and send a call-back message of whether it failed/succeeded.
 }
+
+
+// Some jQuery code
+$(document).ready(function () {
+    $('#login-form').hide();
+
+    $('#login-tab').click(function () {
+        $('#login-form').fadeIn('slow');
+    });
+
+    $('#login-close').click(function () {
+        $('#login-form').fadeOut('slow');
+    });
+});

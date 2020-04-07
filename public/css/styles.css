@@ -16,7 +16,7 @@ body {
   padding-top: 10px;
   padding-bottom: 40px;
   background-color: rgba(99, 99, 99, 0);
-  background-image: url("images/capture.png");
+  background-image: url("../images/capture.png");
   background-size: cover;
 }
 

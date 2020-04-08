@@ -28,7 +28,7 @@ This will install all the dependencies listed in package.json (including express
 To start the webserver, run ` npm start ` or ` node server.js ` in the 'cme' directory.
 
 # Viewing the website:
-Once started, the website can be viewed at [localhost:4000](localhost:4000)
+Once started, the website can be viewed at [localhost:4000](http://localhost:4000/)
 
 # Getting started with development:
 Make sure to develop on the `develop` branch.

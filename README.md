@@ -1,29 +1,43 @@
-# SETUP
-## Step 1: Install NodeJS: 
-If you want to install application: https://nodejs.org/en/download/
-Ubuntu: $ sudo apt-get install -y nodejs
+# C-Me COVID-19 Mapper Github
+This is a repository for a Spring 2020 CSE110 project.
 
-MacOS:  $ brew install node
+# Setting up the project:
+## Step 1: Install Node.js: 
+If you want a Node.js installer, go [here.](https://nodejs.org/en/download/) Otherwise,
 
-Windows:    $ cinst nodejs.install
+Ubuntu: `$ sudo apt-get install -y nodejs`
 
-## Step 2: clone repo:
+MacOS:  `$ brew install node`
+
+Windows:    `$ cinst nodejs.install`
+
+## Step 2: Clone the Repository.
+```
 $ git clone https://github.com/Kevin-Medzorian/cme.git
+```
 
-## Step 3: initialize the expressjs package in the repo with Node Package Manager (NPM)
-Ubuntu/Max:  $ cd path/to/cme/folder 
+## Step 3: Install the dependencies.
+Ubuntu/Mac:
+```
+$ cd path/to/cme/folder
 $ npm install
-=> This should install expressjs as well as other dependencies
+```
+This will install all the dependencies listed in package.json (including express, sqlite3, etc...)
 
 # Running the server:
-Ubuntu: $ node server.js
-Other?: $ npm start
+To start the webserver, run ` npm start ` or ` node server.js ` in the 'cme' directory.
 
-# Testing the server:
-Go the the URL localhost:4000
-http://localhost:4000/json
+# Viewing the website:
+Once started, the website can be viewed at [localhost:4000](localhost:4000)
 
-WORK IN THE 
-Getting started with development:
-https://expressjs.com/en/starter/installing.html
+# Getting started with development:
+Make sure to develop on the `develop` branch.
+
+VSCode can also be helpful for organized development.
+
+[Express.js basics](https://expressjs.com/en/starter/installing.html)
+
+[sqlite3 databases in Node.js](https://www.sqlitetutorial.net/sqlite-nodejs/)
+
+
 

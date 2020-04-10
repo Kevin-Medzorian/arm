@@ -7,9 +7,9 @@ If you want a Node.js installer, go [here.](https://nodejs.org/en/download/) Oth
 
 Ubuntu: `$ sudo apt-get install -y nodejs`
 
-MacOS:  `$ brew install node`
+MacOS: `$ brew install node`
 
-Windows:    `$ cinst nodejs.install`
+Windows: `$ cinst nodejs.install`
 
 ## Step 2: Clone the Repository.
 ```

@@ -29,7 +29,8 @@ body {
 }
 
 .img-fluid {
-  max-width: 100%;
+  max-width: 30%;
+  margin-top: 3px;
   height: auto;
 }
 
@@ -53,6 +54,9 @@ body {
   font-weight: 400;
 }
 
+.navbar-toggler-icon{
+  background-image: url("/images/toggler.png");
+}
 .form-signin .close{
   border-top-right-radius: 30px;
   border-top-left-radius: 0px;

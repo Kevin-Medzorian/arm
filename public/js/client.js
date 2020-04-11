@@ -65,7 +65,7 @@ $(window).resize(function() {
         $('.navbar-nav').css('border-radius', '30px 0px 0px 30px');
         $('.navbar-nav').css('margin-right', '0px');
     }else {
-        $('.navbar-nav').css('border-radius', '30px 30px 30px 30px');
-        $('.navbar-nav').css('margin-right', '10vw');
+        $('.navbar-nav').css('border-radius', '4px 4px 4px 30px');
+        $('.navbar-nav').css('margin-right', '1vw');
     }
 });

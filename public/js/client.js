@@ -32,6 +32,23 @@ function signup() {
 
 // Some jQuery code
 $(document).ready(function () {
+
+    var scroll_pos = 0;
+    $(document).scroll(function () {
+        scroll_pos = $(this).scrollTop();
+        if (scroll_pos > 1) {
+            $("#navbar").css('background-color','rgb(250,250,250)');
+        } else {
+            $("#navbar").css('background-color', 'transparent');
+        }
+    });
+
+    $('.nav-link').on('click', function(){ 
+        if($('#toggler').css('display') !='none'){
+            $('#toggler').trigger( "click" );
+        }
+    });
+
     $('#login-form').hide();
 
     $('#login-tab').click(function () {
@@ -41,4 +58,14 @@ $(document).ready(function () {
     $('#login-close').click(function () {
         $('#login-form').fadeOut('slow');
     });
+});
+
+$(window).resize(function() {
+    if( $('#toggler-icon').is(':visible')){
+        $('.navbar-nav').css('border-radius', '30px 0px 0px 30px');
+        $('.navbar-nav').css('margin-right', '0px');
+    }else {
+        $('.navbar-nav').css('border-radius', '30px 30px 30px 30px');
+        $('.navbar-nav').css('margin-right', '10vw');
+    }
 });

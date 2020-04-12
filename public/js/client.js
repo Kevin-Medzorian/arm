@@ -23,6 +23,16 @@ function login() {
     alert("Ran!");
 }
 
+function openLogin(){
+    $('#signup-form').hide();
+    $('#login-form').fadeIn('slow');
+}
+
+function openSignup(){
+    $('#login-form').hide();
+    $('#signup-form').fadeIn('slow');
+}
+
 // TODO
 function signup() {
     // shouldn't be too hard... same thing as login but server has to check 
@@ -30,9 +40,9 @@ function signup() {
 }
 
 
-// Some jQuery code
+// jQuery Code
 $(document).ready(function () {
-
+    // Navbar dynamic color when scrolling
     var scroll_pos = 0;
     $(document).scroll(function () {
         scroll_pos = $(this).scrollTop();
@@ -43,14 +53,23 @@ $(document).ready(function () {
         }
     });
 
+    // Clicking navigation-links will hide navbar 
     $('.nav-link').on('click', function(){ 
         if($('#toggler').css('display') !='none'){
             $('#toggler').trigger( "click" );
         }
     });
+    
+    $('#signup-btn').on('click', function(){ 
+        if($('#toggler').css('display') !='none'){
+            $('#toggler').trigger( "click" );
+        }
+    });
 
+    // Auto-hide login form.
     $('#login-form').hide();
 
+    // Login-tab fads in login form.
     $('#login-tab').click(function () {
         $('#login-form').fadeIn('slow');
     });
@@ -58,8 +77,13 @@ $(document).ready(function () {
     $('#login-close').click(function () {
         $('#login-form').fadeOut('slow');
     });
+
+    $('#signup-close').click(function () {
+        $('#signup-form').fadeOut('slow');
+    });
 });
 
+// On resize, adjust navbar.
 $(window).resize(function() {
     if( $('#toggler-icon').is(':visible')){
         $('.navbar-nav').css('border-radius', '30px 0px 0px 30px');

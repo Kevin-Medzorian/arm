@@ -1,7 +1,7 @@
 /* Defualt Styles */
 html,
 body {
-  background: url("/images/background.png") no-repeat center fixed; 
+  background: url("/images/background.png") no-repeat center scroll; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -11,14 +11,14 @@ body {
 body {
   display: -ms-flexbox;
   display: -webkit-box;
-  display: flex;
+  display: inline-block;
   -ms-flex-align: center;
   -ms-flex-pack: center;
   -webkit-box-align: center;
   align-items: center;
   -webkit-box-pack: center;
   justify-content: center;
-
+  clear: both;
   padding-top: 100px;
   padding-left: 50px;
   padding-right: 50px;
@@ -78,7 +78,7 @@ body {
 }
 
 .navbar-nav{
-  background-color: rgba(250,250,250, 0.6);
+  background-color: rgba(250,250,250, 0);
   display: inline-flex !important;
   justify-content: space-around;
   flex-basis: auto;
@@ -91,8 +91,8 @@ body {
   margin-right: 1vw;
 }
 
-/* Login/Signin Form Styles */
-.form-signin {
+/* Login Form Styles */
+.form-login {
   display: none; /* Hide on startup */
   width: 300px;
   min-width: 300px;
@@ -108,12 +108,12 @@ body {
   color: rgb(60,60,60);
   text-align: center;
 }
-.form-signin .checkbox {
+.form-login .checkbox {
   opacity: 100%;
   font-weight: 400;
 }
 
-.form-signin .close{
+.form-login .close{
   border-top-right-radius: 30px;
   border-top-left-radius: 0px;
   border-bottom-right-radius: 0px;
@@ -123,10 +123,10 @@ body {
   width: 40px;
   height: 40px;
 }
-.form-signin .error{
+.form-login .error{
   color: red;
 }
-.form-signin .form-control {
+.form-login .form-control {
   opacity: 100%;
   position: relative;
   box-sizing: border-box;
@@ -134,18 +134,18 @@ body {
   padding: 10px;
   font-size: 16px;
 }
-.form-signin .form-control:focus {
+.form-login .form-control:focus {
   opacity: 100%;
   z-index: 2;
 }
-.form-signin input[type="email"] {
+.form-login input[type="email"] {
   margin-bottom: 10px;
   opacity: 100%;
 
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
-.form-signin input[type="password"] {
+.form-login input[type="password"] {
   margin-bottom: 10px;
   opacity: 100%;
 

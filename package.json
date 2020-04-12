@@ -14,12 +14,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Kevin-Medzorian/cme.git"
+    "url": "git+https://github.com/Kevin-Medzorian/arm.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Kevin-Medzorian/cme/issues"
+    "url": "https://github.com/Kevin-Medzorian/arm/issues"
   },
-  "homepage": "https://github.com/Kevin-Medzorian/cme#readme"
+  "homepage": "https://github.com/Kevin-Medzorian/arm#readme"
 }

@@ -1,4 +1,4 @@
-# C-Me COVID-19 Mapper Github
+# ARM - Receive Reciept Manager
 This is a repository for a Spring 2020 CSE110 project.
 
 # Setting up the project:

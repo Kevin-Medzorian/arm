@@ -13,19 +13,19 @@ Windows: `$ cinst nodejs.install`
 
 ## Step 2: Clone the Repository.
 ```
-$ git clone https://github.com/Kevin-Medzorian/cme.git
+$ git clone https://github.com/Kevin-Medzorian/arm.git
 ```
 
 ## Step 3: Install the dependencies.
 Ubuntu/Mac:
 ```
-$ cd path/to/cme/folder
+$ cd path/to/arm/folder
 $ npm install
 ```
 This will install all the dependencies listed in package.json (including express, sqlite3, etc...)
 
 # Running the server:
-To start the webserver, run ` npm start ` or ` node server.js ` in the 'cme' directory.
+To start the webserver, run ` npm start ` or ` node server.js ` in the 'arm' directory.
 
 # Viewing the website:
 Once started, the website can be viewed at [localhost:4000](http://localhost:4000/)

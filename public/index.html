@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <!-- Popper JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <title>RECEIVE Receipt Manager</title>
+
+  <!-- Custom styles for this template -->
+  <link href="css/styles.css" rel="stylesheet">
+
+  <!-- Custom client-side javascript -->
+  <script src="js/client.js"></script>
+</head>
+
+<body>
+  <!-- Fixed navbar from Bootstrap4 examples -->
+  <nav class="navbar navbar-expand-md fixed-top" id="navbar">
+    <a href="/" style="margin-left: 1vw;">
+      <img class="img-fluid d-block home float-left" type="home" src="images/logo-extended3.png" alt="">
+    </a>
+    <button class="navbar-toggler" id="toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+      aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon" id="toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav ml-auto navbar-center">
+        <li class="nav-item">
+          <a class="nav-link" id="login-tab" style="color: rgb(70,70,70);" href="#">Log in<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <button class="btn btn-lg btn-primary btn-rounded" id="signup-btn" style="border-radius: 30px;" onclick="openSignup()" type="submit">Sign up!</button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Home Page Body -->
+  <h1 class="text-center">Digitizing Receipts with Elegance.</h1>
+  <img class="img-fluid d-block" style="padding-left: 5vw; padding-right:5vw; padding-top: 50px;" src="images/idea.png" alt="">
+
+  <!-- Login Form -->
+  <form class="form-login" id="login-form">
+    <button class="btn close" id="login-close">x</button>
+    <img class="img-fluid mb-3 d-block" src="images/login.png" alt="">
+    <label for="inputEmail" class="sr-only">Email address</label>
+    <input type="email" id="email-login" class="form-control" placeholder="Email address" autofocus>
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input type="password" id="password-login" class="form-control" placeholder="Password">
+    <div class="checkbox mb-1">
+      <label>
+        <input type="checkbox" value="remember-me" data-size="xl"> Remember me!
+      </label>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" onclick="login()" type="submit">Log in</button>
+    <p class="text-center mt-2">
+      Not registered?
+      <a onclick="openSignup()" href="#" type="link">Sign up!</a>
+    </p>
+    <div class="error"></div>
+    <p class="mt-3 mb-0 text-muted">
+      ARM &copy; 2020-2021
+    </p>
+  </form>
+
+  <!-- Sign Up Form (Uses style from form-login) -->
+  <form class="form-login" id="signup-form">
+    <button class="btn close" id="signup-close">x</button>
+    <img class="img-fluid mb-3 d-block" src="images/register.png" alt="">
+    <label for="inputEmail" class="sr-only">Email address</label>
+    <input type="email" id="email-signup" class="form-control" placeholder="Email address" autofocus>
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input type="password" id="password-signup" class="form-control" placeholder="Password">
+    <label for="inputPassword" class="sr-only">Confirm Password</label>
+    <input type="password" id="password-confirm" class="form-control" placeholder="Confirm Password">
+    <button class="btn btn-lg btn-primary btn-block" onclick="login()" type="submit">Sign up!</button>
+    <p class="text-center mt-2">
+      Already have an account?
+      <a onclick="openLogin()" href="#" type="link">Log in!</a>
+    </p>
+    <div class="error"></div>
+    <p class="mt-3 mb-0 text-muted">
+      ARM &copy; 2020-2021
+    </p>
+  </form>
+
+</body>
+
+</html>

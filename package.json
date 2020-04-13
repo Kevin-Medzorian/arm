@@ -1,26 +1,25 @@
 {
-  "name": "cme",
+  "name": "arm",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "dependencies": {
-    "react": "^16.13.1",
-    "bootstrap": "4.4.1",
-    "express": "^4.17.1"
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "sqlite3": "4.1.1"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Kevin-Medzorian/cme.git"
+    "url": "git+https://github.com/Kevin-Medzorian/arm.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Kevin-Medzorian/cme/issues"
+    "url": "https://github.com/Kevin-Medzorian/arm/issues"
   },
-  "homepage": "https://github.com/Kevin-Medzorian/cme#readme"
+  "homepage": "https://github.com/Kevin-Medzorian/arm#readme"
 }

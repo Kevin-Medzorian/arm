@@ -3,7 +3,8 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
 
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -26,76 +27,141 @@
 </head>
 
 <body>
-  <!-- Fixed navbar from Bootstrap4 examples -->
-  <nav class="navbar navbar-expand-md fixed-top" id="navbar">
-    <a href="/" style="margin-left: 1vw;">
-      <img class="img-fluid d-block home float-left" type="home" src="images/logo-extended3.png" alt="">
-    </a>
-    <button class="navbar-toggler" id="toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-      aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon" id="toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-      <ul class="navbar-nav ml-auto navbar-center">
-        <li class="nav-item">
-          <a class="nav-link" id="login-tab" style="color: rgb(70,70,70);" href="#">Log in<span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <button class="btn btn-lg btn-primary btn-rounded" id="signup-btn" style="border-radius: 30px;" onclick="openSignup()" type="submit">Sign up!</button>
-        </li>
-      </ul>
+  <div id="home">
+    <!-- Fixed navbar from Bootstrap4 examples -->
+    <nav class="navbar navbar-expand-md fixed-top" id="home-navbar">
+      <a href="/" style="margin-left: 1vw;">
+        <img class="img-fluid d-block home float-left" type="home" src="images/logo-extended3.png" alt="">
+      </a>
+      <button class="navbar-toggler" id="toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon" id="toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav ml-auto navbar-center">
+          <li class="nav-item">
+            <a class="nav-link text-center" id="login-tab" href="#" onclick="openLogin()">Log in<span
+                class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-lg btn-primary btn-rounded" id="signup-btn" style="border-radius: 30px;"
+              onclick="openSignup()" href="#signup" type="submit">Sign up!</button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Home Page Body -->
+    <div class="text-center">
+      <h1 class="mt-4 mb-5 d-inline-flex">
+        Digital Receipts with <h1 class="pl-2 gradient d-inline-flex">Elegance.</h1> 
+      </h1>
+      <br/>
+      <img class="img-fluid mt-5 main" src="images/idea.png" alt="">
+    </img>
     </div>
-  </nav>
 
-  <!-- Home Page Body -->
-  <h1 class="text-center">Digitizing Receipts with Elegance.</h1>
-  <img class="img-fluid d-block" style="padding-left: 5vw; padding-right:5vw; padding-top: 50px;" src="images/idea.png" alt="">
+    <!-- Login Form -->
+    <form class="form-login" id="login-form">
+      <button class="btn close" id="login-close" href="#home">x</button>
+      <img class="img-fluid mb-3 d-block" src="images/login.png" alt="">
+      <label for="inputEmail" class="sr-only">Email address</label>
+      <input type="email" id="email-login" class="form-control" placeholder="Email address" autofocus>
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" id="password-login" class="form-control" placeholder="Password">
+      <div class="checkbox mb-1">
+        <label>
+          <input type="checkbox" value="remember-me" data-size="xl"> Remember me!
+        </label>
+      </div>
+      <button class="btn btn-lg btn-primary btn-block" onclick="login()">Log in</button>
+      <p class="text-center mt-2">
+        Not registered?
+        <a onclick="openSignup()" href="#signup" type="link">Sign up!</a>
+      </p>
+      <div class="error"></div>
+      <p class="mt-3 mb-0 text-muted">
+        ARM &copy; 2020-2021
+      </p>
+    </form>
 
-  <!-- Login Form -->
-  <form class="form-login" id="login-form">
-    <button class="btn close" id="login-close">x</button>
-    <img class="img-fluid mb-3 d-block" src="images/login.png" alt="">
-    <label for="inputEmail" class="sr-only">Email address</label>
-    <input type="email" id="email-login" class="form-control" placeholder="Email address" autofocus>
-    <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" id="password-login" class="form-control" placeholder="Password">
-    <div class="checkbox mb-1">
-      <label>
-        <input type="checkbox" value="remember-me" data-size="xl"> Remember me!
-      </label>
-    </div>
-    <button class="btn btn-lg btn-primary btn-block" onclick="login()" type="submit">Log in</button>
-    <p class="text-center mt-2">
-      Not registered?
-      <a onclick="openSignup()" href="#" type="link">Sign up!</a>
-    </p>
-    <div class="error"></div>
-    <p class="mt-3 mb-0 text-muted">
-      ARM &copy; 2020-2021
-    </p>
-  </form>
+    <!-- Sign Up Form (Uses style from form-login) -->
+    <form class="form-login" id="signup-form">
+      <button class="btn close" id="signup-close" href="#">x</button>
+      <img class="img-fluid mb-3 d-block" src="images/register.png" alt="">
+      <label for="inputEmail" class="sr-only">Email address</label>
+      <input type="email" id="email-signup" class="form-control" placeholder="Email address" autofocus>
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" id="password-signup" class="form-control" placeholder="Password">
+      <label for="inputPassword" class="sr-only">Confirm Password</label>
+      <input type="password" id="password-confirm" class="form-control" placeholder="Confirm Password">
+      <button class="btn btn-lg btn-primary btn-block" onclick="login()" type="submit">Sign up!</button>
+      <p class="text-center mt-2">
+        Already have an account?
+        <a onclick="openLogin()" href="#login" type="link">Log in!</a>
+      </p>
+      <div class="error"></div>
+      <p class="mt-3 mb-0 text-muted">
+        ARM &copy; 2020-2021
+      </p>
+    </form>
+  </div>
 
-  <!-- Sign Up Form (Uses style from form-login) -->
-  <form class="form-login" id="signup-form">
-    <button class="btn close" id="signup-close">x</button>
-    <img class="img-fluid mb-3 d-block" src="images/register.png" alt="">
-    <label for="inputEmail" class="sr-only">Email address</label>
-    <input type="email" id="email-signup" class="form-control" placeholder="Email address" autofocus>
-    <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" id="password-signup" class="form-control" placeholder="Password">
-    <label for="inputPassword" class="sr-only">Confirm Password</label>
-    <input type="password" id="password-confirm" class="form-control" placeholder="Confirm Password">
-    <button class="btn btn-lg btn-primary btn-block" onclick="login()" type="submit">Sign up!</button>
-    <p class="text-center mt-2">
-      Already have an account?
-      <a onclick="openLogin()" href="#" type="link">Log in!</a>
-    </p>
-    <div class="error"></div>
-    <p class="mt-3 mb-0 text-muted">
-      ARM &copy; 2020-2021
-    </p>
-  </form>
+  <div id="session" style="display:none;">
+        <!-- Fixed navbar from Bootstrap4 examples -->
+        <ul class="nav nav-pills fixed-top session-top justify-content-center" id="top-navbar" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link h3 m-1 active" id="pills-id-tab" data-toggle="pill" href="#id" role="tab" aria-controls="id" aria-selected="true">ID</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link h3 m-1" id="pills-receipts-tab" data-toggle="pill" href="#receipts" role="tab" aria-controls="receipts" aria-selected="false">Receipts</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link h3 m-1" id="pills-spending-tab" data-toggle="pill" href="#spending" role="tab" aria-controls="spending" aria-selected="false">Spending</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link h3 m-1" id="pills-account-tab" data-toggle="pill" href="#account" role="tab" aria-controls="account" aria-selected="false">Account</a>
+          </li>
+        </ul>
 
+        <!-- Fixed navbar from Bootstrap4 examples -->
+        <ul class="nav nav-pills nav-fill fixed-bottom session-bot" id="bot-navbar" role="tablist">
+          <li class="nav-item h-100">
+            <a class="nav-link h1 p-0 m-0 h-100 active rounded-0" id="pills-id-tab" data-toggle="pill" href="#id" role="tab" aria-controls="id" aria-selected="true">
+              <img class="img-fluid tab mb-3" src="images/uid.png"/>
+            </a>
+          </li>
+          <li class="nav-item h-100">
+            <a class="nav-link h1 p-0 m-0 h-100 rounded-0" id="pills-receipts-tab" data-toggle="pill" href="#receipts" role="tab" aria-controls="receipts" aria-selected="false">
+              <img class="img-fluid tab mb-3" src="images/receipts.png"/>
+            </a>
+          </li>
+          <li class="nav-item h-100">
+            <a class="nav-link h1 p-0 m-0 h-100 rounded-0" id="pills-spending-tab" data-toggle="pill" href="#spending" role="tab" aria-controls="spending" aria-selected="false">
+              <img class="img-fluid tab mb-3" src="images/spending.png"/>
+            </a>
+          </li>
+          <li class="nav-item h-100">
+            <a class="nav-link h1 p-0 m-0 h-100 rounded-0" id="pills-account-tab" data-toggle="pill" href="#account" role="tab" aria-controls="account" aria-selected="false">
+              <img class="img-fluid tab mb-3" src="images/account.png"/>
+            </a>
+          </li>
+        </ul>
+
+        <div class="tab-content mt-3" id="pills-tabContent">
+          <div class="tab-pane fade show active" id="id" role="tabpanel" aria-labelledby="pills-id-tab">
+              <div class="container p-0 text-center">
+                <img class="img-fluid qrcode" src="images/example_qrcode.png" id="qrcode-image"/>
+                <div class="h2 m-0 mt-5" id="username-text">
+                  @Kevin-Medzorian
+                </div>
+              </div>
+          </div>
+          <div class="tab-pane fade" id="receipts" role="tabpanel" aria-labelledby="pills-receipts-tab">...</div>
+          <div class="tab-pane fade" id="spending" role="tabpanel" aria-labelledby="pills-spending-tab">...</div>
+          <div class="tab-pane fade" id="account" role="tabpanel" aria-labelledby="pills-account-tab">...</div>
+        </div>
+  </div>
 </body>
 
 </html>

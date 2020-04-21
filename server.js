@@ -8,7 +8,7 @@ const bodyParser = require('body-parser')
 const database = require('./database/database.js')
 
 // Port we are running the server on. Can be any free port.
-const port = 4000;
+const port = 3000;
 
 // Create the ExpressJS object
 var app = express();

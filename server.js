@@ -43,4 +43,41 @@ app.listen(port, () => {
 });
 
 // Example use of the database:
-database.printTable()
+console.log('start db stuff');
+database.printTable();
+database.createtables();
+
+let user = 123;
+let hash = 456;
+/*
+database.adduser(user,hash);
+return;
+let num;
+num = database.checkuser(user);
+if(num == true){ console.log('\treceived true'); }
+else{ console.log('\treceived false'); }
+
+num = database.verifyuser(user, hash);
+if(num == true){ console.log('\treceived true'); }
+else{ console.log('\treceived false'); }
+
+num = database.verifyuser(987, '123');
+if(num == true){ console.log('\treceived true'); }
+else{ console.log('\treceived false'); }
+
+database.addbuser(789, 012);
+database.addstore('store1', 'area', 'PA');
+
+let date = Date();
+database.addreceipt(user, 123,
+    database.date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),
+      date.getUTCHours(), date.getUTCMinutes()),
+    1,2, 'food', 1, 4);
+
+let numreceipts = database.countreceipts();
+console.log(`numreceipts: ${numreceipts}`);
+*/
+console.log('closing');
+database.close();
+console.log('closed');
+

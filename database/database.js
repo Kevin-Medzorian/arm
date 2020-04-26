@@ -32,11 +32,11 @@ db.serialize(function () {
     module.exports.printTable = function () {
         // This just prints all rows
         console.log('>printTable');
-        db.each('SELECT rowid AS id, email, password FROM users', function (err, row) {
+        db.each('SELECT rowid AS idx, email, password FROM users', function (err, row) {
             if(err){
               console.log("[DATABASE]" + err.message);
             }
-            console.log("[DATABASE]\tRow " + row.id + ": " + row.email + "\t" + row.password);
+            console.log("[DATABASE]\tRow " + row.idx + ": " + row.email + "\t" + row.password);
         });
         console.log('<printTable');
         //printcid();
@@ -56,20 +56,15 @@ db.serialize(function () {
       console.log("[DATABASE]\tcreateTables");
       const addtable = 'CREATE TABLE IF NOT EXISTS ';
 
-      db.run(addtable + 'Cid(\
-            uid INT PRIMARY KEY,\
-            hash INT NOT NULL)');
-
       //foreign key for the store id (sid)?
       db.run(addtable + 'Cid(\
             uid INT PRIMARY KEY,\
             hash INT NOT NULL,\
-            sid INT NOT NULL)');
+            username TEXT NOT NULL)');
 
       db.run(addtable + 'Bid(\
             bid INT PRIMARY KEY,\
             hash INT NOT NULL)');
-      console.log('hmm');
 
       db.run(addtable + 'ActionCurrent( rid INT PRIMARY KEY,\
             uid INT NOT NULL,\
@@ -100,12 +95,17 @@ db.serialize(function () {
 
       console.log('<createtables');
     }
+    module.exports.resettables = function(){
+      console.log("[DATABASE]\tresetting. Careful...");
+      
+
+    }
     
-    module.exports.printcid = function(){
+    module.exports.printbid = function(){
       console.log('%c[DATABASE]printcid', blue);
       console.log('uid\thash\tsid');
-      db.each('select * from Cid', [], function(){
-        console.log(`${Cid.uid}\t${Cid.hash}\t${Cid.sid}`);
+      db.each('select * from Cid', [], function(err, row){
+        console.log(`${row.uid}\t${row.hash}\t${row.sid}`);
       });
     }
 
@@ -158,6 +158,12 @@ db.serialize(function () {
           return false;
         }
       });
+      /*db.each('SELECT rowid AS id, email, password FROM users', function (err, row) {
+          if(err){
+            console.log("[DATABASE]" + err.message);
+          }
+          console.log("[DATABASE]\tRow " + row.id + ": " + row.email + "\t" + row.password);
+      });*/
     }
     
     module.exports.verifyuser = function(username, hash){//maybe db.get
@@ -195,6 +201,26 @@ db.serialize(function () {
         return true;
       });
     }
+
+    module.exports.getreceipts = function(uid){
+
+    }
+
+/*
+    {
+      "name": "jim",
+        "ID": {
+
+
+
+        }
+    }
+*/
+
+
+
+
+
 
 
     module.exports.addstore = function(sname, loc, state){

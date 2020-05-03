@@ -35,7 +35,7 @@ function openSignup(){
 
 // TODO
 function signup() {
-    // shouldn't be too hard... same thing as login but server has to check 
+    // shouldn't be too hard... same thing as login but server has to check
     // if it already exists and send a call-back message of whether it failed/succeeded.
 }
 
@@ -53,14 +53,14 @@ $(document).ready(function () {
         }
     });
 
-    // Clicking navigation-links will hide navbar 
-    $('.nav-link').on('click', function(){ 
+    // Clicking navigation-links will hide navbar
+    $('.nav-link').on('click', function(){
         if($('#toggler').css('display') !='none'){
             $('#toggler').trigger( "click" );
         }
     });
-    
-    $('#signup-btn').on('click', function(){ 
+
+    $('#signup-btn').on('click', function(){
         if($('#toggler').css('display') !='none'){
             $('#toggler').trigger( "click" );
         }

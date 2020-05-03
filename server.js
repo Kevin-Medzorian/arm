@@ -3,6 +3,7 @@
 // Define custom package imports
 const express = require('express');
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 // Database import from the database folder
 const database = require('./database/database.js')
@@ -13,6 +14,7 @@ const port = 4000;
 // Create the ExpressJS object
 var app = express();
 
+app.use(cors())
 app.use(bodyParser.json()); // for parsing application/json requests
 
 // Give everyone access to our static directory 'public'
@@ -38,9 +40,40 @@ app.post('/login', function (req, res) {
         res.send("Generic success!");
 });
 
+
+// Adds a customer to the database
+app.get('/addcustomer', (req, res) => {
+  const {username, password} = req.query;
+  database.addCustomer(username, password, 7, res);
+  database.printUsers();
+});
+
+// Gets the uid from a user
+app.get('/getuid', (req, res) => {
+  const {username, password} = req.query;
+  database.getUID(username, password, res);
+  database.printUsers();
+});
+
+
 app.listen(port, () => {
         console.log(`[WEBSERVER]\tServer active on port ${port}`);
 });
 
-// Example use of the database:
-database.printTable()
+
+
+// Rahul test cases here
+//
+var username = "sdcdc";
+var password = "sdcscscsd";
+
+// We will handle console.log
+database.addUser(username, password)
+
+console.log("Expected \"success\"  res");
+
+
+
+
+
+

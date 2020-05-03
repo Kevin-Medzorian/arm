@@ -3,33 +3,51 @@ var db = new sqlite3.Database('./database/cme-data.db');
 
 // Ensures that asynchronous db statements wait until their completion before proceeding
 db.serialize(function () {
-    // Create basic, generic table if it doesnt exist.
-    db.run('CREATE TABLE IF NOT EXISTS users (email text, password text)');
-    console.log("[DATABASE]\tInitialized sqlite3 Database");
 
+  // Clears table
+  db.run('drop TABLE if exists users;');
 
-    // NOTE: The syntax:
-    //      'module.exports.********* = function() {}'
-    // Is to allow external JS files to use this function.
+  // Creates table
+  db.run("create table if not exists " +
+    "users (username text, password text, uid text);");
 
-    // Inserts a user into the 'users' table of our database
-    module.exports.insertUser = function(email, password) {
-        db.run('INSERT INTO users (email, password) VALUES (?, ?)', [email, password]);
-    }
+  // Prints success
+  console.log("[DATABASE]\tInitialized sqlite3 Database");
 
-    // Prints out the 'users' table of our database
-    module.exports.printTable = function () {
-        // This just prints all rows
-        db.each('SELECT rowid AS id, email, password FROM users', function (err, row) {
-            console.log("[DATABASE]\tRow " + row.id + ": " + row.email + "\t" + row.password);
+  // Adds a customer to the database
+  module.exports.addCustomer = function(username, password, uid, res) {
+    db.run('INSERT INTO users (username, password, uid) VALUES (?, ?, ?)',
+      [username, password, uid],function(err, row){
+        res.json({
+          data: "success"
         });
-    }
+      });
+  }
 
-    // Checks if the email and password combination exist in the 'users' table.
-    module.exports.verifyUser = function (email, password) {
-        // TODO
-        //  db.each('SELECT rowid AS id, email, password FROM users', function (err, row) {
-        //    console.log(row.id + ": "+ row.email + "\t" + row.password);
-        //});
-    }
+  // Gets the UID for a particular user
+  module.exports.getUID = function(username, password, res) {
+    db.get("SELECT * FROM users where username=? and password=?",
+      [username, password],function (err, row) {
+
+        // Check empty
+        if (row == undefined) {
+          res.json({
+            data: "failure"
+          });
+
+        // Else send data
+        } else {
+          res.json({
+            data: row.uid
+          });
+        }
+      });
+  }
+
+  module.exports.printUsers = function () {
+    // This just prints all rows
+    db.each('SELECT username, password, uid FROM users', function (err, row) {
+      console.log("[DATABASE]\tRow " + row.username + ": " + row.password + "\t" + row.uid);
+    });
+  }
 });

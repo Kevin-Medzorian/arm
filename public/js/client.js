@@ -28,7 +28,6 @@ function login() {
         adjustNavbar();
     }
     event.preventDefault();
-
 }
 
 function openLogin(){
@@ -77,7 +76,7 @@ $(document).ready(function () {
         if(!$('.navbar-nav').is(':visible')){
             $('#toggler-icon').css('background-image', 'url("/images/toggler-close.png")')
         }else {
-            $('#toggler-icon').css('background-image', 'url("/images/toggler.png")')
+            $('#toggler-icon').css('background-image', 'url("/images/toggler-down.png")')
         }
         $('#toggler').fadeOut(112)
         $('#toggler').fadeIn(112)

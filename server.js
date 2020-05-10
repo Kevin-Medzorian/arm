@@ -64,16 +64,57 @@ app.listen(port, () => {
 
 // Rahul test cases here
 //
-var username = "sdcdc";
+/*var username = "sdcdc";
 var password = "sdcscscsd";
 
 // We will handle console.log
 database.addUser(username, password)
-
 console.log("Expected \"success\"  res");
 
+//we should ensure we cannot have a null username -- not sure if this is a valid test case but 
+//wanted to be sure
+username = null
+password = "a;kdflk"
+database.addUser(username,password)
+console.log("Expected failure res")
 
+//adding customer to database
+username = "Rahul"
+password = "ARM3453"
+database.addCustomer(username,password)
 
+//get username -- here username will be Rahul
+database.getUID(username,password)
+console.log("Expected \"success\"  res");
 
+//should fail -- no username found in database
+username = "dflk39"
+database.getUID(username,password)
+console.log("Expected failure res")
 
+//adding business
+var businessName = "Target" 
+password = "expect more pay less"
+var type = "B"
+database.addBusiness(businessName,password,type)
+console.log("Expected \"success\"  res");
 
+//adding store
+var storeId = "Store110"
+type = "S"
+password = "daf;ksj"
+address = "earth"
+database.addStoreInBusiness(businessName,storeId,password,address,type)
+console.log("Expected \"success\"  res");
+
+//adding store name with same business name should fail
+storeId = "Target"
+address = "a;fdk"
+database.addStoreInBusiness(businessName,storeId,password,address,type)
+console.log("Expected \"failure\"  res")
+
+//adding a store with another store with same address should fail
+storeId = "aflkjs"
+address = "earth"
+database.addStoreInBusiness(businessName,storeId,password,address,type)
+console.log("Expected \"failure\"  res")*/

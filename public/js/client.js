@@ -1,9 +1,11 @@
 
 var loggedIn = false;
+var receipts = null;
+var UID = null;
 
 // Client-side login function, called from the index.html's 'login' button.
 function login() {
-    loggedIn = true;
+
     // Create an HTTP Request object
     const httpRequest = new XMLHttpRequest();
 
@@ -16,19 +18,23 @@ function login() {
 
     // Send a "stringified" JSON structure on the POST request
     httpRequest.send(JSON.stringify(
-        { // This is the JSON structure we are sending.
+        {   // This is the JSON structure we are sending.
             email: document.getElementById("email-login").value,
             password: document.getElementById("password-login").value
         }
     ));
-
-    if(loggedIn) {
-        $('#home').hide();
-        $('#session').fadeIn('slow');
-        adjustNavbar();
-    }
-    event.preventDefault();
 }
+
+function signup() {
+
+    fetch(`http://localhost:3000/addcustomer?username=${document.getElementById("email-login").value}&password=${document.getElementById("password-login").value}`)
+           .then(response => response.json())                                        
+           .then(response => {                                                       
+             alert(response.data);                                                                                                                                                                     
+           })                                                                        
+           .catch(err => console.error(err))
+}
+
 
 function openLogin(){
     $('#signup-form').hide();

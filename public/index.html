@@ -186,7 +186,7 @@
 
           <p class="text-center mt-2">
             Already have an account?
-            <a onclick="openLoginForm()" href="#login" type="link">Log in!</a> <!-- Calls clientside javascript, switch to the login form -->
+            <a onclick="openLoginForm()" href="#" type="link">Log in!</a> <!-- Calls clientside javascript, switch to the login form -->
           </p>
 
           <div class="error"></div>  <!-- Custom error-text area in case we need to tell the user something (bad login, etc..) -->
@@ -200,17 +200,17 @@
         <div class="tab-pane fade" id="storeSignup" role="tabpanel" aria-labelledby="store-tab">
           <!-- <img class="img-fluid mb-3 d-block" src="images/register.png" alt=""> <!-- uncomment to enable "register.png" logo -->
 
-          <input type="text" id="store-name-signup" class="form-control" placeholder="Store name" autofocus> <!-- Store name input field -->
-          <input type="text" id="store-address-signup" class="form-control" placeholder="Address" autofocus> <!-- Store address input field -->
-          <input type="email" id="store-email-signup" class="form-control" placeholder="Email address" autofocus> <!-- Ownwer email address -->
-          <input type="password" id="store-password-signup" class="form-control" placeholder="Password"> <!-- Password input -->
-          <input type="password" id="store-password-confirm" class="form-control" placeholder="Confirm Password"> <!-- Confirm password input -->
+          <input type="text" id="store-name-signup" class="form-control" placeholder="Store name" autofocus/> <!-- Store name input field -->
+          <input type="text" id="store-address-signup" class="form-control" placeholder="Address"/> <!-- Store address input field -->
+          <input type="email" id="store-email-signup" class="form-control" placeholder="Email address"/> <!-- Ownwer email address -->
+          <input type="password" id="store-password-signup" class="form-control" placeholder="Password"/> <!-- Password input -->
+          <input type="password" id="store-password-confirm" class="form-control" placeholder="Confirm Password"/> <!-- Confirm password input -->
 
           <button class="btn btn-lg btn-primary btn-block" onclick="storeSignup()" type="submit">Sign up!</button> <!-- Signup button, calls our javascript -->
 
           <p class="text-center mt-2">
             Already have an account?
-            <a onclick="openLoginForm()" href="#login" type="link">Log in!</a> <!-- Switch to login form (with our custom javascript) -->
+            <a onclick="openLoginForm()" href="#" type="link">Log in!</a> <!-- Switch to login form (with our custom javascript) -->
           </p>
 
           <div class="error"></div> <!-- Custom error-text area in case we need to tell the user something (bad login, etc..) -->
@@ -289,7 +289,11 @@
 
           <!-- Account page -->
           <div class="tab-pane fade" id="account" role="tabpanel" aria-labelledby="pills-account-tab">
-
+              <div class="row">
+                <div class="col text-center">
+                  <button class="btn btn-primary" onclick="location.href='/'">Logout</button>
+                </div>
+              </div>
           </div>
         </div>
   </div>
@@ -306,5 +310,4 @@
 
   </div>
 </body>
-
 </html>

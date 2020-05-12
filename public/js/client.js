@@ -17,6 +17,8 @@ function customerLogin() {
     const emailVal = $("#customer-email-login").val();
     const passwordVal = $("#customer-password-login").val();
 
+    console.log("Sending POST request...");
+
     // POST request using fetch()  on "/customer-login"
     fetch("/customer-login", { 
         // Adding method type 
@@ -92,13 +94,15 @@ function customerLogin() {
                 UID = someCustomResponse.cid;
                 openCustomerSession();
             }
-        } catch(err){
+        } catch(err) {
             alert(err); // If there is ANY error here, then send an alert to the browser.
         }
     })
     .catch((error) => { // If there is an error in our POST response (404 error, no server found, etc...), alert the browser.
         alert(error);
     }); 
+
+    event.preventDefault(); // Prevent page from reloading.
 }
 
 /*
@@ -113,6 +117,8 @@ function storeLogin() {
     // Grabs appropriate HTML field data.
     const emailVal = $("#store-email-login").val();
     const passwordVal = $("#store-password-login").val();
+
+    console.log("Sending POST request...");
 
     // POST request using fetch()  on "/store-login"
     fetch("/store-login", { 
@@ -137,6 +143,8 @@ function storeLogin() {
     .catch((error) => {
         alert(error);
     }); 
+
+    event.preventDefault(); // Prevent page from reloading.
 }
 
 /* FUTURE   => For when we implement BUSINESS accounts
@@ -150,6 +158,9 @@ function businessLogin() {
 
     const emailVal = $("#business-email-login").val();
     const passwordVal = $("#business-password-login").val();
+
+
+    console.log("Sending POST request...");
 
     // POST request using fetch() 
     fetch("/business-login", { 
@@ -174,6 +185,8 @@ function businessLogin() {
     .catch((error) => {
         alert(error);
     }); 
+
+    event.preventDefault(); // Prevent page from reloading.
 }
 
 /*
@@ -196,6 +209,8 @@ function customerSignup() {
     } else {
         $(".error").html("Passwords do not match."); // Set user-visible error text field.
     }
+
+    event.preventDefault(); // Prevent page from reloading.
 }
 
 /*
@@ -219,6 +234,8 @@ function storeSignup() {
     } else {
         $(".error").html("Passwords do not match."); // Set user-visible test field.
     }
+
+    event.preventDefault(); // Prevent page from reloading.
 }
 
 /* 
@@ -230,9 +247,10 @@ function openCustomerSession(){
     $("#customer-session").fadeIn(); // Show our customer-session DIV (customer page).
     adjustNavbar();
 
+    console.log("Opened customer session.");
+
     // Set up our UID-text to be equal to our UID 
     $("#uid-text").html(UID);
-
 }
 
 /* 
@@ -341,16 +359,16 @@ $(document).ready(function () {
 function adjustNavbar(){
     if( $('#toggler-icon').is(':visible') || screen.width < 768){
         if(loggedIn){
-            $('#top-navbar').fadeOut('slow');
-            $('#bot-navbar').fadeIn('slow');
+            $('#top-navbar').hide();
+            $('#bot-navbar').fadeIn('fast');
         }
         $('.navbar-nav').css('border-radius', '30px 0px 0px 30px');
         $('.navbar-nav').css('margin-right', '0px');
         $('.navbar-nav').css('background-color', 'rgba(250,250,250, 0.8)');
     } else {
         if(loggedIn){
-            $('#bot-navbar').fadeOut('slow');
-            $('#top-navbar').fadeIn('slow');
+            $('#bot-navbar').hide();
+            $('#top-navbar').fadeIn('fast');
         }
         $('.navbar-nav').css('border-radius', '4px 4px 4px 30px');
         $('.navbar-nav').css('margin-right', '1vw');

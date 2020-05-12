@@ -216,6 +216,15 @@ h1.gradient {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
+
+.form-login input[type="text"] {
+  margin-bottom: 10px;
+  opacity: 100%;
+
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
 .form-login input[type="password"] {
   margin-bottom: 10px;
   opacity: 100%;

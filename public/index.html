@@ -2,169 +2,195 @@
 <html lang="en">
 
 <head>
+  <!-- The following code is technical attributes about this file. Not really any code here. -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
 
-  <!-- Latest compiled and minified CSS -->
+  <!-- Latest compiled and minified bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 
-  <!-- jQuery library -->
+  <!-- jQuery library (for super helpful javascript HTML manipulation!) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
   <!-- Popper JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 
-  <!-- Latest compiled JavaScript -->
+  <!-- Latest compiled JavaScript (for bootstrap)-->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-  <title>RECEIVE Receipt Manager</title>
+  <title>RECEIVE Receipt Manager</title> <!-- Title of Website/Webapp -->
 
-  <!-- Custom styles for this template -->
-  <link href="css/styles.css" rel="stylesheet">
-
-  <!-- Custom client-side javascript -->
-  <script src="js/client.js"></script>
+  <link href="css/styles.css" rel="stylesheet"> <!-- Custom styles for this template. This file is pretty scary... -->
+  <script src="js/client.js"></script> <!-- Our custom client-side javascript -->
 </head>
 
+<!-- Our entire program is in the body of this HTML file. -->
 <body>
 
-  <!-- This is our home session DIV -->
-  <div id="home">
-    <!-- Fixed navbar from Bootstrap4 examples -->
+  <div id="home"> <!-- This is our home DIV (when we are NOT logged in)-->
+
+    <!-- Define a fixed NavBar for our "Login" and "Signup" navigator buttons -->
     <nav class="navbar navbar-expand-md fixed-top" id="home-navbar">
-      <a href="/" style="margin-left: 1vw;">
-        <img class="img-fluid d-block home float-left" type="home" src="images/logo-extended3.png" alt="">
+      <a href="/" style="margin-left: 1vw;"> <!-- Back-To-Home link when clicking on the picture inside. -->
+        <img class="img-fluid d-block home float-left" type="home" src="images/logo-extended3.png" alt=""> <!-- Our Logo! -->
       </a>
+      
+      <!-- This is our navbar toggler button that allows for mobile-device responsiveness -->
       <button class="navbar-toggler" id="toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
         aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon" id="toggler-icon"></span>
+        <span class="navbar-toggler-icon" id="toggler-icon"></span> <!-- Icon for the navbar toggler button -->
       </button>
+
+      <!-- Actual content area for our collapsable navbar -->
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav ml-auto navbar-center">
-          <li class="nav-item">
-            <a class="nav-link text-center" id="login-tab" href="#" onclick="openLoginForm()">Log in<span
-                class="sr-only">(current)</span></a>
+
+          <li class="nav-item"> <!-- First nav item is our "login" navigator -->
+            <a class="nav-link text-center" id="login-tab" href="#" onclick="openLoginForm()">Log in<span 
+                class="sr-only">(current)</span></a> <!-- Open the login form using our Javascript!-->
           </li>
-          <li class="nav-item">
+
+          <li class="nav-item"> <!-- Second nav item is our "Signup" button-->
             <button class="btn btn-lg btn-primary btn-rounded" id="signup-btn" style="border-radius: 30px;"
-              onclick="openSignupForm()" href="#signup" type="submit">Sign up!</button>
+              onclick="openSignupForm()" href="#signup" type="submit">Sign up!</button> <!-- Open the signup form using our Javascript! -->
           </li>
+
         </ul>
       </div>
     </nav>
 
-    <!-- Home Page Body -->
+    <!-- This is the content area for our home page (not logged-in page) -->
     <div class="text-center">
+
       <h1 class="mt-4 mb-5 d-inline-flex">
-        Digital Receipts with Elegance.
+        Digital Receipts with Elegance. <!-- We can add other stuff here (like about us, what we do, who we are, etcc. -->
       </h1>
+
       <br/>
-      <img class="img-fluid mt-4 main" src="images/idea-long.png" alt="">
+
+      <img class="img-fluid mt-4 main" src="images/idea-long.png" alt=""> <!-- That one logo that has a Receipt -> logoCloud -> User  -->
+    
     </img>
     </div>
 
-    <!-- Login Form -->
+    <!-- This is where we define our Login form -->
     <form class="form-login" id="login-form">
-      <button class="btn close" id="login-close" href="#home">x</button>
-      <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item">
+      <button class="btn close" id="login-close" href="#home">x</button> <!-- Close button for our login form. Functionality is defined in client.js -->
+      <ul class="nav nav-tabs" id="myTab" role="tablist"> <!-- Tabs for switching between Customer and Business logins -->
+        
+        <li class="nav-item"> <!-- First login nav item is our customer tab-->
           <a class="nav-link p-2 active" id="customer-tab" data-toggle="tab" href="#customerLogin" role="tab" aria-controls="customerLogin" aria-selected="true">
             <img style="width:25px; height:25px;" src="images/user.png"/>
-            Customer
+            Customer <!-- This is just the text in the customer tab area -->
           </a>
         </li>
-        <li class="nav-item">
+
+        <li class="nav-item"> <!-- Second login nav item is our business tab -->
           <a class="nav-link p-2" id="store-tab" data-toggle="tab" href="#storeLogin" role="tab" aria-controls="storeLogin" aria-selected="false">
             <img style="width:25px; height:25px;" src="images/store.png"/>
             Business
           </a>
         </li>
+      
       </ul>
-      <div class="tab-content" id="myTabContent">
-        <!-- Customer Tab for login -->
+      <div class="tab-content" id="loginTabContent"> <!-- This is where we define the content area for the tabs' body' -->
+
+        <!-- Below is the actual content area for our CUSTOMER login tab -->
         <div class="tab-pane fade show active" id="customerLogin" role="tabpanel" aria-labelledby="customer-tab">
           <img class="img-fluid mb-3 d-block" src="images/login.png" alt="">
-          <label for="inputEmail" class="sr-only">Email address</label>
-          <input type="email" id="customer-email-login" class="form-control" placeholder="Email address" autofocus>
-          <label for="inputPassword" class="sr-only">Password</label>
-          <input type="password" id="customer-password-login" class="form-control" placeholder="Password">
+
+          <input type="email" id="customer-email-login" class="form-control" placeholder="Email address" autofocus> <!-- Email input -->
+          <input type="password" id="customer-password-login" class="form-control" placeholder="Password"> <!-- Password input -->
+
           <div class="checkbox mb-1">
             <label>
               <input type="checkbox" value="remember-me" data-size="xl"> Remember me!
             </label>
           </div>
-          <button class="btn btn-lg btn-primary btn-block" onclick="customerLogin()">Log in</button>
+
+          <button class="btn btn-lg btn-primary btn-block" onclick="customerLogin()">Log in</button> <!-- Uses our custom javascript -->
+
           <p class="text-center mt-2">
             Not registered?
-            <a onclick="openSignupForm()" href="#signup" type="link">Sign up!</a>
+            <a onclick="openSignupForm()" href="#signup" type="link">Sign up!</a> <!-- Switch to our signup form. Uses our javascript. -->
           </p>
-          <div class="error"></div>
+
+          <div class="error"></div> <!-- Custom error-text area in case we need to tell the user something (bad login, etc..) -->
+
           <p class="mt-3 mb-0 text-muted">
             ARM &copy; 2020-2021
           </p>
         </form>
         </div>
-        <!-- Store Tab for login -->
+
+        <!-- Below is the actual content area for our STORE/BUSINESS login tab -->
         <div class="tab-pane fade" id="storeLogin" role="tabpanel" aria-labelledby="store-tab">
           <img class="img-fluid mb-3 d-block" src="images/login.png" alt="">
 
-          <label for="inputEmail" class="sr-only">Email Address</label>
-          <input type="email" id="store-email-login" class="form-control" placeholder="Email address" autofocus>
-
-          <label for="inputPassword" class="sr-only">Password</label>
-          <input type="password" id="store-password-login" class="form-control" placeholder="Password">
+          <input type="email" id="store-email-login" class="form-control" placeholder="Email address" autofocus> <!-- Email input -->
+          <input type="password" id="store-password-login" class="form-control" placeholder="Password"> <!-- Password input -->
 
           <div class="checkbox mb-1">
             <label>
               <input type="checkbox" value="remember-me" data-size="xl"> Remember me!
             </label>
           </div>
-          <button class="btn btn-lg btn-primary btn-block" onclick="storeLogin()">Log in</button>
+
+          <button class="btn btn-lg btn-primary btn-block" onclick="storeLogin()">Log in</button>  <!-- Uses our custom javascript -->
+
           <p class="text-center mt-2">
             Not registered?
-            <a onclick="openSignupForm()" href="#signup" type="link">Sign up!</a>
+            <a onclick="openSignupForm()" href="#signup" type="link">Sign up!</a> <!-- Switch to our signup form. Uses our javascript. -->
           </p>
-          <div class="error"></div>
+
+          <div class="error"></div> <!-- Custom error-text area in case we need to tell the user something (bad login, etc..) -->
+
           <p class="mt-3 mb-0 text-muted">
             ARM &copy; 2020-2021
           </p>
         </form>
         </div>
-      </div>
+      </div> <!-- End of our entire login form DIV -->
 
-    <!-- Sign Up Form (Uses style from form-login) -->
+    <!-- Sign Up Form (but uses style from the class "form-login" ) -->
     <form class="form-login" id="signup-form">
-      <button class="btn close" id="signup-close" href="#">x</button>
+      <button class="btn close" id="signup-close" href="#">x</button> <!-- Close button for the signup form -->
+
       <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item">
+
+        <li class="nav-item"> <!-- First tab in the signup form is the Customer signup tab -->
           <a class="nav-link p-2 active" id="customer-tab" data-toggle="tab" href="#customerSignup" role="tab" aria-controls="customerSignup" aria-selected="true">
             <img style="width:25px; height:25px;" src="images/user.png"/>
-            Customer
+            Customer <!-- Text content for the customer signup tab -->
           </a>
         </li>
-        <li class="nav-item">
+
+        <li class="nav-item"> <!-- Second tab in the signup form is the Store/Business signup tab -->
           <a class="nav-link p-2" id="store-tab" data-toggle="tab" href="#storeSignup" role="tab" aria-controls="storeSignup" aria-selected="false">
             <img style="width:25px; height:25px;" src="images/store.png"/>
             Business
           </a>
         </li>
+
       </ul>
-      <div class="tab-content" id="myTabContent">
+      <div class="tab-content" id="signupTabContent"> <!-- Content area for the body of our tabs -->
         <!-- Customer Signup page tab  -->
         <div class="tab-pane fade show active" id="customerSignup" role="tabpanel" aria-labelledby="customer-tab">
           <img class="img-fluid mb-3 d-block" src="images/register.png" alt="">
-          <label for="inputEmail" class="sr-only">Email address</label>
-          <input type="email" id="customer-email-signup" class="form-control" placeholder="Email address" autofocus>
-          <label for="inputPassword" class="sr-only">Password</label>
-          <input type="password" id="customer-password-signup" class="form-control" placeholder="Password">
-          <label for="inputPassword" class="sr-only">Confirm Password</label>
-          <input type="password" id="customer-password-confirm" class="form-control" placeholder="Confirm Password">
-          <button class="btn btn-lg btn-primary btn-block" onclick="customerSignup()" type="">Sign up!</button>
+
+          <input type="email" id="customer-email-signup" class="form-control" placeholder="Email address" autofocus> <!-- Email address input! -->
+          <input type="password" id="customer-password-signup" class="form-control" placeholder="Password"> <!-- Password input -->
+          <input type="password" id="customer-password-confirm" class="form-control" placeholder="Confirm Password"> <!-- Confirm password input -->
+
+          <button class="btn btn-lg btn-primary btn-block" onclick="customerSignup()" type="">Sign up!</button> <!-- Calls our clientside javascript. -->
+
           <p class="text-center mt-2">
             Already have an account?
-            <a onclick="openLoginForm()" href="#login" type="link">Log in!</a>
+            <a onclick="openLoginForm()" href="#login" type="link">Log in!</a> <!-- Calls clientside javascript, switch to the login form -->
           </p>
-          <div class="error"></div>
+
+          <div class="error"></div>  <!-- Custom error-text area in case we need to tell the user something (bad login, etc..) -->
+
           <p class="mt-3 mb-0 text-muted">
             ARM &copy; 2020-2021
           </p>
@@ -172,91 +198,95 @@
 
         <!-- Store Signup page tab  -->
         <div class="tab-pane fade" id="storeSignup" role="tabpanel" aria-labelledby="store-tab">
-          <!-- <img class="img-fluid mb-3 d-block" src="images/register.png" alt=""> -->
-          <label for="inputEmail" class="sr-only">Store Name</label>
-          <input type="email" id="store-name-signup" class="form-control" placeholder="Store name" autofocus>
-          <label for="inputEmail" class="sr-only">Address</label>
-          <input type="email" id="store-address-signup" class="form-control" placeholder="Address" autofocus>
-          <label for="inputEmail" class="sr-only">Email address</label>
-          <input type="email" id="store-email-signup" class="form-control" placeholder="Email address" autofocus>
-          <label for="inputPassword" class="sr-only">Password</label>
-          <input type="password" id="store-password-signup" class="form-control" placeholder="Password">
-          <label for="inputPassword" class="sr-only">Confirm Password</label>
-          <input type="password" id="store-password-confirm" class="form-control" placeholder="Confirm Password">
-          <button class="btn btn-lg btn-primary btn-block" onclick="storeSignup()" type="submit">Sign up!</button>
+          <!-- <img class="img-fluid mb-3 d-block" src="images/register.png" alt=""> <!-- uncomment to enable "register.png" logo -->
+
+          <input type="text" id="store-name-signup" class="form-control" placeholder="Store name" autofocus> <!-- Store name input field -->
+          <input type="text" id="store-address-signup" class="form-control" placeholder="Address" autofocus> <!-- Store address input field -->
+          <input type="email" id="store-email-signup" class="form-control" placeholder="Email address" autofocus> <!-- Ownwer email address -->
+          <input type="password" id="store-password-signup" class="form-control" placeholder="Password"> <!-- Password input -->
+          <input type="password" id="store-password-confirm" class="form-control" placeholder="Confirm Password"> <!-- Confirm password input -->
+
+          <button class="btn btn-lg btn-primary btn-block" onclick="storeSignup()" type="submit">Sign up!</button> <!-- Signup button, calls our javascript -->
+
           <p class="text-center mt-2">
             Already have an account?
-            <a onclick="openLoginForm()" href="#login" type="link">Log in!</a>
+            <a onclick="openLoginForm()" href="#login" type="link">Log in!</a> <!-- Switch to login form (with our custom javascript) -->
           </p>
-          <div class="error"></div>
+
+          <div class="error"></div> <!-- Custom error-text area in case we need to tell the user something (bad login, etc..) -->
+
           <p class="mt-3 mb-0 text-muted">
             ARM &copy; 2020-2021
           </p>
         </div>
-
       </div>
-    </form>
-  </div>
+    </form> <!-- End of the signup form -->
+  </div> <!-- End of the home page DIV -->
 
-  <div id="customer-session" style="display:none;">
-        <!-- Fixed navbar from Bootstrap4 examples -->
+  <div id="customer-session" style="display:none;"> <!-- Contains our ENTIRE customer-loggedin-session page. -->
+
+        <!-- Top-centric NavBar for when we are on Desktop -->
         <ul class="nav nav-pills fixed-top session-top justify-content-center" id="top-navbar" role="tablist">
-          <li class="nav-item">
+          <li class="nav-item"> <!-- UID NavBar button -->
             <a class="nav-link h3 m-1 active" id="pills-id-tab" data-toggle="pill" href="#id" role="tab" aria-controls="id" aria-selected="true">ID</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item"> <!-- Receipts NavBar button -->
             <a class="nav-link h3 m-1" id="pills-receipts-tab" data-toggle="pill" href="#receipts" role="tab" aria-controls="receipts" aria-selected="false">Receipts</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item"> <!-- Track-Spending NavBar button -->
             <a class="nav-link h3 m-1" id="pills-spending-tab" data-toggle="pill" href="#spending" role="tab" aria-controls="spending" aria-selected="false">Spending</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item"> <!-- Account-Page NavBar button-->
             <a class="nav-link h3 m-1" id="pills-account-tab" data-toggle="pill" href="#account" role="tab" aria-controls="account" aria-selected="false">Account</a>
           </li>
         </ul>
 
-        <!-- Fixed navbar from Bootstrap4 examples -->
+        <!-- Bottom-centric NavBar for when we are on mobile -->
         <ul class="nav nav-pills nav-fill fixed-bottom session-bot" id="bot-navbar" role="tablist">
-          <li class="nav-item h-100">
+          <li class="nav-item h-100"> <!-- UID NavBar button w/ logo -->
             <a class="nav-link h1 p-0 m-0 h-100 active rounded-0" id="pills-id-tab" data-toggle="pill" href="#id" role="tab" aria-controls="id" aria-selected="true">
               <img class="img-fluid tab mb-3" src="images/uid.png"/>
             </a>
           </li>
-          <li class="nav-item h-100">
+          <li class="nav-item h-100"> <!-- Receipts NavBar button w/ logo -->
             <a class="nav-link h1 p-0 m-0 h-100 rounded-0" id="pills-receipts-tab" data-toggle="pill" href="#receipts" role="tab" aria-controls="receipts" aria-selected="false">
               <img class="img-fluid tab mb-3" src="images/receipts.png"/>
             </a>
           </li>
-          <li class="nav-item h-100">
+          <li class="nav-item h-100"> <!-- Track-Spending NavBar button w/ logo-->
             <a class="nav-link h1 p-0 m-0 h-100 rounded-0" id="pills-spending-tab" data-toggle="pill" href="#spending" role="tab" aria-controls="spending" aria-selected="false">
               <img class="img-fluid tab mb-3" src="images/spending.png"/>
             </a>
           </li>
-          <li class="nav-item h-100">
+          <li class="nav-item h-100"> <!-- Account NavBar button w/ logo -->
             <a class="nav-link h1 p-0 m-0 h-100 rounded-0" id="pills-account-tab" data-toggle="pill" href="#account" role="tab" aria-controls="account" aria-selected="false">
               <img class="img-fluid tab mb-3" src="images/account.png"/>
             </a>
           </li>
         </ul>
 
-        <div class="tab-content mt-3" id="pills-tabContent">
-          <!-- UID page -->
+        <div class="tab-content mt-3" id="pills-tabContent"> <!-- Actual content area for each tab in our user-session -->
+
+          <!-- UID Page -->
           <div class="tab-pane fade show active" id="id" role="tabpanel" aria-labelledby="pills-id-tab">
               <div class="container p-0 text-center">
                 <img class="img-fluid qrcode" src="images/example_qrcode.png" id="qrcode-image"/>
                 <div class="h2 m-0 mt-5" id="uid-text">
-                  @Kevin-Medzorian
+                  @Kevin-Medzorian <!-- Text area where our UID will be displayed -->
                 </div>
               </div>
           </div>
+
           <!-- Receipts page -->
           <div class="tab-pane fade" id="receipts" role="tabpanel" aria-labelledby="pills-receipts-tab">
 
           </div>
+
           <!-- Spending page -->
           <div class="tab-pane fade" id="spending" role="tabpanel" aria-labelledby="pills-spending-tab">
 
           </div>
+
           <!-- Account page -->
           <div class="tab-pane fade" id="account" role="tabpanel" aria-labelledby="pills-account-tab">
 
@@ -264,12 +294,13 @@
         </div>
   </div>
 
+  <!-- Div that contains our entire store-session page. -->
   <div id="store-session">
 
 
   </div>
 
-
+  <!-- Div that contains our entire business-session page. -->
   <div id="business-session">
 
 

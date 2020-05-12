@@ -27,6 +27,8 @@
 </head>
 
 <body>
+
+  <!-- This is our home session DIV -->
   <div id="home">
     <!-- Fixed navbar from Bootstrap4 examples -->
     <nav class="navbar navbar-expand-md fixed-top" id="home-navbar">
@@ -40,12 +42,12 @@
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav ml-auto navbar-center">
           <li class="nav-item">
-            <a class="nav-link text-center" id="login-tab" href="#" onclick="openLogin()">Log in<span
+            <a class="nav-link text-center" id="login-tab" href="#" onclick="openLoginForm()">Log in<span
                 class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
             <button class="btn btn-lg btn-primary btn-rounded" id="signup-btn" style="border-radius: 30px;"
-              onclick="openSignup()" href="#signup" type="submit">Sign up!</button>
+              onclick="openSignupForm()" href="#signup" type="submit">Sign up!</button>
           </li>
         </ul>
       </div>
@@ -64,50 +66,139 @@
     <!-- Login Form -->
     <form class="form-login" id="login-form">
       <button class="btn close" id="login-close" href="#home">x</button>
-      <img class="img-fluid mb-3 d-block" src="images/login.png" alt="">
-      <label for="inputEmail" class="sr-only">Email address</label>
-      <input type="email" id="email-login" class="form-control" placeholder="Email address" autofocus>
-      <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="password-login" class="form-control" placeholder="Password">
-      <div class="checkbox mb-1">
-        <label>
-          <input type="checkbox" value="remember-me" data-size="xl"> Remember me!
-        </label>
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link p-2 active" id="customer-tab" data-toggle="tab" href="#customerLogin" role="tab" aria-controls="customerLogin" aria-selected="true">
+            <img style="width:25px; height:25px;" src="images/user.png"/>
+            Customer
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link p-2" id="store-tab" data-toggle="tab" href="#storeLogin" role="tab" aria-controls="storeLogin" aria-selected="false">
+            <img style="width:25px; height:25px;" src="images/store.png"/>
+            Business
+          </a>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <!-- Customer Tab for login -->
+        <div class="tab-pane fade show active" id="customerLogin" role="tabpanel" aria-labelledby="customer-tab">
+          <img class="img-fluid mb-3 d-block" src="images/login.png" alt="">
+          <label for="inputEmail" class="sr-only">Email address</label>
+          <input type="email" id="customer-email-login" class="form-control" placeholder="Email address" autofocus>
+          <label for="inputPassword" class="sr-only">Password</label>
+          <input type="password" id="customer-password-login" class="form-control" placeholder="Password">
+          <div class="checkbox mb-1">
+            <label>
+              <input type="checkbox" value="remember-me" data-size="xl"> Remember me!
+            </label>
+          </div>
+          <button class="btn btn-lg btn-primary btn-block" onclick="customerLogin()">Log in</button>
+          <p class="text-center mt-2">
+            Not registered?
+            <a onclick="openSignupForm()" href="#signup" type="link">Sign up!</a>
+          </p>
+          <div class="error"></div>
+          <p class="mt-3 mb-0 text-muted">
+            ARM &copy; 2020-2021
+          </p>
+        </form>
+        </div>
+        <!-- Store Tab for login -->
+        <div class="tab-pane fade" id="storeLogin" role="tabpanel" aria-labelledby="store-tab">
+          <img class="img-fluid mb-3 d-block" src="images/login.png" alt="">
+
+          <label for="inputEmail" class="sr-only">Email Address</label>
+          <input type="email" id="store-email-login" class="form-control" placeholder="Email address" autofocus>
+
+          <label for="inputPassword" class="sr-only">Password</label>
+          <input type="password" id="store-password-login" class="form-control" placeholder="Password">
+
+          <div class="checkbox mb-1">
+            <label>
+              <input type="checkbox" value="remember-me" data-size="xl"> Remember me!
+            </label>
+          </div>
+          <button class="btn btn-lg btn-primary btn-block" onclick="storeLogin()">Log in</button>
+          <p class="text-center mt-2">
+            Not registered?
+            <a onclick="openSignupForm()" href="#signup" type="link">Sign up!</a>
+          </p>
+          <div class="error"></div>
+          <p class="mt-3 mb-0 text-muted">
+            ARM &copy; 2020-2021
+          </p>
+        </form>
+        </div>
       </div>
-      <button class="btn btn-lg btn-primary btn-block" onclick="login()">Log in</button>
-      <p class="text-center mt-2">
-        Not registered?
-        <a onclick="openSignup()" href="#signup" type="link">Sign up!</a>
-      </p>
-      <div class="error"></div>
-      <p class="mt-3 mb-0 text-muted">
-        ARM &copy; 2020-2021
-      </p>
-    </form>
 
     <!-- Sign Up Form (Uses style from form-login) -->
     <form class="form-login" id="signup-form">
       <button class="btn close" id="signup-close" href="#">x</button>
-      <img class="img-fluid mb-3 d-block" src="images/register.png" alt="">
-      <label for="inputEmail" class="sr-only">Email address</label>
-      <input type="email" id="email-signup" class="form-control" placeholder="Email address" autofocus>
-      <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="password-signup" class="form-control" placeholder="Password">
-      <label for="inputPassword" class="sr-only">Confirm Password</label>
-      <input type="password" id="password-confirm" class="form-control" placeholder="Confirm Password">
-      <button class="btn btn-lg btn-primary btn-block" onclick="login()" type="submit">Sign up!</button>
-      <p class="text-center mt-2">
-        Already have an account?
-        <a onclick="openLogin()" href="#login" type="link">Log in!</a>
-      </p>
-      <div class="error"></div>
-      <p class="mt-3 mb-0 text-muted">
-        ARM &copy; 2020-2021
-      </p>
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link p-2 active" id="customer-tab" data-toggle="tab" href="#customerSignup" role="tab" aria-controls="customerSignup" aria-selected="true">
+            <img style="width:25px; height:25px;" src="images/user.png"/>
+            Customer
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link p-2" id="store-tab" data-toggle="tab" href="#storeSignup" role="tab" aria-controls="storeSignup" aria-selected="false">
+            <img style="width:25px; height:25px;" src="images/store.png"/>
+            Business
+          </a>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <!-- Customer Signup page tab  -->
+        <div class="tab-pane fade show active" id="customerSignup" role="tabpanel" aria-labelledby="customer-tab">
+          <img class="img-fluid mb-3 d-block" src="images/register.png" alt="">
+          <label for="inputEmail" class="sr-only">Email address</label>
+          <input type="email" id="customer-email-signup" class="form-control" placeholder="Email address" autofocus>
+          <label for="inputPassword" class="sr-only">Password</label>
+          <input type="password" id="customer-password-signup" class="form-control" placeholder="Password">
+          <label for="inputPassword" class="sr-only">Confirm Password</label>
+          <input type="password" id="customer-password-confirm" class="form-control" placeholder="Confirm Password">
+          <button class="btn btn-lg btn-primary btn-block" onclick="customerSignup()" type="">Sign up!</button>
+          <p class="text-center mt-2">
+            Already have an account?
+            <a onclick="openLoginForm()" href="#login" type="link">Log in!</a>
+          </p>
+          <div class="error"></div>
+          <p class="mt-3 mb-0 text-muted">
+            ARM &copy; 2020-2021
+          </p>
+        </div>
+
+        <!-- Store Signup page tab  -->
+        <div class="tab-pane fade" id="storeSignup" role="tabpanel" aria-labelledby="store-tab">
+          <!-- <img class="img-fluid mb-3 d-block" src="images/register.png" alt=""> -->
+          <label for="inputEmail" class="sr-only">Store Name</label>
+          <input type="email" id="store-name-signup" class="form-control" placeholder="Store name" autofocus>
+          <label for="inputEmail" class="sr-only">Address</label>
+          <input type="email" id="store-address-signup" class="form-control" placeholder="Address" autofocus>
+          <label for="inputEmail" class="sr-only">Email address</label>
+          <input type="email" id="store-email-signup" class="form-control" placeholder="Email address" autofocus>
+          <label for="inputPassword" class="sr-only">Password</label>
+          <input type="password" id="store-password-signup" class="form-control" placeholder="Password">
+          <label for="inputPassword" class="sr-only">Confirm Password</label>
+          <input type="password" id="store-password-confirm" class="form-control" placeholder="Confirm Password">
+          <button class="btn btn-lg btn-primary btn-block" onclick="storeSignup()" type="submit">Sign up!</button>
+          <p class="text-center mt-2">
+            Already have an account?
+            <a onclick="openLoginForm()" href="#login" type="link">Log in!</a>
+          </p>
+          <div class="error"></div>
+          <p class="mt-3 mb-0 text-muted">
+            ARM &copy; 2020-2021
+          </p>
+        </div>
+
+      </div>
     </form>
   </div>
 
-  <div id="session" style="display:none;">
+  <div id="customer-session" style="display:none;">
         <!-- Fixed navbar from Bootstrap4 examples -->
         <ul class="nav nav-pills fixed-top session-top justify-content-center" id="top-navbar" role="tablist">
           <li class="nav-item">
@@ -149,18 +240,39 @@
         </ul>
 
         <div class="tab-content mt-3" id="pills-tabContent">
+          <!-- UID page -->
           <div class="tab-pane fade show active" id="id" role="tabpanel" aria-labelledby="pills-id-tab">
               <div class="container p-0 text-center">
                 <img class="img-fluid qrcode" src="images/example_qrcode.png" id="qrcode-image"/>
-                <div class="h2 m-0 mt-5" id="username-text">
+                <div class="h2 m-0 mt-5" id="uid-text">
                   @Kevin-Medzorian
                 </div>
               </div>
           </div>
-          <div class="tab-pane fade" id="receipts" role="tabpanel" aria-labelledby="pills-receipts-tab">...</div>
-          <div class="tab-pane fade" id="spending" role="tabpanel" aria-labelledby="pills-spending-tab">...</div>
-          <div class="tab-pane fade" id="account" role="tabpanel" aria-labelledby="pills-account-tab">...</div>
+          <!-- Receipts page -->
+          <div class="tab-pane fade" id="receipts" role="tabpanel" aria-labelledby="pills-receipts-tab">
+
+          </div>
+          <!-- Spending page -->
+          <div class="tab-pane fade" id="spending" role="tabpanel" aria-labelledby="pills-spending-tab">
+
+          </div>
+          <!-- Account page -->
+          <div class="tab-pane fade" id="account" role="tabpanel" aria-labelledby="pills-account-tab">
+
+          </div>
         </div>
+  </div>
+
+  <div id="store-session">
+
+
+  </div>
+
+
+  <div id="business-session">
+
+
   </div>
 </body>
 

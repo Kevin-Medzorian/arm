@@ -1,26 +1,32 @@
 //Note: Vim by default doesn't highlight well multiline strings
+//https://github.com/mapbox/node-sqlite3/wiki/API#databasegetsql-param--callback
+//^ is api for node js sqlite
 const sqlite3 = require('sqlite3').verbose()
 let db = new sqlite3.Database('./database/cme-data.db');
+db.get("PRAGMA foreign_keys = ON")
+console.log("[DATABASE]\tInitialized sqlite3 Database");
 const blue = 'color:blue';
+const failjson = JSON.stringify({"success": false});
+
 
 // Ensures that asynchronous db statements wait until their completion before proceeding
 db.serialize(function () {
-    // Create basic, generic table if it doesnt exist.
-    db.run('CREATE TABLE IF NOT EXISTS users (email text, password text)');
-    console.log("[DATABASE]\tInitialized sqlite3 Database");
     module.exports.close = function(){
       db.close();
     }
-
-
-    // NOTE: The syntax:
-    //      'module.exports.********* = function() {}'
-    // Is to allow external JS files to use this function.
     module.exports.date = function(year, month, day, hour, min){
       //YYYY-MM-DDTHH:MM
       //the T is a separator between day and hour
       return toString(year) + '-' +  month + '-' + day + 'T' + hour + ':' + min;
     }
+
+    /*
+    // Create basic, generic table if it doesnt exist.
+    db.run('CREATE TABLE IF NOT EXISTS users (email text, password text)');
+
+    // NOTE: The syntax:
+    //      'module.exports.********* = function() {}'
+    // Is to allow external JS files to use this function.
         
 
     // Inserts a user into the 'users' table of our database
@@ -40,7 +46,7 @@ db.serialize(function () {
         });
         console.log('<printTable');
         //printcid();
-    }
+    }*/
 
     /*
     // Checks if the email and password combination exist in the 'users' table.
@@ -56,108 +62,368 @@ db.serialize(function () {
       console.log("[DATABASE]\tcreateTables");
       const addtable = 'CREATE TABLE IF NOT EXISTS ';
 
-      //foreign key for the store id (sid)?
-      db.run(addtable + 'Cid(\
-            uid INT PRIMARY KEY,\
-            hash INT NOT NULL,\
-            username TEXT NOT NULL)');
+      db.run(addtable + 'Customer(\
+            username TEXT UNIQUE NOT NULL,\
+            passwordhash TEXT NOT NULL,\
+            cid integer PRIMARY KEY check(typeof(cid) = "integer"))',
+          function(err){
+            console.log("createtables-Customer: ",err);
+          });
 
-      db.run(addtable + 'Bid(\
-            bid INT PRIMARY KEY,\
-            hash INT NOT NULL)');
+      db.run(addtable + 'Business(\
+            username TEXT UNIQUE NOT NULL,\
+            passwordhash TEXT NOT NULL,\
+            bid integer PRIMARY KEY check(typeof(bid) = "integer"),\
+            name TEXT NOT NULL)',
+          (err) =>{
+            console.log("createtables-Business: ", err);
+          });
 
-      db.run(addtable + 'ActionCurrent( rid INT PRIMARY KEY,\
-            uid INT NOT NULL,\
-            sid INT,\
+      db.run(addtable + 'Store(\
+            username TEXT UNIQUE NOT NULL,\
+            passwordhash TEXT NOT NULL,\
+            sid integer PRIMARY KEY check(typeof(sid) = "integer"),\
+            bid integer,\
+            street TEXT,\
+            city TEXT,\
+            state TEXT,\
+            zipcode TEXT,\
+            FOREIGN KEY(bid) REFERENCES Business(bid))',
+          function(err){
+            console.log("createtables-Store: ", err);
+          });
+
+      db.run(addtable + 'Receipt(\
+            rid integer PRIMARY KEY,\
+            cid integer,\
+            sid integer,\
             date TEXT NOT NULL,\
-            tax INT NOT NULL,\
-            subtotal INT NOT NULL,\
-            FOREIGN KEY(uid) REFERENCES Cid(uid))');
+            tax integer NOT NULL,\
+            subtotal integer NOT NULL,\
+            other TEXT,\
+            FOREIGN KEY(cid) REFERENCES Customer(cid),\
+            FOREIGN KEY(sid) REFERENCES Store(sid))',
+          (err) => {
+            console.log("createtables-Receipt: ", err);
+          });
 
-      db.run(addtable + 'ReceiptCurrent(\
-            rid INT NOT NULL,\
-            item TEXT NOT NULL,\
-            quantity INT NOT NULL,\
-            unitcost INT NOT NULL,\
-            FOREIGN KEY(rid) REFERENCES ActionCurrent(rid))');
+      db.run(addtable + 'Item(\
+            rid integer,\
+            name TEXT NOT NULL,\
+            quantity integer NOT NULL check(typeof(quantity) = "integer"),\
+            unitcost integer NOT NULL check(typeof(unitcost) = "integer"),\
+            FOREIGN KEY(rid) REFERENCES Receipt(rid))',
+          (err) =>{
+            console.log("createtables-Item: ", err);
+          });
 
+/*old db, not used
       db.run(addtable + 'StoreName(\
-            sid INT PRIMARY KEY,\
+            sid integer PRIMARY KEY,\
             sname TEXT NOT NULL,\
             bid NOT NULL,\
-            FOREIGN KEY(bid) REFERENCES BID(bid))');
+            FOREIGN KEY(bid) REFERENCES BID(bid))',
+          [],
+          (err) =>{
+            console.log("createtables-StoreName: ", err);
+          });
 
       db.run(addtable + 'StoreLocation(\
             sid TEXT,\
             location TEXT NOT NULL,\
             state VARCHAR(2) NOT NULL,\
-            FOREIGN KEY(sid) REFERENCES StoreName(sid))');
-
+            FOREIGN KEY(sid) REFERENCES StoreName(sid))',
+          [],
+          (err) => {
+            console.log("createtables-StoreLocation: ", err);
+          });
+*/
       console.log('<createtables');
     }
+
+
     module.exports.resettables = function(){
+      return;
       console.log("[DATABASE]\tresetting. Careful...");
-      
-
+      db.run('drop table Item');
+      db.run('drop table Receipt');
+      db.run('drop table Customer;');
+      db.run('drop table Store;');
+      db.run('drop table Business;');
     }
-    
-    module.exports.printbid = function(){
-      console.log('%c[DATABASE]printcid', blue);
-      console.log('uid\thash\tsid');
-      db.each('select * from Cid', [], function(err, row){
-        console.log(`${row.uid}\t${row.hash}\t${row.sid}`);
-      });
+    /*
+    module.exports.injection = function(){
+      db.each('select * from Customer where cid = ?',
+          ['4548 or 1=1'],
+          (err, row) =>{
+            if(err) console.log("injection1 " + err);
+            if(row) console.log("injection2 " + rows);
+          }, (err, count)=>{
+            console.log(`injection rows: ${count}`);
+          });
+    }*/
+/*
+    module.exports.logincustomer = (username, passwordhash) =>{
+      db.get('select cid from Customer where\
+          username = ? AND passwordhash = ?',
+          [username, passwordhash],
+          (err, row, res) =>{
+            if(row) console.log(JSON.stringify({"login" : true, "cid" : row.cid}));
+            else console.log(JSON.stringify({"login" : false}));
+          });
     }
-
-
-    //Add business
-    module.exports.addbuser = function(username, hash){
-      console.log('%c[DATABASE]addbuser', blue);
-      /*db.each('SELECT count(bid) FROM Bid where bid = ?', [username], function(err, row){
-        
-      });*/
-      db.run('INSERT INTO Bid (bid,hash) VALUES (?,?)', [username, hash]);
-    }
-    module.exports.checkbuser = function(username){//maybe db.get
-      console.log('%c[DATABASE]checkbuser', blue);
-      db.get('select count(bid) as c from bid where bid = ?',
-          [username], function(err, row){
-        if(err) console.log("[DATABASE]" + err.message);
-        if(row.c == 1){
-          console.log('[DATABASE] 1 result :D', 'color:green');
-          return true;
-        } else{
-          return false;
-        }
-      });
-    }
-
-    //Add user
-    module.exports.adduser = function(username, hash){
-      console.log('%c[DATABASE]adduser', blue);
-      /*db.each('SELECT count(uid) FROM Cid where uid = ?', [username], function(err, row){
-        
-      });*/
-      db.run('INSERT INTO Cid (uid,hash) VALUES (?,?)', [username, hash],
-          function(err, row){
-        if(err){
-          console.log("adduser error: " + err.message);
-        }
+*/
+    module.exports.getallreceipts = (username, passwordhash, /*res*/) =>{
+      var receiptjson = {}
+      db.get('select cid from Customer C where username = ? and passwordhash = ?',
+        [username, passwordhash],
+        (err, rowin) => {
+          if(err){
+            //res.json(failjson);
+            console.log(`[DATABASE]getallreceipts ${username} error1:${err}`);
+          }
+          if(!rowin) console.log(`[DATABASE]getallreceipts:${username}none`);
+          receiptjson["login"] = true;
+          receiptjson["cid"] = rowin.cid;
+          receiptjson["receipts"] = [];
+          //receiptjson["receipts"] = {};
+          console.log(`[DATABASE]cid: ${rowin.cid}`);
           
+          promises = []
+          //get receipts
+          db.each('select\
+            R.rid, S.sid, B.name, R.date, R.tax, R.subtotal, R.other\
+            from Receipt R, Store S, Business B\
+            where R.cid = ? AND R.sid = S.sid AND S.bid = B.bid',
+            [rowin.cid],
+            (err, rowrec) => {
+              if(err) console.log(`[DATABASE]getallreceipts-rec:${rowin.cid}`);
+              if(!rowrec) console.log(`[DATABASE]getallreceipts-rec:no receipts`);
+              receipt = {
+                "rid" : rowrec.rid,
+                "sid" : rowrec.sid,
+                "name" : rowrec.name,
+                "date" : rowrec.date,
+                "tax" : rowrec.tax,
+                "subtotal" : rowrec.subtotal,
+                "other" : rowrec.other,
+                "item" : []
+              };
+              receiptjson["receipts"].push(receipt);
+              //receiptjson["receipts"][rid] = receipt;
+              
+              //enter items into receipt
+              //promises pass by array, receipt pass by json?,
+              getitem(promises, receipt, rowrec.rid);
+              /*
+              //promise to make sure items are all done before sending JSON
+              promises.push(new Promise((resolve, reject) =>{
+              //get items
+              db.each('select\
+                  name, quantity, unitcost\
+                  from Item\
+                  where rid = ?',
+                  [rowrec.rid],
+                  (err, rowitem) =>{
+
+                    //in wrong array since receipt gets updated :/
+
+                    console.log(`[DATABASE]itemname:${rowrec.rid},${rowitem.name}`);
+                    item = {
+                      "name" : rowitem.name,
+                      "quantity" : rowitem.quantity,
+                      "unitcost" : rowitem.unitcost
+                    };
+                    receipt["item"].push(item);
+                    console.log(receipt["item"]);
+                  }, (err, rowcountitem) =>{
+                    console.log(`item done ${rowrec.rid}`);
+                    if(rowcountitem)
+                      resolve(`${rowin.rid}:found`);
+                    else
+                      resolve(`${rowin.rid}:none`);
+                  }
+              );//item db.each end
+              }));//promise end
+              */
+
+            }, (err, numreceipt) =>{
+              Promise.all(promises)
+                .then(responses =>{
+                    console.log(`PromiseDone:${responses}`);
+                    console.log(JSON.stringify(receiptjson, null, 2));
+                    //res.json(receiptjson);
+                });//print out receipt status
+            }
+          );//receipt db.each end
+
+        });//login done
+
+      //return stuff;
+    }
+    //get all receipts for the other accounts
+
+    let getitem = (promises, receipt, rid) =>{//preserves receipt reference
+      promises.push(new Promise((resolve, reject) =>{
+        
+        db.each('select\
+            name, quantity, unitcost\
+            from Item\
+            where rid = ?',
+            [rid],
+            (err, rowitem) =>{
+              item = {
+                "name" : rowitem.name,
+                "quantity" : rowitem.quantity,
+                "unitcost" : rowitem.unitcost
+              };
+              receipt["item"].push(item);
+            }, (err, rowcountitem) =>{
+              console.log(`[DATABASE]${rid}:${receipt["item"]}`);
+              if(rowcountitem)
+                resolve(`${rid}:${rowcountitem}`);
+              else
+                resolve(`${rid}:none`);
+            }
+        );//item db.each end
+      }));
+    }
+
+
+    module.exports.getallusers = (res) =>{
+      cidjson = {
+        success : true,
+        cid : []
+      };
+      db.all('select cid from Customer', [],
+          (err, rows, res) => {
+            console.log('[DATABASE]getallusers:' + JSON.stringify(rows));
+            //uidjson.uid
+            
+          });
+    }
+/*
+    module.exports.printbid = function(){
+      console.log('%c[DATABASE]printbid', blue);
+      console.log('username\tpasswordhash\tbid');
+      db.each('select * from Business', [], function(err, row){
+        console.log(`${row.username}\t${row.passwordhash}\t${row.bid}`);
       });
+    }
+*/
+    //Add customer
+    module.exports.addcustomer = function(username, passwordhash, cid){
+      console.log('%c[DATABASE]adduser', blue);
+      db.run('INSERT INTO Customer VALUES (?,?,?)',
+          [username, passwordhash, cid],
+          (err)=>{
+            if(err){
+              console.log("[DATABASE]adduser error: " + err);
+            }
+          }
+      );
+    }
+    module.exports.addbusiness = function(username,passwordhash,bid,name){
+      db.run('INSERT INTO Business VALUES (?,?,?,?)",
+          [username, passwordhash, bid, name],
+          (err) =>{
+            if(err){
+              console.log("[DATABASE]addbusiness error: " + err);
+            }
+          }
+      );
+    }
+    module.exports.addstore = (username,passwordhash,bid,street,city,state,zipcode) =>{
+      db.run('INSERT INTO Store(username, passwordhash, bid,\
+            street, city, state, zipcode) VALUES (?,?,?,?,?,?,?)',
+          [username,passwordhash,bid,street,city,state,zipcode],
+          (err) =>{
+            if(err){
+              console.log("[DATABASE]addstore error: " + err);
+            }
+          }
+      );
+    }
+    module.exports.getcid = (username, passwordhash){
+      db.get('select cid from Customer where username = ? AND passwordhash = ?',
+          [username, passwordhash],
+          (err, row) =>{
+            if(err){
+              console.log("[DATABASE]getcid error: " + err);
+              console.log(failjson);
+              //res.json(failedjson);
+              return;
+            }
+            if(!row){
+              console.log("[DATABASE]getcid not found");
+              console.log(failedjson);
+              //res.json(failedjson);
+              return;
+            }
+            console.log({"success":true, "cid":row.cid);
+            //res.json({"success":true, "cid":row.cid);
+          }
+      );
+    }
+    module.exports.getbid = (username, passwordhash){
+      db.get('select bid from Business where username = ? AND passwordhash = ?',
+          [username, passwordhash],
+          (err, row) =>{
+            if(err){
+              console.log("[DATABASE]getbid error: " + err);
+              console.log(failjson);
+              //res.json(failedjson);
+              return;
+            }
+            if(!row){
+              console.log("[DATABASE]getbid not found");
+              console.log(failedjson);
+              //res.json(failedjson);
+              return;
+            }
+            console.log({"success":true, "bid":row.bid);
+            //res.json({"success":true, "bid":row.bid);
+          }
+      );
+    }
+    module.exports.getsid = (username, passwordhash){
+      db.get('select sid from Store where username = ? AND passwordhash = ?',
+          [username, passwordhash],
+          (err, row) =>{
+            if(err){
+              console.log("[DATABASE]getsid error: " + err);
+              console.log(failjson);
+              //res.json(failedjson);
+              return;
+            }
+            if(!row){
+              console.log("[DATABASE]getsid not found");
+              console.log(failedjson);
+              //res.json(failedjson);
+              return;
+            }
+            console.log({"success":true, "sid":row.sid);
+            //res.json({"success":true, "sid":row.sid);
+          }
+      );
     }
     module.exports.checkuser = function(username){//maybe db.get
       console.log('%c[DATABASE]checkuser', blue);
+      let ret;
       db.get('select count(uid) AS c from Cid where uid = ?',
           [username], function(err, row){
         if(err) console.log("[DATABASE]" + err.message);
         if(row.c == 1){
           console.log('[DATABASE] 1 result :D', 'color:green');
-          return true;
+          ret = true;
         } else{
-          return false;
+          ret = false;
         }
+        console.log("ret set as: " + ret);
+        console.log("true is: " + true);
       });
+      console.log("set ret as: " + ret);
+      return ret;
       /*db.each('SELECT rowid AS id, email, password FROM users', function (err, row) {
           if(err){
             console.log("[DATABASE]" + err.message);
@@ -191,8 +457,8 @@ db.serialize(function () {
           date = row.t;
         });
       }
-      db.run('INSERT INTO ActionCurrent(uid,sid,date,tax,subtotal) VALUES (?,?,?,?,?);\
-          INSERT INTO ReceiptCurrent(item,quantity,unitcost) VALUES (?,?,?)',
+      db.run('INSERT INTO Receipt(uid,sid,date,tax,subtotal) VALUES (?,?,?,?,?);\
+          INSERT INTO Item(item,quantity,unitcost) VALUES (?,?,?)',
           [uid,sid,date,tax,subtotal, item,quantity,unitcost], function(err,row){
         if(err){
           console.log("[DATABASE]addreceipt error: " + err.message);
@@ -202,57 +468,8 @@ db.serialize(function () {
       });
     }
 
-    module.exports.getreceipts = function(uid){
-
-    }
-
-/*
-    {
-      "name": "jim",
-        "ID": {
 
 
 
-        }
-    }
-*/
-
-
-
-
-
-
-
-    module.exports.addstore = function(sname, loc, state){
-      console.log('%c[DATABASE]addstore', blue);
-      db.run('INSERT INTO StoreName(sname) VALUES (?);\
-          INSERT INTO StoreLocation(location state) VALUES (?,?)',
-          [sname, loc, state], function(err, row){
-
-
-        if(err){
-          console.log("[DATABASE]addstore error: " + err.message);
-          return false;
-        }
-        return true;
-      });
-    }
-
-
-    module.exports.countuser = function(){
-      console.log('%c[DATABASE]countuser', blue);
-      db.run('SELECT count(*) as c FROM Cid', [], function(err, row){
-        if(err) console.log("[DATABASE]" + err.message);
-        return row.c;
-      });
-    }
-
-    module.exports.countreceipts = function(){
-      console.log('%c[DATABASE]countreceipts', blue);
-      db.run('SELECT count(*) as c from ReceiptCurrent', [], function(err, row){
-        if(err) console.log("[DATABASE]" + err.message);
-        return row.c;
-      });
-    }
 
 });

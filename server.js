@@ -41,43 +41,24 @@ app.post('/login', function (req, res) {
 app.listen(port, () => {
         console.log(`[WEBSERVER]\tServer active on port ${port}`);
 });
-
-// Example use of the database:
-console.log('start db stuff');
-database.printTable();
-database.createtables();
-
-let user = 123;
-let hash = 456;
 /*
-database.adduser(user,hash);
+// Example use of the database:
+//database.resettables();
+console.log('start db stuff');
+//database.printTable();
+
+var reset = 0
+if(reset == 1){
+  database.resettables();
+  database.createtables();
+  return;
+}
+//database.adduser("user1", "code1", 1234);
+
+
+database.getallreceipts("u3", "c3");
 return;
-let num;
-num = database.checkuser(user);
-if(num == true){ console.log('\treceived true'); }
-else{ console.log('\treceived false'); }
 
-num = database.verifyuser(user, hash);
-if(num == true){ console.log('\treceived true'); }
-else{ console.log('\treceived false'); }
-
-num = database.verifyuser(987, '123');
-if(num == true){ console.log('\treceived true'); }
-else{ console.log('\treceived false'); }
-
-database.addbuser(789, 012);
-database.addstore('store1', 'area', 'PA');
-
-let date = Date();
-database.addreceipt(user, 123,
-    database.date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),
-      date.getUTCHours(), date.getUTCMinutes()),
-    1,2, 'food', 1, 4);
-
-let numreceipts = database.countreceipts();
-console.log(`numreceipts: ${numreceipts}`);
+//const util = require('util');
 */
-console.log('closing');
-database.close();
-console.log('closed');
 

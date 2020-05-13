@@ -51,7 +51,6 @@ db.serialize(function () {
     /*
     // Checks if the email and password combination exist in the 'users' table.
     module.exports.verifyuser = function (email, password) {
-        // TODO
         //  db.each('SELECT rowid AS id, email, password FROM users', function (err, row) {
         //    console.log(row.id + ": "+ row.email + "\t" + row.password);
         //});
@@ -97,7 +96,7 @@ db.serialize(function () {
             rid integer PRIMARY KEY,\
             cid integer,\
             sid integer,\
-            date TEXT NOT NULL,\
+            date integer NOT NULL,\
             tax integer NOT NULL,\
             subtotal integer NOT NULL,\
             other TEXT,\
@@ -324,7 +323,7 @@ db.serialize(function () {
       );
     }
     module.exports.addbusiness = function(username,passwordhash,bid,name){
-      db.run('INSERT INTO Business VALUES (?,?,?,?)",
+      db.run('INSERT INTO Business VALUES (?,?,?,?)',
           [username, passwordhash, bid, name],
           (err) =>{
             if(err){
@@ -344,7 +343,7 @@ db.serialize(function () {
           }
       );
     }
-    module.exports.getcid = (username, passwordhash){
+    module.exports.getcid = (username, passwordhash) =>{
       db.get('select cid from Customer where username = ? AND passwordhash = ?',
           [username, passwordhash],
           (err, row) =>{
@@ -360,12 +359,12 @@ db.serialize(function () {
               //res.json(failedjson);
               return;
             }
-            console.log({"success":true, "cid":row.cid);
-            //res.json({"success":true, "cid":row.cid);
+            console.log({"success":true, "cid":row.cid});
+            //res.json({"success":true, "cid":row.cid});
           }
       );
     }
-    module.exports.getbid = (username, passwordhash){
+    module.exports.getbid = (username, passwordhash) =>{
       db.get('select bid from Business where username = ? AND passwordhash = ?',
           [username, passwordhash],
           (err, row) =>{
@@ -381,12 +380,12 @@ db.serialize(function () {
               //res.json(failedjson);
               return;
             }
-            console.log({"success":true, "bid":row.bid);
+            console.log({"success":true, "bid":row.bid});
             //res.json({"success":true, "bid":row.bid);
           }
       );
     }
-    module.exports.getsid = (username, passwordhash){
+    module.exports.getsid = (username, passwordhash)=>{
       db.get('select sid from Store where username = ? AND passwordhash = ?',
           [username, passwordhash],
           (err, row) =>{
@@ -402,61 +401,15 @@ db.serialize(function () {
               //res.json(failedjson);
               return;
             }
-            console.log({"success":true, "sid":row.sid);
-            //res.json({"success":true, "sid":row.sid);
+            console.log({"success":true, "sid":row.sid});
+            //res.json({"success":true, "sid":row.sid});
           }
       );
     }
-    module.exports.checkuser = function(username){//maybe db.get
-      console.log('%c[DATABASE]checkuser', blue);
-      let ret;
-      db.get('select count(uid) AS c from Cid where uid = ?',
-          [username], function(err, row){
-        if(err) console.log("[DATABASE]" + err.message);
-        if(row.c == 1){
-          console.log('[DATABASE] 1 result :D', 'color:green');
-          ret = true;
-        } else{
-          ret = false;
-        }
-        console.log("ret set as: " + ret);
-        console.log("true is: " + true);
-      });
-      console.log("set ret as: " + ret);
-      return ret;
-      /*db.each('SELECT rowid AS id, email, password FROM users', function (err, row) {
-          if(err){
-            console.log("[DATABASE]" + err.message);
-          }
-          console.log("[DATABASE]\tRow " + row.id + ": " + row.email + "\t" + row.password);
-      });*/
-    }
     
-    module.exports.verifyuser = function(username, hash){//maybe db.get
-      console.log('%c[DATABASE]verifyuser', blue);
-      db.get('select count(uid) as c from Cid where uid = ? AND hash = ?',
-          [username, hash], function(err, row){
-
-        if(err) console.log("[DATABASE]" + err.message);
-        if(row.c == 1){
-          console.log('[DATABASE] 1 result :D', 'color:green');
-          return true;
-        } else if(row.c == 0){
-          return false;
-        } else{
-          console.log("[DATABASE]verifyuser " + row.c + " found!?!?");
-          return false;
-        }
-      });
-    }
-
-    module.exports.addreceipt = function(uid,sid,date,tax,subtotal, item,quantity,unitcost){
+/*
+    module.exports.addreceipt = (username,passwordhash,cid,sid,date,tax,subtotal,other)=>{
       console.log('%c[DATABASE]addreceipt', blue);
-      if(date === 'now'){
-        db.get('select strftime(\'%Y-%m-%dT%H:%M\', \'utc\') as t', [], (err, row)=>{
-          date = row.t;
-        });
-      }
       db.run('INSERT INTO Receipt(uid,sid,date,tax,subtotal) VALUES (?,?,?,?,?);\
           INSERT INTO Item(item,quantity,unitcost) VALUES (?,?,?)',
           [uid,sid,date,tax,subtotal, item,quantity,unitcost], function(err,row){
@@ -467,9 +420,6 @@ db.serialize(function () {
         return true;
       });
     }
-
-
-
-
-
+*/
 });
+

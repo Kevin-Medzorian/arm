@@ -1,0 +1,8 @@
+sqlite3 filename
+
+for a nice display,
+    .headers on
+    .mode column
+
+to show insert SQL command:
+    .mode insert

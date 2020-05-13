@@ -33,7 +33,7 @@ app.post('/login', function (req, res) {
         console.log("[WEBSERVER]\tIP address (" + req.connection.remoteAddress +
                 ") tried to login with email (" + req.body.email +
                 ") and password (" + req.body.password + ").")
-
+        
         // Generic success message sent back to the client (its enforced that we have to send a response)
         res.send("Generic success!");
 });

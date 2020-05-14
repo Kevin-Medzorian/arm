@@ -10,6 +10,15 @@ const database = require('./database/database.js')
 // Port we are running the server on. Can be any free port.
 const port = 3000;
 
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+
 // Create the ExpressJS object
 var app = express();
 
@@ -62,3 +71,70 @@ return;
 //const util = require('util');
 */
 
+// Rahul test cases here
+//
+if(1 == 0){
+  var username;
+  var password;
+  /*
+  username = "sdcdc";
+  password = "sdcscscsd";
+
+  // We will handle console.log
+  database.addUser(username, password)
+  console.log("Expected \"success\"  res");
+
+  //we should ensure we cannot have a null username -- not sure if this is a valid test case but 
+  //wanted to be sure
+  username = null
+  password = "a;kdflk"
+  database.addUser(username,password)
+  console.log("Expected failure res")
+  */
+
+  //adding customer to database
+  var customerusername = "Rahul"
+  var customerpassword = "ARM3453"
+  database.addcustomer(customerusername,customerpassword)
+  sleep(1000);
+  //get username -- here username will be Rahul
+  database.getcid(customerusername,customerpassword)
+  console.log("Expected \"success\"  res");
+
+  //should fail -- no username found in database
+  username = "dflk39"
+  database.getcid(username,password)
+  console.log("Expected failure res")
+
+  //adding business
+  var businessName = "Target" 
+  var businesspassword = "expect more pay less"
+  database.addbusiness(businessName,businesspassword, businessName)
+  console.log("Expected \"success\"  res");
+  sleep(1000);
+  //adding store
+  var storename = "Store110"
+  //type = "S"
+  var storepassword = "daf;ksj"
+  var street = "mystreet"
+  var city = "mycity"
+  var state = "CA"
+  var zipcode = "12345"
+  database.addstore(businessName,businesspassword,storename,storepassword,street,
+      city, state, zipcode)
+  console.log("Expected \"success\"  res");
+
+  sleep(1000);
+  //adding store name with same business name should fail
+  storeId = "Target"
+  database.addstore(businessName,businesspassword,storename,storepassword,street,
+      city, state, zipcode)
+  console.log("Expected \"failure\"  res")
+  /*
+  //adding a store with another store with same address should fail
+  storeId = "aflkjs"
+  address = "earth"
+  database.addstore(businessName,storeId,password,address,type)
+  console.log("Expected \"failure\"  res")
+  */
+}

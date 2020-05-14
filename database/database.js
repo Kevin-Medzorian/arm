@@ -311,55 +311,93 @@ db.serialize(function () {
     }
 */
     //Add customer
-    module.exports.addcustomer = function(username, passwordhash, cid){
-      console.log('%c[DATABASE]adduser', blue);
-      db.run('INSERT INTO Customer VALUES (?,?,?)',
-          [username, passwordhash, cid],
-          (err)=>{
+    module.exports.addcustomer = function(username, passwordhash, cid = null){
+      console.log('%c[DATABASE]addcustomer', blue);
+      function iferr(err){
+        if(err){
+          console.log("[DATABASE]addbusiness error: " + err);
+        }
+      }
+      if(cid){//custom cid
+        db.run('INSERT INTO Customer VALUES (?,?,?)',
+            [username, passwordhash, cid],iferr);
+      } else{
+        db.run('INSERT INTO Customer(username,passwordhash) VALUES (?,?)',
+            [username, passwordhash],iferr);
+      }
+    }
+    module.exports.addbusiness = function(username,passwordhash,name,bid = null){
+      console.log('%c[DATABASE]addbusiness', blue);
+      function iferr(err){
+        if(err){
+          console.log("[DATABASE]addbusiness error: " + err);
+        }else{
+          console.log(`[DATABASE]addbusiness ${username} success`);
+        }
+      }
+      if(bid){//custom bid
+        db.run('INSERT INTO Business VALUES (?,?,?,?)',
+            [username, passwordhash, bid, name], iferr);
+
+      } else{
+        db.run('INSERT INTO Business(username,passwordhash,name) VALUES (?,?,?)',
+            [username, passwordhash, name], iferr);
+      }
+    }
+    module.exports.addstore = (busername,bpasswordhash,susername,spasswordhash,street,city,state,zipcode) =>{
+      db.get('select bid from Business where username=? AND passwordhash=?',
+          [busername,bpasswordhash],
+          (err, row) =>{
             if(err){
-              console.log("[DATABASE]adduser error: " + err);
+              console.log(`[DATABASE]addstore error: business username:${busername},${err}`);
+              console.log(failjson);
+              //res.json(failjson);
+              return;
             }
+            if(!row){
+              console.log(`[DATABASE]addstore business username(${busername}) combo does not exist`);
+              console.log(failjson);
+              //res.json(failjson);
+              return;
+            }
+            db.run('INSERT INTO Store(\
+                  username, passwordhash, bid,\
+                  street, city, state, zipcode) VALUES (?,?,?,?,?,?,?)',
+                [susername,spasswordhash,row.bid,street,city,state,zipcode],
+                (err) =>{
+                  if(err){
+                    console.log("[DATABASE]addstore error: " + err);
+                    console.log(failjson);
+                    //res.json(failjson);
+                    return;
+                  }else{
+                    console.log({"success":true});
+                    //res.json({"success":true});
+                  }
+                }
+            );
           }
       );
     }
-    module.exports.addbusiness = function(username,passwordhash,bid,name){
-      db.run('INSERT INTO Business VALUES (?,?,?,?)',
-          [username, passwordhash, bid, name],
-          (err) =>{
-            if(err){
-              console.log("[DATABASE]addbusiness error: " + err);
-            }
-          }
-      );
-    }
-    module.exports.addstore = (username,passwordhash,bid,street,city,state,zipcode) =>{
-      db.run('INSERT INTO Store(username, passwordhash, bid,\
-            street, city, state, zipcode) VALUES (?,?,?,?,?,?,?)',
-          [username,passwordhash,bid,street,city,state,zipcode],
-          (err) =>{
-            if(err){
-              console.log("[DATABASE]addstore error: " + err);
-            }
-          }
-      );
-    }
+
     module.exports.getcid = (username, passwordhash) =>{
+      console.log(`getcid: ${username},${passwordhash}`);
       db.get('select cid from Customer where username = ? AND passwordhash = ?',
           [username, passwordhash],
           (err, row) =>{
             if(err){
-              console.log("[DATABASE]getcid error: " + err);
+              console.log(`[DATABASE]getcid error: username(${username}) ${err}`);
               console.log(failjson);
-              //res.json(failedjson);
+              //res.json(failjson);
               return;
             }
             if(!row){
-              console.log("[DATABASE]getcid not found");
-              console.log(failedjson);
-              //res.json(failedjson);
+              console.log(`[DATABASE]getcid ${username} not found`);
+              console.log(failjson);
+              //res.json(failjson);
               return;
             }
-            console.log({"success":true, "cid":row.cid});
+            console.log("getcid"+JSON.stringify({"success":true, "cid":row.cid},null,2));
             //res.json({"success":true, "cid":row.cid});
           }
       );
@@ -369,18 +407,18 @@ db.serialize(function () {
           [username, passwordhash],
           (err, row) =>{
             if(err){
-              console.log("[DATABASE]getbid error: " + err);
+              console.log(`[DATABASE]getbid error: username(${username}) ${err}`);
               console.log(failjson);
-              //res.json(failedjson);
+              //res.json(failjson);
               return;
             }
             if(!row){
-              console.log("[DATABASE]getbid not found");
-              console.log(failedjson);
-              //res.json(failedjson);
+              console.log(`[DATABASE]getbid ${username} not found`);
+              console.log(failjson);
+              //res.json(failjson);
               return;
             }
-            console.log({"success":true, "bid":row.bid});
+            console.log(JSON.stringify({"success":true, "bid":row.bid},null,2));
             //res.json({"success":true, "bid":row.bid);
           }
       );
@@ -390,15 +428,15 @@ db.serialize(function () {
           [username, passwordhash],
           (err, row) =>{
             if(err){
-              console.log("[DATABASE]getsid error: " + err);
+              console.log(`[DATABASE]getsid error: username(${username}) ${err}`);
               console.log(failjson);
-              //res.json(failedjson);
+              //res.json(failjson);
               return;
             }
             if(!row){
-              console.log("[DATABASE]getsid not found");
-              console.log(failedjson);
-              //res.json(failedjson);
+              console.log(`[DATABASE]getsid ${username} not found`);
+              console.log(failjson);
+              //res.json(failjson);
               return;
             }
             console.log({"success":true, "sid":row.sid});

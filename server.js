@@ -70,7 +70,7 @@ return;
 
 //const util = require('util');
 */
-database.test();
+//database.test();
 
 var fs = require('fs');
 //https://www.w3schools.com/nodejs/nodejs_filesystem.asp

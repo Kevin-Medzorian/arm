@@ -289,7 +289,16 @@ db.serialize(function () {
       }));
     }
 
+    module.exports.getbusinessstorereceipt = (busername,bpasswordhash,sid)=>{
+      
 
+    }
+
+    module.exports.getstorereceipt = (susername,spasswordhash)=>{
+    }
+
+
+/*
     module.exports.getallusers = (res) =>{
       cidjson = {
         "status" : true,
@@ -302,7 +311,6 @@ db.serialize(function () {
             
           });
     }
-/*
     module.exports.printbid = function(){
       console.log('%c[DATABASE]printbid', blue);
       console.log('username\tpasswordhash\tbid');
@@ -487,57 +495,88 @@ db.serialize(function () {
     
 
     module.exports.storeaddreceipt = (susername,spasswordhash,cid,date,tax,subtotal,other,items)=>{
-      console.log('%c[DATABASE]addreceipt', blue);
-      db.searlize(() => {
-          var sid;
-          db.get('select sid from Store where username=? AND passwordhash=?',
-              [susername, spasswordhash],
-              (err, rowsid) =>{
-                if(err){
-                  console.log(`[DATABASE]storeaddreceiptERROR: username(${susername}) ${err}`);
-                  console.log(failjson);
-                  //res.json(failjson);
-                  return;
-                }
-                if(!rowsid){
-                  console.log(`[DATABASE]storeaddreceiptERROR: username(${username}) not found`);
-                  console.log(failjson);
-                  //res.json(failjson);
-                  return;
-                }
-                sid = row.sid
+      //get sid, add receipt, get rid, add items
+      console.log('%c[DATABASE]storeaddreceipt', blue);
+      db.get('select sid from Store where username=? AND passwordhash=?',
+          [susername, spasswordhash],
+          (err, rowsid) =>{
+            if(err){
+              console.log(`[DATABASE]storeaddreceiptERROR: username(${susername}) ${err}`);
+              console.log(failjson);
+              //res.json(failjson);
+              return;
+            }
+            if(!rowsid){
+              console.log(`[DATABASE]storeaddreceiptERROR: username(${username}) not found`);
+              console.log(failjson);
+              //res.json(failjson);
+              return;
+            }
+            db.serialize(()=>{
+                db.run('INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (?,?,?,?,?,?);',
+                    [cid,rowsid.sid,date,tax,subtotal,other],
+                    (err)=>{
+                      if(err){
+                        console.log(`[DATABASE]storeaddreceiptERROR:
+                            username${susername}, ${err}`);
+                      }
+                    }
+                )
+                .get('select last_insert_rowid() as rid',
+                    (err, rowrid) =>{
 
-              }
-          )
-          .run('INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (?,?,?,?,?);\
-              INSERT INTO Item() VALUES (?,?,?)',
-              [],
-              (err,row)=>{
-                if(err){
-                  console.log(`[DATABASE]storeaddreceiptERROR:
-                      username${susername}, ${err}`);
-                }
-              }
-          );
+                        item.forEach(val =>{
+                              db.run('insert into Item(?,?,?,?)',
+                                  [rowrid.rid,val.name,val.quantity,val.unitcost],
+                                  (err) =>{
+                                    if(err){
+                                      console.log(`storeaddreceiptERRORitem: username(${susername}), rid(${rowid.rid}), ${err}`);
+                                    }
+                              });
+                        });
+                });
+            });
 
-        }
-      );
+      });
+    }
+
+    module.exports.customeraddreceipt = ()=>{
+
+    }
+    module.exports.getstores = (busername,bpasswordhash) =>{
+      db.get('select bid,name from Business where username=? AND passwordhash=?',
+          [busername,bpasswordhash],
+          (err,row)=>{
+          if(err){
+            console.log(`[DATABASE]getstoresERROR: username(${busername}), ${err}`);
+            //res.json(failjson);
+            return;
+          }
+          if(!row){
+            console.log(`[DATABASE]getstoresERROR: username(${busername}) not found`);
+            //res.json(failjson);
+            return;
+          }
+          var storejson = {
+            "success":true,
+            "name":row.name,
+            "bid":row.bid,
+            "stores":[]
+          };
+          db.each('select sid from Store where bid=?',
+              [row.bid],
+              (err, rowstore)=>{
+                storejson["stores"].push(rowstore.sid);
+              },
+              (err,storecount)=>{
+                console.log(`[DATABASE]getstores: username(${busername}): json:${storejson}`);
+                //res.json(storejson);
+          });
+
+
+
+      });
+
     }
 
 });
-/*
-                item.forEach(val =>{
-                      db.run('insert into Item(?,?,?,?)',
-                          [rowsid.sid],
-                          (err) =>{
-                            if(err){
-                              console.log(`storeaddreceiptERRORitem:
-                                  username${susername}, ${err}`);
-                            }
-                          }
-                      );
-                    }
-                );
-
-                //insert into Receipt with given cid
-                */

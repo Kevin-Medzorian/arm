@@ -9,7 +9,7 @@ const database = require('./database/database.js')
 
 // Port we are running the server on. Can be any free port.
 const port = 3000;
-
+/*
 function sleep(milliseconds) {
   var start = new Date().getTime();
   for (var i = 0; i < 1e7; i++) {
@@ -17,7 +17,7 @@ function sleep(milliseconds) {
       break;
     }
   }
-}
+}*/
 
 // Create the ExpressJS object
 var app = express();
@@ -70,10 +70,14 @@ return;
 
 //const util = require('util');
 */
+database.test();
 
+var fs = require('fs');
+//https://www.w3schools.com/nodejs/nodejs_filesystem.asp
+//write my outputs to file
 // Rahul test cases here
 //
-if(1 == 0){
+if(1==0){
   var username;
   var password;
   /*
@@ -96,7 +100,7 @@ if(1 == 0){
   var customerusername = "Rahul"
   var customerpassword = "ARM3453"
   database.addcustomer(customerusername,customerpassword)
-  sleep(1000);
+  sleep(5000);
   //get username -- here username will be Rahul
   database.getcid(customerusername,customerpassword)
   console.log("Expected \"success\"  res");
@@ -111,7 +115,7 @@ if(1 == 0){
   var businesspassword = "expect more pay less"
   database.addbusiness(businessName,businesspassword, businessName)
   console.log("Expected \"success\"  res");
-  sleep(1000);
+  sleep(5000);
   //adding store
   var storename = "Store110"
   //type = "S"
@@ -124,7 +128,7 @@ if(1 == 0){
       city, state, zipcode)
   console.log("Expected \"success\"  res");
 
-  sleep(1000);
+  sleep(5000);
   //adding store name with same business name should fail
   storeId = "Target"
   database.addstore(businessName,businesspassword,storename,storepassword,street,

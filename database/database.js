@@ -6,12 +6,12 @@ let db = new sqlite3.Database('./database/cme-data.db');
 db.get("PRAGMA foreign_keys = ON")
 console.log("[DATABASE]\tInitialized sqlite3 Database");
 const blue = 'color:blue';
-const failjson = JSON.stringify({"success": false});
-
+const failjson = JSON.stringify({"status": false});
+const util = require('util');
 
 // Ensures that asynchronous db statements wait until their completion before proceeding
 db.serialize(function () {
-    module.exports.close = function(){
+    module.exports.close = ()=>{
       db.close();
     }
     module.exports.date = function(year, month, day, hour, min){
@@ -172,6 +172,7 @@ db.serialize(function () {
           });
     }
 */
+    //given username of customer
     module.exports.getallreceipts = (username, passwordhash, /*res*/) =>{
       var receiptjson = {}
       db.get('select cid from Customer C where username = ? and passwordhash = ?',
@@ -291,7 +292,7 @@ db.serialize(function () {
 
     module.exports.getallusers = (res) =>{
       cidjson = {
-        success : true,
+        "status" : true,
         cid : []
       };
       db.all('select cid from Customer', [],
@@ -371,8 +372,8 @@ db.serialize(function () {
                     //res.json(failjson);
                     return;
                   }else{
-                    console.log({"success":true});
-                    //res.json({"success":true});
+                    console.log({"status":true});
+                    //res.json({"status":true});
                   }
                 }
             );
@@ -397,8 +398,8 @@ db.serialize(function () {
               //res.json(failjson);
               return;
             }
-            console.log("getcid"+JSON.stringify({"success":true, "cid":row.cid},null,2));
-            //res.json({"success":true, "cid":row.cid});
+            console.log("getcid"+JSON.stringify({"status":true, "cid":row.cid},null,2));
+            //res.json({"status":true, "cid":row.cid});
           }
       );
     }
@@ -418,8 +419,8 @@ db.serialize(function () {
               //res.json(failjson);
               return;
             }
-            console.log(JSON.stringify({"success":true, "bid":row.bid},null,2));
-            //res.json({"success":true, "bid":row.bid);
+            console.log(JSON.stringify({"status":true, "bid":row.bid},null,2));
+            //res.json({"status":true, "bid":row.bid);
           }
       );
     }
@@ -439,25 +440,104 @@ db.serialize(function () {
               //res.json(failjson);
               return;
             }
-            console.log({"success":true, "sid":row.sid});
-            //res.json({"success":true, "sid":row.sid});
+            console.log({"status":true, "sid":row.sid});
+            //res.json({"status":true, "sid":row.sid});
           }
       );
     }
-    
-/*
-    module.exports.addreceipt = (username,passwordhash,cid,sid,date,tax,subtotal,other)=>{
-      console.log('%c[DATABASE]addreceipt', blue);
-      db.run('INSERT INTO Receipt(uid,sid,date,tax,subtotal) VALUES (?,?,?,?,?);\
-          INSERT INTO Item(item,quantity,unitcost) VALUES (?,?,?)',
-          [uid,sid,date,tax,subtotal, item,quantity,unitcost], function(err,row){
-        if(err){
-          console.log("[DATABASE]addreceipt error: " + err.message);
-          return false;
-        }
-        return true;
-      });
-    }
-*/
-});
 
+    module.exports.test = () =>{
+      /*
+      db.get('insert into abc(b) values (1); select last_insert_rowid();',
+          (err, rows) =>{
+            console.log(`TESTING TESTING rows:${rows}`);
+            util.inspect(rows);
+          }
+      );*/
+      /*
+      db.serialize(() => {
+        dbSum(1, 1, db);
+        dbSum(2, 2, db);
+        dbSum(3, 3, db);
+        dbSum(4, 4, db);
+        dbSum(5, 5, db);
+      });
+
+      // close the database connection
+      db.close((err) => {
+        if (err) {
+          return console.error(err.message);
+        }
+      });
+
+      function dbSum(a, b, db) {
+        db.get('SELECT (? + ?) sum', [a, b], (err, row) => {
+          if (err) {
+            console.error(err.message);
+          }
+          console.log(`The sum of ${a} and ${b} is ${row.sum}`);
+        });
+      }
+      */
+
+      //only does 1 command at a time and ignores the one after
+      db.run('insert into Item values(1,"test",9,9);\
+          insert into Item values(1,"test2",9,9);');
+    }
+    
+
+    module.exports.storeaddreceipt = (susername,spasswordhash,cid,date,tax,subtotal,other,items)=>{
+      console.log('%c[DATABASE]addreceipt', blue);
+      db.searlize(() => {
+          var sid;
+          db.get('select sid from Store where username=? AND passwordhash=?',
+              [susername, spasswordhash],
+              (err, rowsid) =>{
+                if(err){
+                  console.log(`[DATABASE]storeaddreceiptERROR: username(${susername}) ${err}`);
+                  console.log(failjson);
+                  //res.json(failjson);
+                  return;
+                }
+                if(!rowsid){
+                  console.log(`[DATABASE]storeaddreceiptERROR: username(${username}) not found`);
+                  console.log(failjson);
+                  //res.json(failjson);
+                  return;
+                }
+                sid = row.sid
+
+              }
+          )
+          .run('INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (?,?,?,?,?);\
+              INSERT INTO Item() VALUES (?,?,?)',
+              [],
+              (err,row)=>{
+                if(err){
+                  console.log(`[DATABASE]storeaddreceiptERROR:
+                      username${susername}, ${err}`);
+                }
+              }
+          );
+
+        }
+      );
+    }
+
+});
+/*
+                item.forEach(val =>{
+                      db.run('insert into Item(?,?,?,?)',
+                          [rowsid.sid],
+                          (err) =>{
+                            if(err){
+                              console.log(`storeaddreceiptERRORitem:
+                                  username${susername}, ${err}`);
+                            }
+                          }
+                      );
+                    }
+                );
+
+                //insert into Receipt with given cid
+                */

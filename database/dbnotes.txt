@@ -6,3 +6,15 @@ for a nice display,
 
 to show insert SQL command:
     .mode insert
+
+
+
+Rahul test 1 reset commands
+.header on
+.mode column
+delete from Store where username = "Store110";
+delete from Customer where username = "Rahul";
+delete from Business where username = 'Target';
+.q
+
+

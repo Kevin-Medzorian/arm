@@ -232,3 +232,45 @@ h1.gradient {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+/* Receipts styles */
+.receipt-list {
+  border-radius: 20px;
+  background-color: rgb(200,200,200);
+  height: 100px;
+  padding: 5px;
+}
+
+.left{
+  float:left;
+}
+
+.right{
+  float:right;
+}
+
+.receipt-list-store{
+  font-size: 36px;
+  height: 50px;
+  width: calc(100% - 130px);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding-top: 0px;
+}
+
+.receipt-list-date{
+  font-size: 24px;
+  height: 50px;
+  width: 130px;
+  vertical-align: middle;
+  text-align: right;
+  padding-top: 12px;
+}
+
+.receipt-list-subtitle{
+  font-size: 20px;
+}
+
+.receipt-list-subtext{
+  font-size: 20px;
+}

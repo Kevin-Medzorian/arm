@@ -13,12 +13,6 @@ function customerLogin() {
     // Clear the User-Visible error field (exists for letting user know passwords dont match, etc..)
     $(".error").html("");
 
-    if (true){
-    loggedIn = true; 
-    UID = "C64826490";
-    openCustomerSession();
-    event.preventDefault();
-    }else {
 
     // Grab the appropriate HTML field data
     const emailVal = $("#customer-email-login").val();
@@ -41,64 +35,16 @@ function customerLogin() {
         }
     })
     // Converting to JSON
-    //.then(response => response.json())  // => Uncomment whenever backend implements "/customer-login"
+    .then(response => response.json())  // => Uncomment whenever backend implements "/customer-login"
     // Displaying results to console
     .then(json => {
-        var someCustomResponse = { // => CUSTOM response message that I made (should be similar to what we expect).
-            "login": true,
-            "cid" : "123123",
-            "receipts": [
-                    {
-                    "rid" : 123,
-                    "sid" : 321,
-                    "store": "Ralph's",
-                    "date" : "1589255024",
-                    "tax" : 99, // in cents,
-                    "subtotal" : 1000, // in cents
-                    "other" : "some custom text",
-                    "items" : [
-                                {
-                                    "name" : "tomato",
-                                    "quantity" : 2,
-                                    "unitcost" : 99 // in cents
-                                },
-                                {
-                                    "name" : "A in cse110",
-                                    "quantity" : 10,
-                                    "unitcost" : 0 // in cents
-                                }
-                              ]
-                    },
-                    {
-                        "rid" : 420,
-                        "sid" : 321,
-                        "store": "Vons",
-                        "date" : "1589000000",
-                        "tax" : 99, // in cents,
-                        "subtotal" : 1000, // in cents
-                        "other" : "some custom text",
-                        "items" : [
-                                    {
-                                        "name" : "more tomatoes",
-                                        "quantity" : 20,
-                                        "unitcost" : 4004 // in cents
-                                    },
-                                    {
-                                        "name" : "F in cse110",
-                                        "quantity" : 0,
-                                        "unitcost" : 100 // in cents
-                                    }
-                                  ]
-                    }
-                    ]
-            }; // => END of CUSTOM response
 
         // Check if the response's "login" field is true (SUCCESS).
         try{
-            if(someCustomResponse.login){
+            if(json.login){
                 loggedIn = true;
-                receipts = someCustomResponse.receipts;
-                UID = someCustomResponse.cid;
+                receipts = json.receipts;
+                UID = json.cid;
                 openCustomerSession();
             }
         } catch(err) {
@@ -110,7 +56,6 @@ function customerLogin() {
     });
 
     event.preventDefault(); // Prevent page from reloading.
-}
 }
 
 /*

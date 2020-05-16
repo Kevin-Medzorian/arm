@@ -27,7 +27,7 @@ db.serialize(function () {
     // NOTE: The syntax:
     //      'module.exports.********* = function() {}'
     // Is to allow external JS files to use this function.
-        
+
 
     // Inserts a user into the 'users' table of our database
     module.exports.insertUser = function(email, password) {
@@ -173,7 +173,7 @@ db.serialize(function () {
     }
 */
     //given username of customer
-    module.exports.getallreceipts = (username, passwordhash, /*res*/) =>{
+    module.exports.getallreceipts = (username, passwordhash, res) =>{
       var receiptjson = {}
       db.get('select cid from Customer C where username = ? and passwordhash = ?',
         [username, passwordhash],
@@ -188,7 +188,7 @@ db.serialize(function () {
           receiptjson["receipts"] = [];
           //receiptjson["receipts"] = {};
           console.log(`[DATABASE]cid: ${rowin.cid}`);
-          
+
           promises = []
           //get receipts
           db.each('select\
@@ -211,7 +211,7 @@ db.serialize(function () {
               };
               receiptjson["receipts"].push(receipt);
               //receiptjson["receipts"][rid] = receipt;
-              
+
               //enter items into receipt
               //promises pass by array, receipt pass by json?,
               getitem(promises, receipt, rowrec.rid);
@@ -252,7 +252,7 @@ db.serialize(function () {
                 .then(responses =>{
                     console.log(`PromiseDone:${responses}`);
                     console.log(JSON.stringify(receiptjson, null, 2));
-                    //res.json(receiptjson);
+                    res.json(receiptjson);
                 });//print out receipt status
             }
           );//receipt db.each end
@@ -265,7 +265,7 @@ db.serialize(function () {
 
     let getitem = (promises, receipt, rid) =>{//preserves receipt reference
       promises.push(new Promise((resolve, reject) =>{
-        
+
         db.each('select\
             name, quantity, unitcost\
             from Item\
@@ -290,7 +290,7 @@ db.serialize(function () {
     }
 
     module.exports.getbusinessstorereceipt = (busername,bpasswordhash,sid)=>{
-      
+
 
     }
 
@@ -308,7 +308,7 @@ db.serialize(function () {
           (err, rows, res) => {
             console.log('[DATABASE]getallusers:' + JSON.stringify(rows));
             //uidjson.uid
-            
+
           });
     }
     module.exports.printbid = function(){
@@ -389,7 +389,7 @@ db.serialize(function () {
       );
     }
 
-    module.exports.getcid = (username, passwordhash) =>{
+    module.exports.getcid = (username, passwordhash, res) =>{
       console.log(`getcid: ${username},${passwordhash}`);
       db.get('select cid from Customer where username = ? AND passwordhash = ?',
           [username, passwordhash],
@@ -397,17 +397,17 @@ db.serialize(function () {
             if(err){
               console.log(`[DATABASE]getcid error: username(${username}) ${err}`);
               console.log(failjson);
-              //res.json(failjson);
+              res.json(failjson);
               return;
             }
             if(!row){
               console.log(`[DATABASE]getcid ${username} not found`);
               console.log(failjson);
-              //res.json(failjson);
+              res.json(failjson);
               return;
             }
             console.log("getcid"+JSON.stringify({"status":true, "cid":row.cid},null,2));
-            //res.json({"status":true, "cid":row.cid});
+            res.json({"status":true, "cid":row.cid});
           }
       );
     }
@@ -492,7 +492,7 @@ db.serialize(function () {
       db.run('insert into Item values(1,"test",9,9);\
           insert into Item values(1,"test2",9,9);');
     }
-    
+
 
     module.exports.storeaddreceipt = (susername,spasswordhash,cid,date,tax,subtotal,other,items)=>{
       //get sid, add receipt, get rid, add items

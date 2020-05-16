@@ -42,7 +42,7 @@ app.post('/login', function (req, res) {
         console.log("[WEBSERVER]\tIP address (" + req.connection.remoteAddress +
                 ") tried to login with email (" + req.body.email +
                 ") and password (" + req.body.password + ").")
-        
+
         // Generic success message sent back to the client (its enforced that we have to send a response)
         res.send("Generic success!");
 });
@@ -50,6 +50,37 @@ app.post('/login', function (req, res) {
 app.listen(port, () => {
         console.log(`[WEBSERVER]\tServer active on port ${port}`);
 });
+
+
+
+
+// Adds a customer to the database
+app.post('/customer-login', (req, res) => {
+  database.getallreceipts(req.body.email, req.body.password, res);
+});
+
+// Adds a customer to the database
+app.post('/store-login', (req, res) => {
+  database.getsid(req.body.email, req.body.password, res);
+});
+
+// Adds a customer to the database
+app.post('/customer-signup', (req, res) => {
+  database.addcustomer(req.body.email, req.body.password, res);
+});
+
+// Adds a customer to the database
+// Save for later
+/*app.post('/store-signup', (req, res) => {
+  database.addcustomer(req.body.email, req.body.password, res);
+});
+*/
+
+app.post('/store-signup', (req, res) => {
+  database.addcustomer(req.body.email, req.body.password, res);
+});
+
+
 /*
 // Example use of the database:
 //database.resettables();
@@ -88,7 +119,7 @@ if(1==0){
   database.addUser(username, password)
   console.log("Expected \"success\"  res");
 
-  //we should ensure we cannot have a null username -- not sure if this is a valid test case but 
+  //we should ensure we cannot have a null username -- not sure if this is a valid test case but
   //wanted to be sure
   username = null
   password = "a;kdflk"
@@ -111,7 +142,7 @@ if(1==0){
   console.log("Expected failure res")
 
   //adding business
-  var businessName = "Target" 
+  var businessName = "Target"
   var businesspassword = "expect more pay less"
   database.addbusiness(businessName,businesspassword, businessName)
   console.log("Expected \"success\"  res");

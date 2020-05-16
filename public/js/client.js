@@ -5,7 +5,7 @@ var UID = null;
 
 
 /*
-    Called whenever the customer "login!" button is clicked. 
+    Called whenever the customer "login!" button is clicked.
     Grabs the approriate HTML fields.
     Then, makes a POST request on "/customer-login" to the server to try to login.
 */
@@ -20,26 +20,26 @@ function customerLogin() {
     console.log("Sending POST request...");
 
     // POST request using fetch()  on "/customer-login"
-    fetch("/customer-login", { 
-        // Adding method type 
-        method: "POST", 
-        // Adding body or contents to send 
-        body: JSON.stringify({ 
+    fetch("/customer-login", {
+        // Adding method type
+        method: "POST",
+        // Adding body or contents to send
+        body: JSON.stringify({
             email: emailVal,
             password: passwordVal
-        }), 
-        // Adding headers to the request 
-        headers: { 
+        }),
+        // Adding headers to the request
+        headers: {
             "Content-type": "application/json; charset=UTF-8"
-        } 
-    }) 
-    // Converting to JSON 
+        }
+    })
+    // Converting to JSON
     //.then(response => response.json())  // => Uncomment whenever backend implements "/customer-login"
-    // Displaying results to console 
+    // Displaying results to console
     .then(json => {
         var someCustomResponse = { // => CUSTOM response message that I made (should be similar to what we expect).
             "login": true,
-            "cid" : "123123", 
+            "cid" : "123123",
             "receipts": [
                     {
                     "rid" : 123,
@@ -85,7 +85,7 @@ function customerLogin() {
                     }
                     ]
             }; // => END of CUSTOM response
-        
+
         // Check if the response's "login" field is true (SUCCESS).
         try{
             if(someCustomResponse.login){
@@ -100,13 +100,13 @@ function customerLogin() {
     })
     .catch((error) => { // If there is an error in our POST response (404 error, no server found, etc...), alert the browser.
         alert(error);
-    }); 
+    });
 
     event.preventDefault(); // Prevent page from reloading.
 }
 
 /*
-    Called whenever the store "login!" button is clicked. 
+    Called whenever the store "login!" button is clicked.
     Grabs the approriate HTML fields.
     Then, makes a POST request on "/store-login" to the server to try to login.
 */
@@ -121,34 +121,34 @@ function storeLogin() {
     console.log("Sending POST request...");
 
     // POST request using fetch()  on "/store-login"
-    fetch("/store-login", { 
-        // Adding method type 
-        method: "POST", 
-        // Adding body or contents to send 
-        body: JSON.stringify({ 
+    fetch("/store-login", {
+        // Adding method type
+        method: "POST",
+        // Adding body or contents to send
+        body: JSON.stringify({
             email: emailVal,
             password: passwordVal
-        }), 
-        // Adding headers to the request 
-        headers: { 
+        }),
+        // Adding headers to the request
+        headers: {
             "Content-type": "application/json; charset=UTF-8"
-        } 
-    }) 
-    // Converting to JSON 
-    .then(response => response.json()) 
-    // Displaying results to console 
+        }
+    })
+    // Converting to JSON
+    .then(response => response.json())
+    // Displaying results to console
     .then(json => {
         console.log(json);
     })
     .catch((error) => {
         alert(error);
-    }); 
+    });
 
     event.preventDefault(); // Prevent page from reloading.
 }
 
 /* FUTURE   => For when we implement BUSINESS accounts
-    Called whenever the business "login!" button is clicked. 
+    Called whenever the business "login!" button is clicked.
     Finally, makes a POST request on "/business-login" to the server to try to login.
 */
 function businessLogin() {
@@ -162,35 +162,35 @@ function businessLogin() {
 
     console.log("Sending POST request...");
 
-    // POST request using fetch() 
-    fetch("/business-login", { 
-        // Adding method type 
-        method: "POST", 
-        // Adding body or contents to send 
-        body: JSON.stringify({ 
+    // POST request using fetch()
+    fetch("/business-login", {
+        // Adding method type
+        method: "POST",
+        // Adding body or contents to send
+        body: JSON.stringify({
             email: emailVal,
             password: passwordVal
-        }), 
-        // Adding headers to the request 
-        headers: { 
+        }),
+        // Adding headers to the request
+        headers: {
             "Content-type": "application/json; charset=UTF-8"
-        } 
-    }) 
-    // Converting to JSON 
-    .then(response => response.json()) 
-    // Displaying results to console 
+        }
+    })
+    // Converting to JSON
+    .then(response => response.json())
+    // Displaying results to console
     .then(json => {
         console.log(json)
     })
     .catch((error) => {
         alert(error);
-    }); 
+    });
 
     event.preventDefault(); // Prevent page from reloading.
 }
 
 /*
-    Called whenever the customer "signup!" button is clicked. 
+    Called whenever the customer "signup!" button is clicked.
     Grabs the approriate HTML fields, ensures password == confirm-password.
     Finally, makes a POST request on "/customer-signup" to the server to try to signup.
 */
@@ -205,7 +205,7 @@ function customerSignup() {
 
     // Ensure password == confirm-password before attempting to signup.
     if(passwordVal == confirmVal){
-        
+
     } else {
         $(".error").html("Passwords do not match."); // Set user-visible error text field.
     }
@@ -214,7 +214,7 @@ function customerSignup() {
 }
 
 /*
-    Called whenever the store "signup!" button is clicked. 
+    Called whenever the store "signup!" button is clicked.
     Grabs the approriate HTML fields, ensures password == confirm-password.
     Then, makes a POST request on "/store-signup" to the server to try to signup.
 */
@@ -230,7 +230,7 @@ function storeSignup() {
 
     // Ensure password == confirm-password before attempting to signup.
     if(passwordVal == confirmVal){
-        
+
     } else {
         $(".error").html("Passwords do not match."); // Set user-visible test field.
     }
@@ -238,7 +238,7 @@ function storeSignup() {
     event.preventDefault(); // Prevent page from reloading.
 }
 
-/* 
+/*
 After a successfull login response, open the customer session by unhiding/hiding appropriate HTML div's
 Adjusts navbar, then delegates setting up UID and Receipts pages to other functions.
 */
@@ -249,11 +249,11 @@ function openCustomerSession(){
 
     console.log("Opened customer session.");
 
-    // Set up our UID-text to be equal to our UID 
+    // Set up our UID-text to be equal to our UID
     $("#uid-text").html(UID);
 }
 
-/* 
+/*
     After a successfull login response, open the stroe session by unhiding/hiding appropriate HTML div's
     Adjusts navbar, then delegates setting up UID and Receipts pages to other functions.
 */
@@ -263,7 +263,7 @@ function openStoreSession(){
     adjustNavbar();
 }
 
-/* 
+/*
     After a successfull login response, open the business session by unhiding/hiding appropriate HTML div's
     Adjusts navbar, then delegates setting up UID and Receipts pages to other functions.
 */
@@ -299,7 +299,7 @@ function openSignupForm(){
 /*
     !!! The following is somewhat complicated custom jQuery code for custom website functionality. !!!
 */
-$(document).ready(function () { 
+$(document).ready(function () {
     $('#pills-receipts-tab').on('click', function(){
         $('#pills-receipts-tab').css('background-color', 'rgb(0,0,0) !important;');
         //background-color: rgb(200,200,200) !important;
@@ -316,24 +316,24 @@ $(document).ready(function () {
         }
     });
 
-    // Clicking navigation-links will hide navbar 
-    $('#login-tab').on('click', function(){ 
+    // Clicking navigation-links will hide navbar
+    $('#login-tab').on('click', function(){
         if($('#toggler').css('display') !='none'){
             $('#toggler').trigger( "click" );
         }
     });
-    $('#signup-btn').on('click', function(){ 
+    $('#signup-btn').on('click', function(){
         if($('#toggler').css('display') !='none'){
             $('#toggler').trigger( "click" );
         }
     });
-    
-    $('#signup-btn').on('click', function(){ 
+
+    $('#signup-btn').on('click', function(){
         if($('#toggler').css('display') !='none'){
             $('#toggler').trigger( "click" );
         }
     });
-    $('#toggler').on('click', function(){ 
+    $('#toggler').on('click', function(){
         if(!$('.navbar-nav').is(':visible')){
             $('#toggler-icon').css('background-image', 'url("/images/toggler-close.png")')
         } else {

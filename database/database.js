@@ -14,7 +14,7 @@ db.serialize(function () {
     module.exports.close = ()=>{
       db.close();
     }
-    module.exports.date = function(year, month, day, hour, min){
+/*    module.exports.date = function(year, month, day, hour, min){
       //YYYY-MM-DDTHH:MM
       //the T is a separator between day and hour
       return toString(year) + '-' +  month + '-' + day + 'T' + hour + ':' + min;
@@ -22,7 +22,7 @@ db.serialize(function () {
     function print(str){
       console.log(`[DATABASE] str`);
     }
-
+*/
     /*
     // Create basic, generic table if it doesnt exist.
     db.run('CREATE TABLE IF NOT EXISTS users (email text, password text)');
@@ -227,37 +227,6 @@ db.serialize(function () {
               //enter items into receipt
               //promises pass by array, receipt pass by json?,
               getitem(promises, receipt, rowrec.rid);
-              /*
-              //promise to make sure items are all done before sending JSON
-              promises.push(new Promise((resolve, reject) =>{
-              //get items
-              db.each('select\
-                  name, quantity, unitcost\
-                  from Item\
-                  where rid = ?',
-                  [rowrec.rid],
-                  (err, rowitem) =>{
-
-                    //in wrong array since receipt gets updated :/
-
-                    console.log(`[DATABASE]itemname:${rowrec.rid},${rowitem.name}`);
-                    item = {
-                      "name" : rowitem.name,
-                      "quantity" : rowitem.quantity,
-                      "unitcost" : rowitem.unitcost
-                    };
-                    receipt["item"].push(item);
-                    console.log(receipt["item"]);
-                  }, (err, rowcountitem) =>{
-                    console.log(`item done ${rowrec.rid}`);
-                    if(rowcountitem)
-                      resolve(`${rowin.rid}:found`);
-                    else
-                      resolve(`${rowin.rid}:none`);
-                  }
-              );//item db.each end
-              }));//promise end
-              */
 
             }, (err, numreceipt) =>{
               Promise.all(promises)
@@ -365,16 +334,21 @@ db.serialize(function () {
     }
     module.exports.addbusiness = function(username,passwordhash,name,bid = null, res){
       console.log('%c[DATABASE]addbusiness', blue);
-      var success = true;
       function iferr(err){
         if(err){
           console.log(`[DATABASE]addbusinessERROR:username${username}, ${err}`);
-          if(err) res.json(failjson);
-          success = false;
+          if(res) res.json(failjson);
         }else{
           console.log(`[DATABASE]addbusiness ${username} success`);
+          db.get('select bid from Business where username=? and passwordhash=?',
+              [username, passwordhash],
+              (err, row)=>{
+                var bidjson = {"success":true, "bid":row.bid};
+                console.log(`[DATABASE]addbusiness:${JSON.stringify(bidjson, null, 2)}`);
+                if(res) res.json(bidjson);
+          });
         }
-      }
+      }//iferr end
       if(bid){//custom bid
         db.run('INSERT INTO Business VALUES (?,?,?,?)',
             [username, passwordhash, bid, name], iferr);
@@ -383,15 +357,6 @@ db.serialize(function () {
         db.run('INSERT INTO Business(username,passwordhash,name) VALUES (?,?,?)',
             [username, passwordhash, name], iferr);
       }
-      if(success){
-        db.get('select bid from Business where username=? and passwordhash=?',
-            [username, passwordhash],
-            (err, row)=>{
-              var bidjson = {"success":true, "bid":row.bid};
-              console.log(`[DATABASE]addbusiness:${JSON.stringify(ridjson, null, 2)}`);
-              if(res) res.json(cidjson);
-        });
-      }
     }
     module.exports.addstore =
       (busername,bpasswordhash,susername,spasswordhash,street,city,state,zipcode,res) =>{
@@ -399,7 +364,7 @@ db.serialize(function () {
           [busername,bpasswordhash],
           (err, row) =>{
             if(err){
-              console.log(`[DATABASE]addstore error: business username:${busername},${err}`);
+              console.log(`[DATABASE]addstoreERROR: business username:${busername},${err}`);
               console.log(failjson);
               if(res) res.json(failjson);
               return;
@@ -421,7 +386,8 @@ db.serialize(function () {
                     if(res) res.json(failjson);
                     return;
                   }
-                  db.get('select sid from Store where username=? AND password=?',
+
+                  db.get('select sid from Store where username=? AND passwordhash=?',
                       [susername, spasswordhash],
                       (err, rowstore)=>{
                         var storejson = {"success":true, "sid":rowstore.sid};
@@ -429,9 +395,6 @@ db.serialize(function () {
                         if(res) res.json(storejson);
                   });
             });
-            function sendsid(){
-
-            }
       });
     }
 

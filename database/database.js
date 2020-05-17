@@ -6,7 +6,7 @@ let db = new sqlite3.Database('./database/cme-data.db');
 db.get("PRAGMA foreign_keys = ON")
 console.log("[DATABASE]\tInitialized sqlite3 Database");
 const blue = 'color:blue';
-const failjson = JSON.stringify({"status": false});
+const failjson = {"login": false};
 const util = require('util');
 
 // Ensures that asynchronous db statements wait until their completion before proceeding
@@ -18,6 +18,9 @@ db.serialize(function () {
       //YYYY-MM-DDTHH:MM
       //the T is a separator between day and hour
       return toString(year) + '-' +  month + '-' + day + 'T' + hour + ':' + min;
+    }
+    function print(str){
+      console.log(`[DATABASE] str`);
     }
 
     /*
@@ -179,10 +182,15 @@ db.serialize(function () {
         [username, passwordhash],
         (err, rowin) => {
           if(err){
-            //res.json(failjson);
-            console.log(`[DATABASE]getallreceipts ${username} error1:${err}`);
+            if(res) res.json(failjson);
+            console.log(`[DATABASE]getallreceiptsERROR:username(${username}), ${err}`);
+            return;
           }
-          if(!rowin) console.log(`[DATABASE]getallreceipts:${username}none`);
+          if(!rowin){
+            console.log(`[DATABASE]getallreceipts:${username}none`);
+            if(res) res.json(failjson);
+            return;
+          }
           receiptjson["login"] = true;
           receiptjson["cid"] = rowin.cid;
           receiptjson["receipts"] = [];
@@ -197,8 +205,12 @@ db.serialize(function () {
             where R.cid = ? AND R.sid = S.sid AND S.bid = B.bid',
             [rowin.cid],
             (err, rowrec) => {
-              if(err) console.log(`[DATABASE]getallreceipts-rec:${rowin.cid}`);
-              if(!rowrec) console.log(`[DATABASE]getallreceipts-rec:no receipts`);
+              if(err){
+                console.log(`[DATABASE]getallreceipts-recERROR:${rowin.cid}`);
+              }
+              if(!rowrec){
+                console.log(`[DATABASE]getallreceipts-rec:no receipts`);
+              }
               receipt = {
                 "rid" : rowrec.rid,
                 "sid" : rowrec.sid,
@@ -252,8 +264,8 @@ db.serialize(function () {
                 .then(responses =>{
                     console.log(`PromiseDone:${responses}`);
                     console.log(JSON.stringify(receiptjson, null, 2));
-                    res.json(receiptjson);
-                });//print out receipt status
+                    if(res) res.json(receiptjson);
+                });//print out receipt login
             }
           );//receipt db.each end
 
@@ -279,7 +291,7 @@ db.serialize(function () {
               };
               receipt["item"].push(item);
             }, (err, rowcountitem) =>{
-              console.log(`[DATABASE]${rid}:${receipt["item"]}`);
+              //console.log(`[DATABASE]${rid}:${receipt["item"]}`);
               if(rowcountitem)
                 resolve(`${rid}:${rowcountitem}`);
               else
@@ -289,7 +301,7 @@ db.serialize(function () {
       }));
     }
 
-    module.exports.getbusinessstorereceipt = (busername,bpasswordhash,sid)=>{
+    module.exports.getbusinesstorereceipt = (busername,bpasswordhash,sid)=>{
 
 
     }
@@ -301,7 +313,7 @@ db.serialize(function () {
 /*
     module.exports.getallusers = (res) =>{
       cidjson = {
-        "status" : true,
+        "login" : true,
         cid : []
       };
       db.all('select cid from Customer', [],
@@ -320,26 +332,46 @@ db.serialize(function () {
     }
 */
     //Add customer
-    module.exports.addcustomer = function(username, passwordhash, cid = null){
+    module.exports.addcustomer = function(username, passwordhash, cid = null, res){
       console.log('%c[DATABASE]addcustomer', blue);
+      var success = true;
       function iferr(err){
-        if(err){
-          console.log("[DATABASE]addbusiness error: " + err);
+        if(err){//most likely unique constraint failed
+          console.log(`[DATABASE]addcustomerERROR:username${username}, ${err}`);
+          success = false;
+          if(res) res.json(failjson);
         }
       }
-      if(cid){//custom cid
-        db.run('INSERT INTO Customer VALUES (?,?,?)',
-            [username, passwordhash, cid],iferr);
-      } else{
-        db.run('INSERT INTO Customer(username,passwordhash) VALUES (?,?)',
-            [username, passwordhash],iferr);
+      db.serialize(()=>{
+        if(cid){//custom cid
+          db.run('INSERT INTO Customer VALUES (?,?,?)',
+              [username, passwordhash, cid],iferr);
+        } else{
+          db.run('INSERT INTO Customer(username,passwordhash) VALUES (?,?)',
+              [username, passwordhash],iferr);
+        }
+        if(success){
+          db.get('select cid from Customer where username=? and passwordhash=?',
+              [username,passwordhash],
+              (err, row)=>{
+                cidjson = {"success":true, "cid":row.cid};
+                console.log(`[DATABASE]addcustomer:${JSON.stringify(cidjson, null, 2)}`);
+                if(res) res.json(cidjson);
+          });
+
+          
+        }
+
       }
     }
-    module.exports.addbusiness = function(username,passwordhash,name,bid = null){
+    module.exports.addbusiness = function(username,passwordhash,name,bid = null, res){
       console.log('%c[DATABASE]addbusiness', blue);
+      var success = true;
       function iferr(err){
         if(err){
-          console.log("[DATABASE]addbusiness error: " + err);
+          console.log(`[DATABASE]addbusinessERROR:username${username}, ${err}`);
+          if(err) res.json(failjson);
+          success = false;
         }else{
           console.log(`[DATABASE]addbusiness ${username} success`);
         }
@@ -352,21 +384,31 @@ db.serialize(function () {
         db.run('INSERT INTO Business(username,passwordhash,name) VALUES (?,?,?)',
             [username, passwordhash, name], iferr);
       }
+      if(success){
+        db.get('select bid from Business where username=? and passwordhash=?',
+            [username, passwordhash],
+            (err, row)=>{
+              var bidjson = {"success":true, "bid":row.bid};
+              console.log(`[DATABASE]addbusiness:${JSON.stringify(ridjson, null, 2)}`);
+              if(res) res.json(cidjson);
+        });
+      }
     }
-    module.exports.addstore = (busername,bpasswordhash,susername,spasswordhash,street,city,state,zipcode) =>{
+    module.exports.addstore =
+      (busername,bpasswordhash,susername,spasswordhash,street,city,state,zipcode,res) =>{
       db.get('select bid from Business where username=? AND passwordhash=?',
           [busername,bpasswordhash],
           (err, row) =>{
             if(err){
               console.log(`[DATABASE]addstore error: business username:${busername},${err}`);
               console.log(failjson);
-              //res.json(failjson);
+              if(res) res.json(failjson);
               return;
             }
             if(!row){
               console.log(`[DATABASE]addstore business username(${busername}) combo does not exist`);
               console.log(failjson);
-              //res.json(failjson);
+              if(res) res.json(failjson);
               return;
             }
             db.run('INSERT INTO Store(\
@@ -377,16 +419,21 @@ db.serialize(function () {
                   if(err){
                     console.log("[DATABASE]addstore error: " + err);
                     console.log(failjson);
-                    //res.json(failjson);
+                    if(res) res.json(failjson);
                     return;
-                  }else{
-                    console.log({"status":true});
-                    //res.json({"status":true});
                   }
-                }
-            );
-          }
-      );
+                  db.get('select sid from Store where username=? AND password=?',
+                      [susername, spasswordhash],
+                      (err, rowstore)=>{
+                        var storejson = {"success":true, "sid":rowstore.sid};
+                        console.log(`[DATABASE]addstore:${storejson}`);
+                        if(res) res.json(storejson);
+                  });
+            });
+            function sendsid(){
+
+            }
+      });
     }
 
     module.exports.getcid = (username, passwordhash, res) =>{
@@ -395,19 +442,19 @@ db.serialize(function () {
           [username, passwordhash],
           (err, row) =>{
             if(err){
-              console.log(`[DATABASE]getcid error: username(${username}) ${err}`);
+              console.log(`[DATABASE]getcidERROR:username(${username}), ${err}`);
               console.log(failjson);
-              res.json(failjson);
+              if(res) res.json(failjson);
               return;
             }
             if(!row){
               console.log(`[DATABASE]getcid ${username} not found`);
               console.log(failjson);
-              res.json(failjson);
+              if(res) res.json(failjson);
               return;
             }
-            console.log("getcid"+JSON.stringify({"status":true, "cid":row.cid},null,2));
-            res.json({"status":true, "cid":row.cid});
+            console.log("getcid"+JSON.stringify({"login":true, "cid":row.cid},null,2));
+            if(res) res.json({"login":true, "cid":row.cid});
           }
       );
     }
@@ -416,19 +463,19 @@ db.serialize(function () {
           [username, passwordhash],
           (err, row) =>{
             if(err){
-              console.log(`[DATABASE]getbid error: username(${username}) ${err}`);
+              console.log(`[DATABASE]getbidERROR: username(${username}), ${err}`);
               console.log(failjson);
-              //res.json(failjson);
+              if(res) res.json(failjson);
               return;
             }
             if(!row){
               console.log(`[DATABASE]getbid ${username} not found`);
               console.log(failjson);
-              //res.json(failjson);
+              if(res) res.json(failjson);
               return;
             }
-            console.log(JSON.stringify({"status":true, "bid":row.bid},null,2));
-            //res.json({"status":true, "bid":row.bid);
+            console.log(JSON.stringify({"login":true, "bid":row.bid},null,2));
+            if(res) res.json({"login":true, "bid":row.bid);
           }
       );
     }
@@ -437,19 +484,19 @@ db.serialize(function () {
           [username, passwordhash],
           (err, row) =>{
             if(err){
-              console.log(`[DATABASE]getsid error: username(${username}) ${err}`);
+              console.log(`[DATABASE]getsidERROR: username(${username}), ${err}`);
               console.log(failjson);
-              //res.json(failjson);
+              if(res) res.json(failjson);
               return;
             }
             if(!row){
               console.log(`[DATABASE]getsid ${username} not found`);
               console.log(failjson);
-              //res.json(failjson);
+              if(res) res.json(failjson);
               return;
             }
-            console.log({"status":true, "sid":row.sid});
-            //res.json({"status":true, "sid":row.sid});
+            console.log({"login":true, "sid":row.sid});
+            if(res) res.json({"login":true, "sid":row.sid});
           }
       );
     }
@@ -487,6 +534,7 @@ db.serialize(function () {
         });
       }
       */
+      return;
 
       //only does 1 command at a time and ignores the one after
       db.run('insert into Item values(1,"test",9,9);\
@@ -494,7 +542,8 @@ db.serialize(function () {
     }
 
 
-    module.exports.storeaddreceipt = (susername,spasswordhash,cid,date,tax,subtotal,other,items)=>{
+    module.exports.storeaddreceipt =
+      (susername,spasswordhash,cid,date,tax,subtotal,other,items,res)=>{
       //get sid, add receipt, get rid, add items
       console.log('%c[DATABASE]storeaddreceipt', blue);
       db.get('select sid from Store where username=? AND passwordhash=?',
@@ -503,13 +552,13 @@ db.serialize(function () {
             if(err){
               console.log(`[DATABASE]storeaddreceiptERROR: username(${susername}) ${err}`);
               console.log(failjson);
-              //res.json(failjson);
+              if(res) res.json(failjson);
               return;
             }
             if(!rowsid){
               console.log(`[DATABASE]storeaddreceiptERROR: username(${username}) not found`);
               console.log(failjson);
-              //res.json(failjson);
+              if(res) res.json(failjson);
               return;
             }
             db.serialize(()=>{
@@ -523,7 +572,7 @@ db.serialize(function () {
                     }
                 )
                 .get('select last_insert_rowid() as rid',
-                    (err, rowrid) =>{
+                    (err, rowrid) =>{//TODO
 
                         item.forEach(val =>{
                               db.run('insert into Item(?,?,?,?)',
@@ -543,18 +592,18 @@ db.serialize(function () {
     module.exports.customeraddreceipt = ()=>{
 
     }
-    module.exports.getstores = (busername,bpasswordhash) =>{
+    module.exports.getstores = (busername,bpasswordhash,res) =>{
       db.get('select bid,name from Business where username=? AND passwordhash=?',
           [busername,bpasswordhash],
           (err,row)=>{
           if(err){
             console.log(`[DATABASE]getstoresERROR: username(${busername}), ${err}`);
-            //res.json(failjson);
+            if(res) res.json(failjson);
             return;
           }
           if(!row){
             console.log(`[DATABASE]getstoresERROR: username(${busername}) not found`);
-            //res.json(failjson);
+            if(res) res.json(failjson);
             return;
           }
           var storejson = {
@@ -570,7 +619,7 @@ db.serialize(function () {
               },
               (err,storecount)=>{
                 console.log(`[DATABASE]getstores: username(${busername}): json:${storejson}`);
-                //res.json(storejson);
+                if(res) res.json(storejson);
           });
 
 

@@ -3,7 +3,7 @@ insert into "tablename"(columns) values (values);
 make sure:
   PRAGMA foreign_keys=ON;
 */
-
+/*
 CREATE TABLE Customer(
     username TEXT UNIQUE NOT NULL,
     passwordhash TEXT NOT NULL,

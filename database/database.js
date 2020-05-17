@@ -359,10 +359,8 @@ db.serialize(function () {
                 if(res) res.json(cidjson);
           });
 
-          
         }
-
-      }
+      });//serialize done
     }
     module.exports.addbusiness = function(username,passwordhash,name,bid = null, res){
       console.log('%c[DATABASE]addbusiness', blue);

@@ -301,12 +301,13 @@ db.serialize(function () {
       }));
     }
 
-    module.exports.getbusinesstorereceipt = (busername,bpasswordhash,sid)=>{
+    module.exports.getbusinesstorereceipt =
+      (busername,bpasswordhash,sid,res=null)=>{
 
 
     }
 
-    module.exports.getstorereceipt = (susername,spasswordhash)=>{
+    module.exports.getstorereceipt = (susername,spasswordhash,res=null)=>{
     }
 
 
@@ -456,7 +457,7 @@ db.serialize(function () {
           }
       );
     }
-    module.exports.getbid = (username, passwordhash) =>{
+    module.exports.getbid = (username, passwordhash, res) =>{
       db.get('select bid from Business where username = ? AND passwordhash = ?',
           [username, passwordhash],
           (err, row) =>{
@@ -473,11 +474,11 @@ db.serialize(function () {
               return;
             }
             console.log(JSON.stringify({"login":true, "bid":row.bid},null,2));
-            if(res) res.json({"login":true, "bid":row.bid);
+            if(res) res.json({"login":true, "bid":row.bid});
           }
       );
     }
-    module.exports.getsid = (username, passwordhash)=>{
+    module.exports.getsid = (username, passwordhash, res)=>{
       db.get('select sid from Store where username = ? AND passwordhash = ?',
           [username, passwordhash],
           (err, row) =>{

@@ -3,7 +3,6 @@
 // Define custom package imports
 const express = require('express');
 const bodyParser = require('body-parser')
-
 // Database import from the database folder
 const database = require('./database/database.js')
 
@@ -51,35 +50,97 @@ app.listen(port, () => {
 });
 
 
+const errorempty = "Fields can't be empty";
+const badinput = {"login":false, "error": "bad input"};
 
-
-// Adds a customer to the database
+//==================LOGIN REQUESTS
 app.post('/customer-login', (req, res) => {
-    console.log(`/customer-login`);
-  database.getallreceipts(req.body.email, req.body.password, res);
+  //json: {'email':'', 'password': ''}
+  console.log(`/customer-login`);
+  try{
+    if(req.body.email.length == 0 || req.body.password.length == 0){
+      res.json({"login": false, "error": errorempty});
+      return;
+    }
+    database.getallreceipts(req.body.email, req.body.password, res);
+  } catch(err){
+    console.log(err);
+    res.json(badinput);
+  }
 });
-
-// Adds a customer to the database
+app.post('/business-login', (req, res) => {
+  console.log(`/business-login`);
+  try{
+    //json: {'email':'', 'password': ''}
+    if(req.body.email.length == 0 || req.body.password.length == 0){
+      res.json({"login": false, "error": errorempty});
+      return;
+    }
+    database.getstores(req.body.email, req.body.password, res);
+  } catch(err){
+    console.log(err);
+    res.json(badinput);
+  }
+});
 app.post('/store-login', (req, res) => {
-    console.log(`/store-login`);
-  database.getsid(req.body.email, req.body.password, res);
+  console.log(`/store-login`);
+  try{
+    //json: {'email':'', 'password': ''}
+    if(req.body.email.length == 0 || req.body.password.length == 0){
+      res.json({"login": false, "error": errorempty});
+      return;
+    }
+    database.getsid(req.body.email, req.body.password, res);
+  } catch(err){
+    console.log(err);
+    res.json(badinput);
+  }
 });
 
+//==================SIGN UP REQUESTS
 // Adds a customer to the database
 app.post('/customer-signup', (req, res) => {
   console.log(`customer-signup`)
-  database.addcustomer(req.body.email, req.body.password, null, res);
+  try{
+    if(req.body.email.length == 0 || req.body.password.length == 0){
+      res.json({"login": false, "error": errorempty});
+      return;
+    }
+    database.addcustomer(req.body.email, req.body.password, null, res);
+  } catch(err){
+    console.log(err);
+    res.json(badinput);
+  }
 });
 
-// Adds a customer to the database
-// Save for later
-/*app.post('/store-signup', (req, res) => {
-  database.addcustomer(req.body.email, req.body.password, res);
+app.post('/business-signup', (req, res) => {
+  console.log('business-signup');
+  try{
+    if(req.body.email.length == 0 || req.body.password.length == 0 ||
+        req.body.name == 0){
+      res.json({"login": false, "error": errorempty});
+      return;
+    }
+    database.addbusiness(req.body.email, req.body.password, req.body.name, null, res);
+  } catch(err){
+    res.json(badinput);
+  }
 });
-*/
 
-app.post('/store-signup', (req, res) => {
-  database.addcustomer(req.body.email, req.body.password, null, res);
+app.post('/store-signup', (req, res)=>{
+  console.log('store-signup');
+  try{
+    const body = req.body;
+    if(body.busername.length == 0 || body.bpassword.length == 0 ||
+        body.susername.length == 0 || body.spassword.length == 0){
+      res.json({"login": false, "error": errorempty});
+      return;
+    }
+    database.addstore(body.busername, body.bpassword, body.susername,
+        body.spassword, body.street, body.city, body.state, body.zipcode, res);
+  } catch(err){
+    res.json(badinput);
+  }
 });
 
 

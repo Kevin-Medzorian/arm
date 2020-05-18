@@ -6,7 +6,7 @@ let db = new sqlite3.Database('./database/cme-data.db');
 db.get("PRAGMA foreign_keys = ON")
 console.log("[DATABASE]\tInitialized sqlite3 Database");
 const blue = 'color:blue';
-const failjson = {"login": false};
+//const failjson = {"login": false};
 const util = require('util');
 
 // Ensures that asynchronous db statements wait until their completion before proceeding
@@ -182,13 +182,15 @@ db.serialize(function () {
         [username, passwordhash],
         (err, rowin) => {
           if(err){
-            if(res) res.json(failjson);
             console.log(`[DATABASE]getallreceiptsERROR:username(${username}), ${err}`);
+            console.log({"login":false, "error":"Internal error"});
+            if(res) res.json({"login":false, "error":"Internal error"});
             return;
           }
           if(!rowin){
-            console.log(`[DATABASE]getallreceipts:${username}none`);
-            if(res) res.json(failjson);
+            console.log(`[DATABASE]getallreceipts:${username} not found`);
+            console.log({"login":false, "error":"login failed"});
+            if(res) res.json({"login":false, "error":"login failed"});
             return;
           }
           receiptjson["login"] = true;
@@ -307,8 +309,8 @@ db.serialize(function () {
       function iferr(err){
         if(err){//most likely unique constraint failed
           console.log(`[DATABASE]addcustomerERROR:username${username}, ${err}`);
-          success = false;
-          if(res) res.json(failjson);
+          console.log({"login":false, "error":"Username already exists"});
+          if(res) res.json({"login":false, "error":"Username already exists"});
           return;
         }
         db.get('select cid from Customer where username=? and passwordhash=?',
@@ -334,7 +336,8 @@ db.serialize(function () {
       function iferr(err){
         if(err){
           console.log(`[DATABASE]addbusinessERROR:username${username}, ${err}`);
-          if(res) res.json(failjson);
+          console.log({"login":false, "error":"Username or business name already exists"});
+          if(res) res.json({"login":false, "error":"Username or business name already exists"});
           return;
         }
         console.log(`[DATABASE]addbusiness ${username} success`);
@@ -363,14 +366,14 @@ db.serialize(function () {
           (err, row) =>{
             if(err){
               console.log(`[DATABASE]addstoreERROR: business username:${busername},${err}`);
-              console.log(failjson);
-              if(res) res.json(failjson);
+              console.log({"login":false, "error":"Internal error"});
+              if(res) res.json({"login":false, "error":"Internal error"});
               return;
             }
             if(!row){
               console.log(`[DATABASE]addstore business username(${busername}) combo does not exist`);
-              console.log(failjson);
-              if(res) res.json(failjson);
+              console.log({"login":false, "error":"bad business credentials"});
+              if(res) res.json({"login":false, "error":"Internal error"});
               return;
             }
             db.run('INSERT INTO Store(\
@@ -380,8 +383,8 @@ db.serialize(function () {
                 (err) =>{
                   if(err){
                     console.log("[DATABASE]addstore error: " + err);
-                    console.log(failjson);
-                    if(res) res.json(failjson);
+                    console.log({"login":false, "error":"Username already exists"});
+                    if(res) res.json({"login":false, "error":"Username already exists"});
                     return;
                   }
 
@@ -396,6 +399,7 @@ db.serialize(function () {
       });
     }
 
+    //maybe replaced by getallreceipts
     module.exports.getcid = (username, passwordhash, res) =>{
       console.log(`getcid: ${username},${passwordhash}`);
       db.get('select cid from Customer where username = ? AND passwordhash = ?',
@@ -403,14 +407,14 @@ db.serialize(function () {
           (err, row) =>{
             if(err){
               console.log(`[DATABASE]getcidERROR:username(${username}), ${err}`);
-              console.log(failjson);
-              if(res) res.json(failjson);
+              console.log({"login":false, "error":"Internal error"});
+              if(res) res.json({"login":false, "error":"Internal error"});
               return;
             }
             if(!row){
               console.log(`[DATABASE]getcid ${username} not found`);
-              console.log(failjson);
-              if(res) res.json(failjson);
+              console.log({"login":false, "error":"bad customer login"});
+              if(res) res.json({"login":false, "error":"login failed"});
               return;
             }
             console.log("getcid"+JSON.stringify({"login":true, "cid":row.cid},null,2));
@@ -418,20 +422,21 @@ db.serialize(function () {
           }
       );
     }
+    //maybe replaced with getallstores
     module.exports.getbid = (username, passwordhash, res) =>{
       db.get('select bid from Business where username = ? AND passwordhash = ?',
           [username, passwordhash],
           (err, row) =>{
             if(err){
               console.log(`[DATABASE]getbidERROR: username(${username}), ${err}`);
-              console.log(failjson);
-              if(res) res.json(failjson);
+              console.log({"login":false, "error":"Internal error"});
+              if(res) res.json({"login":false, "error":"Internal error"});
               return;
             }
             if(!row){
               console.log(`[DATABASE]getbid ${username} not found`);
-              console.log(failjson);
-              if(res) res.json(failjson);
+              console.log({"login":false, "error":"bad business login"});
+              if(res) res.json({"login":false, "error":"login failed"});
               return;
             }
             console.log(JSON.stringify({"login":true, "bid":row.bid},null,2));
@@ -445,14 +450,14 @@ db.serialize(function () {
           (err, row) =>{
             if(err){
               console.log(`[DATABASE]getsidERROR: username(${username}), ${err}`);
-              console.log(failjson);
-              if(res) res.json(failjson);
+              console.log({"login":false, "error":"Internal error"});
+              if(res) res.json({"login":false, "error":"Internal error"});
               return;
             }
             if(!row){
               console.log(`[DATABASE]getsid ${username} not found`);
-              console.log(failjson);
-              if(res) res.json(failjson);
+              console.log({"login":false, "error":"bad store login"});
+              if(res) res.json({"login":false, "error":"login failed"});
               return;
             }
             console.log({"login":true, "sid":row.sid});
@@ -511,14 +516,14 @@ db.serialize(function () {
           (err, rowsid) =>{
             if(err){
               console.log(`[DATABASE]storeaddreceiptERROR: username(${susername}) ${err}`);
-              console.log(failjson);
-              if(res) res.json(failjson);
+              console.log({"login":false, "error":"Internal error"});
+              if(res) res.json({"login":false, "error":"Internal error"});
               return;
             }
             if(!rowsid){
               console.log(`[DATABASE]storeaddreceiptERROR: username(${username}) not found`);
-              console.log(failjson);
-              if(res) res.json(failjson);
+              console.log({"login":false, "error":"Bad store credentials"});
+              if(res) res.json({"login":false, "error":"Internal error"});
               return;
             }
             db.serialize(()=>{
@@ -558,12 +563,14 @@ db.serialize(function () {
           (err,row)=>{
           if(err){
             console.log(`[DATABASE]getstoresERROR: username(${busername}), ${err}`);
-            if(res) res.json(failjson);
+            console.log({"login":false, "error":"Internal error"});
+            if(res) res.json({"login":false, "error":"Internal error"});
             return;
           }
           if(!row){
             console.log(`[DATABASE]getstoresERROR: username(${busername}) not found`);
-            if(res) res.json(failjson);
+            console.log({"login":false, "error":"login failed"});
+            if(res) res.json({"login":false, "error":"login failed"});
             return;
           }
           var storejson = {

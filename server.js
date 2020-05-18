@@ -8,8 +8,7 @@ const bodyParser = require('body-parser')
 const database = require('./database/database.js')
 
 // Port we are running the server on. Can be any free port.
-const port = 3000;
-/*
+
 function sleep(milliseconds) {
   var start = new Date().getTime();
   for (var i = 0; i < 1e7; i++) {
@@ -17,7 +16,7 @@ function sleep(milliseconds) {
       break;
     }
   }
-}*/
+}
 
 // Create the ExpressJS object
 var app = express();
@@ -56,17 +55,19 @@ app.listen(port, () => {
 
 // Adds a customer to the database
 app.post('/customer-login', (req, res) => {
+    console.log(`/customer-login`);
   database.getallreceipts(req.body.email, req.body.password, res);
 });
 
 // Adds a customer to the database
 app.post('/store-login', (req, res) => {
+    console.log(`/store-login`);
   database.getsid(req.body.email, req.body.password, res);
 });
 
 // Adds a customer to the database
 app.post('/customer-signup', (req, res) => {
-  console.log("customer-signup")
+  console.log(`customer-signup`)
   database.addcustomer(req.body.email, req.body.password, null, res);
 });
 

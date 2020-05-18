@@ -12,8 +12,6 @@ var UID = null;
 function customerLogin() {
     // Clear the User-Visible error field (exists for letting user know passwords dont match, etc..)
     $(".error").html("");
-
-
     // Grab the appropriate HTML field data
     const emailVal = $("#customer-email-login").val();
     const passwordVal = $("#customer-password-login").val();
@@ -142,6 +140,16 @@ function businessLogin() {
     event.preventDefault(); // Prevent page from reloading.
 }
 
+function checkPasswordConditions(passwordVal,confirmVal){
+    if(passwordVal !== confirmVal){
+        $(".error").html("Passwords do not match.");
+        return false;
+    }else if(passwordVal.length < 8){
+        $(".error").html("Password must at least be 8 characters long");
+        return false;
+    }
+    return true;
+}
 /*
     Called whenever the customer "signup!" button is clicked.
     Grabs the approriate HTML fields, ensures password == confirm-password.
@@ -155,12 +163,36 @@ function customerSignup() {
     const emailVal = $("#customer-email-signup").val();
     const passwordVal = $("#customer-password-signup").val();
     const confirmVal = $("#customer-password-confirm").val();
-
-    // Ensure password == confirm-password before attempting to signup.
-    if(passwordVal == confirmVal){
-
-    } else {
-        $(".error").html("Passwords do not match."); // Set user-visible error text field.
+    if(checkPasswordConditions(passwordVal,confirmVal)){
+        fetch("/customer-signup",{
+            method: "POST",
+            body: JSON.stringify({
+                email : emailVal,
+                password : passwordVal
+            }),
+            headers:{
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+        .then(response => response.json())
+        .then(json => {
+            //{"login":true, "cid":12355}
+            console.log("trying json.login");
+            try{
+                console.log(json);
+                if(json.login){
+                    console.log("customer login true");
+                    loggedIn = true;
+                    UID = json.cid;
+                    openCustomerSession();
+                }else{
+                    //some error
+                    alert('customer signup failed');
+                }
+            }catch(err) {
+                alert(err); // If there is ANY error here, then send an alert to the browser.
+            }
+        });
     }
 
     event.preventDefault(); // Prevent page from reloading.
@@ -196,6 +228,7 @@ After a successfull login response, open the customer session by unhiding/hiding
 Adjusts navbar, then delegates setting up UID and Receipts pages to other functions.
 */
 function openCustomerSession(){
+    console.log("opencustomersession");
     $("#home").hide(); // Hide our home DIV (this is the one we see whenever we are not logged in).
     $("#customer-session").fadeIn(); // Show our customer-session DIV (customer page).
     adjustNavbar();

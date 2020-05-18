@@ -66,7 +66,8 @@ app.post('/store-login', (req, res) => {
 
 // Adds a customer to the database
 app.post('/customer-signup', (req, res) => {
-  database.addcustomer(req.body.email, req.body.password, res);
+  console.log("customer-signup")
+  database.addcustomer(req.body.email, req.body.password, null, res);
 });
 
 // Adds a customer to the database
@@ -77,7 +78,7 @@ app.post('/customer-signup', (req, res) => {
 */
 
 app.post('/store-signup', (req, res) => {
-  database.addcustomer(req.body.email, req.body.password, res);
+  database.addcustomer(req.body.email, req.body.password, null, res);
 });
 
 

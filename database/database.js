@@ -304,33 +304,29 @@ db.serialize(function () {
     //Add customer
     module.exports.addcustomer = function(username, passwordhash, cid = null, res){
       console.log('%c[DATABASE]addcustomer', blue);
-      var success = true;
       function iferr(err){
         if(err){//most likely unique constraint failed
           console.log(`[DATABASE]addcustomerERROR:username${username}, ${err}`);
           success = false;
           if(res) res.json(failjson);
+          return;
         }
-      }
-      db.serialize(()=>{
-        if(cid){//custom cid
-          db.run('INSERT INTO Customer VALUES (?,?,?)',
-              [username, passwordhash, cid],iferr);
-        } else{
-          db.run('INSERT INTO Customer(username,passwordhash) VALUES (?,?)',
-              [username, passwordhash],iferr);
-        }
-        if(success){
-          db.get('select cid from Customer where username=? and passwordhash=?',
-              [username,passwordhash],
-              (err, row)=>{
-                cidjson = {"login":true, "cid":row.cid};
-                console.log(`[DATABASE]addcustomer:${JSON.stringify(cidjson, null, 2)}`);
-                if(res) res.json(cidjson);
-          });
+        db.get('select cid from Customer where username=? and passwordhash=?',
+            [username,passwordhash],
+            (err, row)=>{
+              cidjson = {"login":true, "cid":row.cid};
+              console.log(`[DATABASE]addcustomer:${JSON.stringify(cidjson, null, 2)}`);
+              if(res) res.json(cidjson);
+        });
+      }//iferr end
 
-        }
-      });//serialize done
+      if(cid){//custom cid
+        db.run('INSERT INTO Customer VALUES (?,?,?)',
+            [username, passwordhash, cid],iferr);
+      } else{
+        db.run('INSERT INTO Customer(username,passwordhash) VALUES (?,?)',
+            [username, passwordhash],iferr);
+      }
     }
     module.exports.addbusiness = function(username,passwordhash,name,bid = null, res){
       console.log('%c[DATABASE]addbusiness', blue);
@@ -338,17 +334,18 @@ db.serialize(function () {
         if(err){
           console.log(`[DATABASE]addbusinessERROR:username${username}, ${err}`);
           if(res) res.json(failjson);
-        }else{
-          console.log(`[DATABASE]addbusiness ${username} success`);
-          db.get('select bid from Business where username=? and passwordhash=?',
-              [username, passwordhash],
-              (err, row)=>{
-                var bidjson = {"login":true, "bid":row.bid};
-                console.log(`[DATABASE]addbusiness:${JSON.stringify(bidjson, null, 2)}`);
-                if(res) res.json(bidjson);
-          });
+          return;
         }
+        console.log(`[DATABASE]addbusiness ${username} success`);
+        db.get('select bid from Business where username=? and passwordhash=?',
+            [username, passwordhash],
+            (err, row)=>{
+              var bidjson = {"login":true, "bid":row.bid};
+              console.log(`[DATABASE]addbusiness:${JSON.stringify(bidjson, null, 2)}`);
+              if(res) res.json(bidjson);
+        });
       }//iferr end
+
       if(bid){//custom bid
         db.run('INSERT INTO Business VALUES (?,?,?,?)',
             [username, passwordhash, bid, name], iferr);

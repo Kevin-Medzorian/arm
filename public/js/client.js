@@ -15,43 +15,48 @@ function customerLogin() {
     // Grab the appropriate HTML field data
     const emailVal = $("#customer-email-login").val();
     const passwordVal = $("#customer-password-login").val();
+    if(emailVal.length === 0 || passwordVal.length === 0){
+        $(".error").html("Username and password should not be empty");
+    }else{
+        console.log("Sending POST request...");
 
-    console.log("Sending POST request...");
-
-    // POST request using fetch()  on "/customer-login"
-    fetch("/customer-login", {
-        // Adding method type
-        method: "POST",
-        // Adding body or contents to send
-        body: JSON.stringify({
-            email: emailVal,
-            password: passwordVal
-        }),
-        // Adding headers to the request
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
-    })
-    // Converting to JSON
-    .then(response => response.json())  // => Uncomment whenever backend implements "/customer-login"
-    // Displaying results to console
-    .then(json => {
-
-        // Check if the response's "login" field is true (SUCCESS).
-        try{
-            if(json.login){
-                loggedIn = true;
-                receipts = json.receipts;
-                UID = json.cid;
-                openCustomerSession();
+        // POST request using fetch()  on "/customer-login"
+        fetch("/customer-login", {
+            // Adding method type
+            method: "POST",
+            // Adding body or contents to send
+            body: JSON.stringify({
+                email: emailVal,
+                password: passwordVal
+            }),
+            // Adding headers to the request
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
             }
-        } catch(err) {
-            alert(err); // If there is ANY error here, then send an alert to the browser.
-        }
-    })
-    .catch((error) => { // If there is an error in our POST response (404 error, no server found, etc...), alert the browser.
-        alert(error);
-    });
+        })
+        // Converting to JSON
+        .then(response => response.json())  // => Uncomment whenever backend implements "/customer-login"
+        // Displaying results to console
+        .then(json => {
+
+            // Check if the response's "login" field is true (SUCCESS).
+            try{
+                if(json.login){
+                    loggedIn = true;
+                    receipts = json.receipts;
+                    UID = json.cid;
+                    openCustomerSession();
+                } else{
+                    $(".error").html("Username or password is incorrect");
+                }
+            } catch(err) {
+                alert(err); // If there is ANY error here, then send an alert to the browser.
+            }
+        })
+        .catch((error) => { // If there is an error in our POST response (404 error, no server found, etc...), alert the browser.
+            alert(error);
+        });
+    }
 
     event.preventDefault(); // Prevent page from reloading.
 }
@@ -163,7 +168,9 @@ function customerSignup() {
     const emailVal = $("#customer-email-signup").val();
     const passwordVal = $("#customer-password-signup").val();
     const confirmVal = $("#customer-password-confirm").val();
-    if(checkPasswordConditions(passwordVal,confirmVal)){
+    if(emailVal.length == 0){
+        $(".error").html("Email cannot be empty");
+    }else if(checkPasswordConditions(passwordVal,confirmVal)){
         fetch("/customer-signup",{
             method: "POST",
             body: JSON.stringify({

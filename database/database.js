@@ -324,7 +324,7 @@ db.serialize(function () {
           db.get('select cid from Customer where username=? and passwordhash=?',
               [username,passwordhash],
               (err, row)=>{
-                cidjson = {"success":true, "cid":row.cid};
+                cidjson = {"login":true, "cid":row.cid};
                 console.log(`[DATABASE]addcustomer:${JSON.stringify(cidjson, null, 2)}`);
                 if(res) res.json(cidjson);
           });
@@ -343,7 +343,7 @@ db.serialize(function () {
           db.get('select bid from Business where username=? and passwordhash=?',
               [username, passwordhash],
               (err, row)=>{
-                var bidjson = {"success":true, "bid":row.bid};
+                var bidjson = {"login":true, "bid":row.bid};
                 console.log(`[DATABASE]addbusiness:${JSON.stringify(bidjson, null, 2)}`);
                 if(res) res.json(bidjson);
           });
@@ -390,7 +390,7 @@ db.serialize(function () {
                   db.get('select sid from Store where username=? AND passwordhash=?',
                       [susername, spasswordhash],
                       (err, rowstore)=>{
-                        var storejson = {"success":true, "sid":rowstore.sid};
+                        var storejson = {"login":true, "sid":rowstore.sid};
                         console.log(`[DATABASE]addstore:${storejson}`);
                         if(res) res.json(storejson);
                   });
@@ -569,7 +569,7 @@ db.serialize(function () {
             return;
           }
           var storejson = {
-            "success":true,
+            "login":true,
             "name":row.name,
             "bid":row.bid,
             "stores":[]

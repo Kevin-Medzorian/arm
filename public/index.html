@@ -127,8 +127,8 @@
         <div class="tab-pane fade" id="storeLogin" role="tabpanel" aria-labelledby="store-tab">
           <img class="img-fluid mb-3 d-block" src="images/login.png" alt="">
 
-          <input type="email" id="store-email-login" class="form-control" placeholder="Email address" autofocus> <!-- Email input -->
-          <input type="password" id="store-password-login" class="form-control" placeholder="Password"> <!-- Password input -->
+          <input type="email" id="business-email-login" class="form-control" placeholder="Email address" autofocus> <!-- Email input -->
+          <input type="password" id="business-password-login" class="form-control" placeholder="Password"> <!-- Password input -->
 
           <div class="checkbox mb-1">
             <label>
@@ -136,7 +136,7 @@
             </label>
           </div>
 
-          <button class="btn btn-lg btn-primary btn-block" onclick="storeLogin()">Log in</button>  <!-- Uses our custom javascript -->
+          <button class="btn btn-lg btn-primary btn-block" onclick="businessLogin()">Log in</button>  <!-- Uses our custom javascript -->
 
           <p class="text-center mt-2">
             Not registered?
@@ -200,11 +200,11 @@
         <div class="tab-pane fade" id="storeSignup" role="tabpanel" aria-labelledby="store-tab">
           <!-- <img class="img-fluid mb-3 d-block" src="images/register.png" alt=""> <!-- uncomment to enable "register.png" logo -->
 
-          <input type="text" id="store-name-signup" class="form-control" placeholder="Store name" autofocus/> <!-- Store name input field -->
-          <input type="text" id="store-address-signup" class="form-control" placeholder="Address"/> <!-- Store address input field -->
-          <input type="email" id="store-email-signup" class="form-control" placeholder="Email address"/> <!-- Ownwer email address -->
-          <input type="password" id="store-password-signup" class="form-control" placeholder="Password"/> <!-- Password input -->
-          <input type="password" id="store-password-confirm" class="form-control" placeholder="Confirm Password"/> <!-- Confirm password input -->
+          <input type="text" id="business-name-signup" class="form-control" placeholder="Store name" autofocus/> <!-- Store name input field -->
+          <input type="text" id="business-address-signup" class="form-control" placeholder="Address"/> <!-- Store address input field -->
+          <input type="email" id="business-email-signup" class="form-control" placeholder="Email address"/> <!-- Ownwer email address -->
+          <input type="password" id="business-password-signup" class="form-control" placeholder="Password"/> <!-- Password input -->
+          <input type="password" id="business-password-confirm" class="form-control" placeholder="Confirm Password"/> <!-- Confirm password input -->
 
           <button class="btn btn-lg btn-primary btn-block" onclick="storeSignup()" type="submit">Sign up!</button> <!-- Signup button, calls our javascript -->
 

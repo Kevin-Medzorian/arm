@@ -95,6 +95,7 @@ function storeLogin() {
     // Displaying results to console
     .then(json => {
         console.log(json);
+        
     })
     .catch((error) => {
         alert(error);
@@ -111,10 +112,10 @@ function businessLogin() {
     // TODO
     // Clear the User-Visible error field (exists for letting user know passwords dont match, etc..)
     $(".error").html("");
-
+    
     const emailVal = $("#business-email-login").val();
     const passwordVal = $("#business-password-login").val();
-
+    console.log(emailVal + passwordVal);
 
     console.log("Sending POST request...");
 
@@ -137,6 +138,18 @@ function businessLogin() {
     // Displaying results to console
     .then(json => {
         console.log(json)
+        try{
+            if(json.login){
+                loggedIn = true;
+                receipts = json.receipts;
+                UID = json.bid;
+                openBusinessSession();
+            } else{
+                $(".error").html("Username or password is incorrect");
+            }
+        } catch(err) {
+            alert(err); // If there is ANY error here, then send an alert to the browser.
+        }
     })
     .catch((error) => {
         alert(error);
@@ -194,7 +207,7 @@ function customerSignup() {
                     openCustomerSession();
                 }else{
                     //some error
-                    alert('customer signup failed');
+                    $(".error").html("Username already exists");
                 }
             }catch(err) {
                 alert(err); // If there is ANY error here, then send an alert to the browser.
@@ -215,16 +228,46 @@ function storeSignup() {
     $(".error").html("");
 
     // Grab appropriate values from HTML fields.
-    const nameVal = $("#store-name-signup").val();
-    const addressVal = $("#store-address-signup").val();
-    const passwordVal = $("#store-password-signup").val();
-    const confirmVal = $("#store-password-confirm").val();
-
+    const nameVal = $("#business-name-signup").val();
+    const emailVal = $("#business-email-signup").val();
+    const addressVal = $("#business-address-signup").val();
+    const passwordVal = $("#business-password-signup").val();
+    const confirmVal = $("#business-password-confirm").val();
+    console.log(nameVal+emailVal+passwordVal);
     // Ensure password == confirm-password before attempting to signup.
-    if(passwordVal == confirmVal){
-
-    } else {
-        $(".error").html("Passwords do not match."); // Set user-visible test field.
+    if(nameVal.length == 0){
+        $(".error").html("Email cannot be empty");
+    }else if(checkPasswordConditions(passwordVal,confirmVal)){
+        fetch("/business-signup",{
+            method: "POST",
+            body: JSON.stringify({
+                name : nameVal,
+                email : emailVal,
+                password : passwordVal
+            }),
+            headers:{
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+        .then(response => response.json())
+        .then(json => {
+            //{"login":true, "cid":12355}
+            //console.log("trying json.login");
+            try{
+                //console.log(json);
+                if(json.login){
+                    console.log("business login true");
+                    loggedIn = true;
+                    UID = json.bid;
+                    openBusinessSession();
+                }else{
+                    //some error
+                    $(".error").html("Username already exists");
+                }
+            }catch(err) {
+                alert(err); // If there is ANY error here, then send an alert to the browser.
+            }
+        });
     }
 
     event.preventDefault(); // Prevent page from reloading.

@@ -383,26 +383,29 @@
         <a class="nav-link h3 m-1" id="pills-account-tab" data-toggle="pill" href="#account-business" role="tab" aria-controls="account-business" aria-selected="false">Account</a>
       </li>
     </ul>
+    <div class="tab-pane fade" id="manage-stores" role="tabpanel" aria-labelledby="pills-manage-stores-tab">
+      <!--<div class = "h-100 row align-items-center" id="center-texts-store-input"> NEED TO WORK HERE!-->
+        <input type="text" id="store-address" class="form-control" placeholder="Address" autofocus/>
+        <input type="text" id="store-manager-email" class="form-control" placeholder="Manager Email" />
+        <input type="text" id="store-password" class="form-control" placeholder="Password" />
+        <input type="text" id="store-confirm-password" class="form-control" placeholder="Confirm Password" />
+      <!--</div>-->
+    </div>
+  </div>
 
-  
-
-    <div class="tab-pane fade" id="manage-stores" role="tabpanel" aria-labelledby="pills-spending-tab">
+    <div class="tab-pane fade" id="receipts-businesses" role="tabpanel" aria-labelledby="pills-receipts-businesses-tab">
 
     </div>
-    <div class="tab-pane fade" id="receipts-businesses" role="tabpanel" aria-labelledby="pills-spending-tab">
-
-    </div>
-    <div class="tab-pane fade" id="view-product-statistics" role="tabpanel" aria-labelledby="pills-spending-tab">
+    <div class="tab-pane fade" id="view-product-statistics" role="tabpanel" aria-labelledby="pills-product-statistics-tab">
 
     </div>
 
-    <div class="tab-pane fade" id="account-business" role="tabpanel" aria-labelledby="pills-spending-tab">
+    <div class="tab-pane fade" id="account-business" role="tabpanel" aria-labelledby="pills-account-business-tab">
       <div class="row">
         <div class="col text-center">
           <button class="btn btn-primary" onclick="location.href='/'">Logout</button>
         </div>
       </div>
     </div>
-</div>
 </body>
 </html>

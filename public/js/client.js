@@ -223,7 +223,7 @@ function customerSignup() {
     Grabs the approriate HTML fields, ensures password == confirm-password.
     Then, makes a POST request on "/store-signup" to the server to try to signup.
 */
-function storeSignup() {
+function businessSignup() {
     // Clear the User-Visible error field (exists for letting user know passwords dont match, etc..)
     $(".error").html("");
 
@@ -358,6 +358,14 @@ $(document).ready(function () {
             $('#toggler').trigger( "click" );
         }
     });
+
+    // Clicking navigation-links will hide navbar
+    $('#login-tab').on('click', function(){
+        if($('#toggler').css('display') !='none'){
+            $('#toggler').trigger( "click" );
+        }
+    });
+
     $('#signup-btn').on('click', function(){
         if($('#toggler').css('display') !='none'){
             $('#toggler').trigger( "click" );
@@ -369,6 +377,28 @@ $(document).ready(function () {
             $('#toggler').trigger( "click" );
         }
     });
+
+     // Cliking store login tab makes its text appear, and clears other text.
+     $('#store-login-tab').on('click', function(){
+        $('#store-login-text').html("Store");
+        $('#business-login-text').html("");
+        $('#customer-login-text').html("");
+    });
+
+    // Cliking business login tab makes its text appear, and clears other text.
+    $('#business-login-tab').on('click', function(){
+        $('#business-login-text').html("Business");
+        $('#store-login-text').html("");
+        $('#customer-login-text').html("");
+    });
+
+    // Cliking customer login tab makes its text appear, and clears other text.
+    $('#customer-login-tab').on('click', function(){
+        $('#customer-login-text').html("Customer");
+        $('#store-login-text').html("");
+        $('#business-login-text').html("");
+    });
+
     $('#toggler').on('click', function(){
         if(!$('.navbar-nav').is(':visible')){
             $('#toggler-icon').css('background-image', 'url("/images/toggler-close.png")')

@@ -183,7 +183,8 @@ function storeSignup() {
 
     // Ensure password == confirm-password before attempting to signup.
     if(passwordVal == confirmVal){
-
+    // Fetch
+      // run openStoreSession
     } else {
         $(".error").html("Passwords do not match."); // Set user-visible test field.
     }

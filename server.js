@@ -140,6 +140,7 @@ app.post('/store-signup', (req, res)=>{
     database.addstore(body.busername, body.bpassword, body.susername,
         body.spassword, body.street, body.city, body.state, body.zipcode, res);
   } catch(err){
+    console.log(err);
     res.json(badinput);
   }
 });
@@ -170,7 +171,8 @@ app.post('/store-add-receipt', (req, res)=>{
         body.items,
         res
         ); 
-  } catch(e){
+  } catch(err){
+    console.log(err);
     res.json(badinput);
   }
 

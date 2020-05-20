@@ -117,20 +117,21 @@ app.post('/business-signup', (req, res) => {
   console.log('business-signup');
   try{
     if(req.body.email.length == 0 || req.body.password.length == 0 ||
-        req.body.name == 0){
+        req.body.name.length == 0){
       res.json({"login": false, "error": errorempty});
       return;
     }
     database.addbusiness(req.body.email, req.body.password, req.body.name, null, res);
   } catch(err){
+    console.log(err);
     res.json(badinput);
   }
 });
 
 app.post('/store-signup', (req, res)=>{
   console.log('store-signup');
+  const body = req.body;
   try{
-    const body = req.body;
     if(body.busername.length == 0 || body.bpassword.length == 0 ||
         body.susername.length == 0 || body.spassword.length == 0){
       res.json({"login": false, "error": errorempty});
@@ -143,6 +144,43 @@ app.post('/store-signup', (req, res)=>{
   }
 });
 
+//====================Add receipts
+app.post('/store-add-receipt', (req, res)=>{
+  console.log('store-add-receipt');
+//susername,spasswordhash,cid,date,tax,subtotal,other,items,res
+  const body = req.body;
+  try{
+    if(body.username.length == 0 || body.passwordhash == 0){
+      res.json({"login":false, "error": errorempty});
+      return;
+    }
+    if(aacid <= 0 || typeof(aacid) != 'number' || aasid <= 0 || tyepof(aasid) !=
+        'number' || typeof(aadate) != 'number'){
+      res.json(badinput);
+      return;
+    }
+    database.storeaddreceipt(
+        body.username,
+        body.password,
+        body.cid,
+        body.date,
+        body.tax,
+        body.subtotal,
+        body.other,
+        body.items,
+        res
+        ); 
+  } catch(e){
+    res.json(badinput);
+  }
+
+});
+
+app.post('/customer-add-receipt', (req, res)=>{
+  console.log('customer-add-receipt');
+
+
+});
 
 /*
 // Example use of the database:

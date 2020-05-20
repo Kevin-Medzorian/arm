@@ -2,6 +2,8 @@
 var loggedIn = false;
 var receipts = null;
 var UID = null;
+var busername = null
+var bpassword = null
 
 
 /*
@@ -60,6 +62,66 @@ function customerLogin() {
 
     event.preventDefault(); // Prevent page from reloading.
 }
+/*
+    Called when the business clicks the add store
+    Grabs apppropriate HTML fields
+    Then, makes POST request on "/"
+*/
+function storeSignUp(){
+    $(".error").html("");
+    const streetVal = $("#store-street").val();
+    const cityVal = $("#store-city").val();
+    const stateVal = $("#store-state").val();
+    const zipCodeVal = $("#store-zipcode").val();
+    const managerEmailVal = $("#store-manager-email").val();
+    const passwordVal = $("#store-password").val();
+    //const confirmVal = $("#store-confirm-password").val();
+    console.log(streetVal);
+    console.log(cityVal);
+    console.log(stateVal);
+    console.log(zipCodeVal);
+    console.log(passwordVal);
+   // console.log(confirmVal);
+    console.log("Sending POST request...");
+    
+    fetch("/store-signup",{
+        method: "POST",
+        body: JSON.stringify({
+            busername : busername,
+            bpassword: bpassword,
+            susername : managerEmailVal,
+            spassword : passwordVal,
+            street : streetVal,
+            city : cityVal,
+            state : stateVal,
+            zipcode : zipCodeVal
+        }),
+        
+        headers:{
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        try{
+            console.log(json);
+            if(json.login){
+                console.log("store login true");
+                loggedIn = true;
+                UID = json.sid;
+                openStoreSession();
+            }else{
+                //some error
+                $(".error").html("Username already exists");
+            }
+        }catch(err) {
+            alert(err); // If there is ANY error here, then send an alert to the browser.
+        }
+    });
+    event.preventDefault();
+}
+
 
 /*
     Called whenever the store "login!" button is clicked.
@@ -116,7 +178,8 @@ function businessLogin() {
     const emailVal = $("#business-email-login").val();
     const passwordVal = $("#business-password-login").val();
     console.log(emailVal + passwordVal);
-
+    busername = emailVal
+    bpassword = passwordVal
     console.log("Sending POST request...");
 
     // POST request using fetch()
@@ -226,7 +289,8 @@ function customerSignup() {
 function businessSignup() {
     // Clear the User-Visible error field (exists for letting user know passwords dont match, etc..)
     $(".error").html("");
-
+    busername = emailVal
+    bpassword = passwordVal
     // Grab appropriate values from HTML fields.
     const nameVal = $("#business-name-signup").val();
     const emailVal = $("#business-email-signup").val();
@@ -440,6 +504,10 @@ function adjustNavbar(){
         $('.navbar-nav').css('margin-right', '1vw');
         $('.navbar-nav').css('background-color', 'transparent');
     }
+}
+function signOut(){
+    busername = null
+    bpassword = null
 }
 // On resize of the website, adjust the navbar.
 $(window).resize(function() {

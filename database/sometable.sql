@@ -4,6 +4,23 @@ make sure:
   PRAGMA foreign_keys=ON;
 */
 /*
+CREATE TABLE Business(
+    username TEXT UNIQUE NOT NULL,
+    passwordhash TEXT NOT NULL,
+    bid integer PRIMARY KEY check(typeof(bid) = "integer"),
+    name TEXT NOT NULL
+);
+CREATE TABLE Store(
+    username TEXT UNIQUE NOT NULL,
+    passwordhash TEXT NOT NULL,
+    sid integer PRIMARY KEY check(typeof(sid) = "integer"),
+    bid integer,
+    street TEXT,
+    city TEXT,
+    state TEXT,
+    zipcode TEXT,
+    FOREIGN KEY(bid) REFERENCES Business(bid)
+);
 CREATE TABLE Customer(
     username TEXT UNIQUE NOT NULL,
     passwordhash TEXT NOT NULL,
@@ -26,23 +43,6 @@ CREATE TABLE Item(
     quantity integer NOT NULL check(typeof(quantity) = "integer"),
     unitcost integer NOT NULL check(typeof(unitcost) = "integer"),
     FOREIGN KEY(rid) REFERENCES Receipt(rid)
-);
-CREATE TABLE Store(
-    username TEXT UNIQUE NOT NULL,
-    passwordhash TEXT NOT NULL,
-    sid integer PRIMARY KEY check(typeof(sid) = "integer"),
-    bid integer,
-    street TEXT,
-    city TEXT,
-    state TEXT,
-    zipcode TEXT,
-    FOREIGN KEY(bid) REFERENCES Business(bid)
-);
-CREATE TABLE Business(
-    username TEXT UNIQUE NOT NULL,
-    passwordhash TEXT NOT NULL,
-    bid integer PRIMARY KEY check(typeof(bid) = "integer"),
-    name TEXT NOT NULL
 );
 */
 

@@ -53,6 +53,51 @@ app.listen(port, () => {
 
 const errorempty = "Fields can't be empty";
 const badinput = {"login":false, "error": "bad input"};
+//==================SIGN UP REQUESTS
+// Adds a customer to the database
+app.post('/customer-signup', (req, res) => {
+  console.log(`customer-signup`)
+  try{
+    if(req.body.email.length == 0 || req.body.password.length == 0){
+      res.json({"login": false, "error": errorempty});
+      return;
+    }
+    database.addcustomer(req.body.email, req.body.password, null, res);
+  } catch(err){
+    console.log(err);
+    res.json(badinput);
+  }
+});
+app.post('/business-signup', (req, res) => {
+  console.log('business-signup');
+  try{
+    if(req.body.email.length == 0 || req.body.password.length == 0 ||
+        req.body.name.length == 0){
+      res.json({"login": false, "error": errorempty});
+      return;
+    }
+    database.addbusiness(req.body.email, req.body.password, req.body.name, null, res);
+  } catch(err){
+    console.log(err);
+    res.json(badinput);
+  }
+});
+app.post('/store-signup', (req, res)=>{
+  console.log('store-signup');
+  const body = req.body;
+  try{
+    if(body.busername.length == 0 || body.bpassword.length == 0 ||
+        body.susername.length == 0 || body.spassword.length == 0){
+      res.json({"login": false, "error": errorempty});
+      return;
+    }
+    database.addstore(body.busername, body.bpassword, body.susername,
+        body.spassword, body.street, body.city, body.state, body.zipcode, res);
+  } catch(err){
+    console.log(err);
+    res.json(badinput);
+  }
+});
 
 //==================LOGIN REQUESTS
 app.post('/customer-login', (req, res) => {
@@ -92,54 +137,6 @@ app.post('/store-login', (req, res) => {
       return;
     }
     database.getsid(req.body.email, req.body.password, res);
-  } catch(err){
-    console.log(err);
-    res.json(badinput);
-  }
-});
-
-//==================SIGN UP REQUESTS
-// Adds a customer to the database
-app.post('/customer-signup', (req, res) => {
-  console.log(`customer-signup`)
-  try{
-    if(req.body.email.length == 0 || req.body.password.length == 0){
-      res.json({"login": false, "error": errorempty});
-      return;
-    }
-    database.addcustomer(req.body.email, req.body.password, null, res);
-  } catch(err){
-    console.log(err);
-    res.json(badinput);
-  }
-});
-
-app.post('/business-signup', (req, res) => {
-  console.log('business-signup');
-  try{
-    if(req.body.email.length == 0 || req.body.password.length == 0 ||
-        req.body.name.length == 0){
-      res.json({"login": false, "error": errorempty});
-      return;
-    }
-    database.addbusiness(req.body.email, req.body.password, req.body.name, null, res);
-  } catch(err){
-    console.log(err);
-    res.json(badinput);
-  }
-});
-
-app.post('/store-signup', (req, res)=>{
-  console.log('store-signup');
-  const body = req.body;
-  try{
-    if(body.busername.length == 0 || body.bpassword.length == 0 ||
-        body.susername.length == 0 || body.spassword.length == 0){
-      res.json({"login": false, "error": errorempty});
-      return;
-    }
-    database.addstore(body.busername, body.bpassword, body.susername,
-        body.spassword, body.street, body.city, body.state, body.zipcode, res);
   } catch(err){
     console.log(err);
     res.json(badinput);
@@ -215,6 +212,8 @@ app.post('/store-get-item', (req, res)=>{
 
 });
 
+//maybe get names starting with ____
+//then get stats on item with that name
 
 /*
 // Example use of the database:

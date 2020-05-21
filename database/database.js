@@ -142,7 +142,6 @@ db.serialize(function () {
       console.log('<createtables');
     }
 
-
     module.exports.resettables = function(){
       return;
       console.log("[DB]\tresetting. Careful...");
@@ -163,17 +162,204 @@ db.serialize(function () {
             console.log(`injection rows: ${count}`);
           });
     }*/
-/*
-    module.exports.logincustomer = (username, passwordhash) =>{
-      db.get('select cid from Customer where\
-          username = ? AND passwordhash = ?',
-          [username, passwordhash],
-          (err, row, res) =>{
-            if(row) console.log(JSON.stringify({"login" : true, "cid" : row.cid}));
-            else console.log(JSON.stringify({"login" : false}));
-          });
+
+    module.exports.addcustomer = function(username, passwordhash, cid = null, res){
+      console.log('[DB]addcustomer');
+      function iferr(err){
+        if(err){//most likely unique constraint failed
+          console.log(`[DB]addcustomerERROR:username${username}, ${err}`);
+          console.log({"login":false, "error":"Username already exists"});
+          if(res) res.json({"login":false, "error":"Username already exists"});
+          return;
+        }
+        db.get('select cid from Customer where username=? and passwordhash=?',
+            [username,passwordhash],
+            (err, row)=>{
+              cidjson = {"login":true, "cid":row.cid};
+              console.log(`[DB]addcustomer:${JSON.stringify(cidjson, null, 2)}`);
+              if(res) res.json(cidjson);
+        });
+      }//iferr end
+
+      if(cid){//custom cid
+        db.run('INSERT INTO Customer VALUES (?,?,?)',
+            [username, passwordhash, cid],iferr);
+      } else{
+        db.run('INSERT INTO Customer(username,passwordhash) VALUES (?,?)',
+            [username, passwordhash],iferr);
+      }
     }
-*/
+    module.exports.addbusiness = function(username,passwordhash,name,bid = null, res){
+      console.log('[DB]addbusiness');
+      function iferr(err){
+        if(err){
+          console.log(`[DB]addbusinessERROR:username${username}, ${err}`);
+          console.log({"login":false, "error":"Username or business name already exists"});
+          if(res) res.json({"login":false, "error":"Username or business name already exists"});
+          return;
+        }
+        console.log(`[DB]addbusiness ${username} success`);
+        db.get('select bid from Business where username=? and passwordhash=?',
+            [username, passwordhash],
+            (err, row)=>{
+              var bidjson = {"login":true, "bid":row.bid};
+              console.log(`[DB]addbusiness:${JSON.stringify(bidjson, null, 2)}`);
+              if(res) res.json(bidjson);
+        });
+      }//iferr end
+
+      if(bid){//custom bid
+        db.run('INSERT INTO Business VALUES (?,?,?,?)',
+            [username, passwordhash, bid, name], iferr);
+
+      } else{
+        db.run('INSERT INTO Business(username,passwordhash,name) VALUES (?,?,?)',
+            [username, passwordhash, name], iferr);
+      }
+    }
+    module.exports.addstore = (busername,bpasswordhash,
+      susername,spasswordhash,street,city,state,zipcode,res) =>{
+
+      db.get('select bid from Business where username=? AND passwordhash=?',
+          [busername,bpasswordhash],
+          (err, row) =>{
+            if(err){
+              console.log(`[DB]addstoreERROR: business username:${busername},${err}`);
+              console.log({"login":false, "error":"Internal error"});
+              if(res) res.json({"login":false, "error":"Internal error"});
+              return;
+            }
+            if(!row){
+              console.log(`[DB]addstore business username(${busername}) combo does not exist`);
+              console.log({"login":false, "error":"bad business credentials"});
+              if(res) res.json({"login":false, "error":"Internal error"});
+              return;
+            }
+            db.run('INSERT INTO Store(\
+                  username, passwordhash, bid,\
+                  street, city, state, zipcode) VALUES (?,?,?,?,?,?,?)',
+                [susername,spasswordhash,row.bid,street,city,state,zipcode],
+                (err) =>{
+                  if(err){
+                    console.log("[DB]addstore error: " + err);
+                    console.log({"login":false, "error":"Username already exists"});
+                    if(res) res.json({"login":false, "error":"Username already exists"});
+                    return;
+                  }
+
+                  db.get('select sid from Store where username=? AND passwordhash=?',
+                      [susername, spasswordhash],
+                      (err, rowstore)=>{
+                        var storejson = {"login":true, "sid":rowstore.sid};
+                        console.log(`[DB]addstore:${storejson}`);
+                        if(res) res.json(storejson);
+                  });
+            });
+      });
+    }
+
+    //replaced by getallreceipts
+    module.exports.getcid = (username, passwordhash, res) =>{
+      console.log(`getcid: ${username},${passwordhash}`);
+      db.get('select cid from Customer where username = ? AND passwordhash = ?',
+          [username, passwordhash],
+          (err, row) =>{
+            if(err){
+              console.log(`[DB]getcidERROR:username(${username}), ${err}`);
+              console.log({"login":false, "error":"Internal error"});
+              if(res) res.json({"login":false, "error":"Internal error"});
+              return;
+            }
+            if(!row){
+              console.log(`[DB]getcid ${username} not found`);
+              console.log({"login":false, "error":"bad customer login"});
+              if(res) res.json({"login":false, "error":"login failed"});
+              return;
+            }
+            console.log("getcid"+JSON.stringify({"login":true, "cid":row.cid},null,2));
+            if(res) res.json({"login":true, "cid":row.cid});
+          }
+      );
+    }
+    //replaced with getstores
+    module.exports.getbid = (username, passwordhash, res) =>{
+      db.get('select bid from Business where username = ? AND passwordhash = ?',
+          [username, passwordhash],
+          (err, row) =>{
+            if(err){
+              console.log(`[DB]getbidERROR: username(${username}), ${err}`);
+              console.log({"login":false, "error":"Internal error"});
+              if(res) res.json({"login":false, "error":"Internal error"});
+              return;
+            }
+            if(!row){
+              console.log(`[DB]getbid ${username} not found`);
+              console.log({"login":false, "error":"bad business login"});
+              if(res) res.json({"login":false, "error":"login failed"});
+              return;
+            }
+            console.log(JSON.stringify({"login":true, "bid":row.bid},null,2));
+            if(res) res.json({"login":true, "bid":row.bid});
+          }
+      );
+    }
+    //still in use
+    module.exports.getsid = (username, passwordhash, res)=>{
+      db.get('select sid from Store where username = ? AND passwordhash = ?',
+          [username, passwordhash],
+          (err, row) =>{
+            if(err){
+              console.log(`[DB]getsidERROR: username(${username}), ${err}`);
+              console.log({"login":false, "error":"Internal error"});
+              if(res) res.json({"login":false, "error":"Internal error"});
+              return;
+            }
+            if(!row){
+              console.log(`[DB]getsid ${username} not found`);
+              console.log({"login":false, "error":"bad store login"});
+              if(res) res.json({"login":false, "error":"login failed"});
+              return;
+            }
+            console.log({"login":true, "sid":row.sid});
+            if(res) res.json({"login":true, "sid":row.sid});
+          }
+      );
+    }
+    module.exports.getstores = (busername,bpasswordhash,res) =>{
+      db.get('select bid,name from Business where username=? AND passwordhash=?',
+          [busername,bpasswordhash],
+          (err,row)=>{
+          if(err){
+            console.log(`[DB]getstoresERROR: username(${busername}), ${err}`);
+            console.log({"login":false, "error":"Internal error"});
+            if(res) res.json({"login":false, "error":"Internal error"});
+            return;
+          }
+          if(!row){
+            console.log(`[DB]getstoresERROR: username(${busername}) not found`);
+            console.log({"login":false, "error":"login failed"});
+            if(res) res.json({"login":false, "error":"login failed"});
+            return;
+          }
+          var storejson = {
+            "login":true,
+            "name":row.name,
+            "bid":row.bid,
+            "stores":[]
+          };
+          db.each('select sid from Store where bid=?',
+              [row.bid],
+              (err, rowstore)=>{
+                storejson["stores"].push(rowstore.sid);
+              },
+              (err,storecount)=>{
+                console.log(`[DB]getstores: username(${busername}): json:${storejson}`);
+                if(res) res.json(storejson);
+          });
+
+      });
+
+    }
     //given username of customer
     module.exports.getallreceipts = (username, passwordhash, res) =>{
       var receiptjson = {}
@@ -244,7 +430,6 @@ db.serialize(function () {
       //return stuff;
     }
     //get all receipts for the other accounts
-
     let getitem = (promises, receipt, rid) =>{//preserves receipt reference
       promises.push(new Promise((resolve, reject) =>{
 
@@ -327,238 +512,12 @@ db.serialize(function () {
                     "other":rowrec.other
                   });
             },(err, count)=>{
-              console.log(`[DB]`);
-            
+              console.log(`[DB]getstorereceipt: username(${username})`);
+              console.log(storejson);
+              res.json(storejson);
             });
       });
     }
-
-
-
-/*
-    module.exports.getallusers = (res) =>{
-      cidjson = {
-        "login" : true,
-        cid : []
-      };
-      db.all('select cid from Customer', [],
-          (err, rows, res) => {
-            console.log('[DB]getallusers:' + JSON.stringify(rows));
-            //uidjson.uid
-
-          });
-    }
-    module.exports.printbid = function(){
-      console.log('[DB]printbid');
-      console.log('username\tpasswordhash\tbid');
-      db.each('select * from Business', [], function(err, row){
-        console.log(`${row.username}\t${row.passwordhash}\t${row.bid}`);
-      });
-    }
-*/
-    //Add customer
-    module.exports.addcustomer = function(username, passwordhash, cid = null, res){
-      console.log('[DB]addcustomer');
-      function iferr(err){
-        if(err){//most likely unique constraint failed
-          console.log(`[DB]addcustomerERROR:username${username}, ${err}`);
-          console.log({"login":false, "error":"Username already exists"});
-          if(res) res.json({"login":false, "error":"Username already exists"});
-          return;
-        }
-        db.get('select cid from Customer where username=? and passwordhash=?',
-            [username,passwordhash],
-            (err, row)=>{
-              cidjson = {"login":true, "cid":row.cid};
-              console.log(`[DB]addcustomer:${JSON.stringify(cidjson, null, 2)}`);
-              if(res) res.json(cidjson);
-        });
-      }//iferr end
-
-      if(cid){//custom cid
-        db.run('INSERT INTO Customer VALUES (?,?,?)',
-            [username, passwordhash, cid],iferr);
-      } else{
-        db.run('INSERT INTO Customer(username,passwordhash) VALUES (?,?)',
-            [username, passwordhash],iferr);
-      }
-    }
-    module.exports.addbusiness = function(username,passwordhash,name,bid = null, res){
-      console.log('[DB]addbusiness');
-      function iferr(err){
-        if(err){
-          console.log(`[DB]addbusinessERROR:username${username}, ${err}`);
-          console.log({"login":false, "error":"Username or business name already exists"});
-          if(res) res.json({"login":false, "error":"Username or business name already exists"});
-          return;
-        }
-        console.log(`[DB]addbusiness ${username} success`);
-        db.get('select bid from Business where username=? and passwordhash=?',
-            [username, passwordhash],
-            (err, row)=>{
-              var bidjson = {"login":true, "bid":row.bid};
-              console.log(`[DB]addbusiness:${JSON.stringify(bidjson, null, 2)}`);
-              if(res) res.json(bidjson);
-        });
-      }//iferr end
-
-      if(bid){//custom bid
-        db.run('INSERT INTO Business VALUES (?,?,?,?)',
-            [username, passwordhash, bid, name], iferr);
-
-      } else{
-        db.run('INSERT INTO Business(username,passwordhash,name) VALUES (?,?,?)',
-            [username, passwordhash, name], iferr);
-      }
-    }
-    module.exports.addstore =
-      (busername,bpasswordhash,susername,spasswordhash,street,city,state,zipcode,res) =>{
-      db.get('select bid from Business where username=? AND passwordhash=?',
-          [busername,bpasswordhash],
-          (err, row) =>{
-            if(err){
-              console.log(`[DB]addstoreERROR: business username:${busername},${err}`);
-              console.log({"login":false, "error":"Internal error"});
-              if(res) res.json({"login":false, "error":"Internal error"});
-              return;
-            }
-            if(!row){
-              console.log(`[DB]addstore business username(${busername}) combo does not exist`);
-              console.log({"login":false, "error":"bad business credentials"});
-              if(res) res.json({"login":false, "error":"Internal error"});
-              return;
-            }
-            db.run('INSERT INTO Store(\
-                  username, passwordhash, bid,\
-                  street, city, state, zipcode) VALUES (?,?,?,?,?,?,?)',
-                [susername,spasswordhash,row.bid,street,city,state,zipcode],
-                (err) =>{
-                  if(err){
-                    console.log("[DB]addstore error: " + err);
-                    console.log({"login":false, "error":"Username already exists"});
-                    if(res) res.json({"login":false, "error":"Username already exists"});
-                    return;
-                  }
-
-                  db.get('select sid from Store where username=? AND passwordhash=?',
-                      [susername, spasswordhash],
-                      (err, rowstore)=>{
-                        var storejson = {"login":true, "sid":rowstore.sid};
-                        console.log(`[DB]addstore:${storejson}`);
-                        if(res) res.json(storejson);
-                  });
-            });
-      });
-    }
-
-    //maybe replaced by getallreceipts
-    module.exports.getcid = (username, passwordhash, res) =>{
-      console.log(`getcid: ${username},${passwordhash}`);
-      db.get('select cid from Customer where username = ? AND passwordhash = ?',
-          [username, passwordhash],
-          (err, row) =>{
-            if(err){
-              console.log(`[DB]getcidERROR:username(${username}), ${err}`);
-              console.log({"login":false, "error":"Internal error"});
-              if(res) res.json({"login":false, "error":"Internal error"});
-              return;
-            }
-            if(!row){
-              console.log(`[DB]getcid ${username} not found`);
-              console.log({"login":false, "error":"bad customer login"});
-              if(res) res.json({"login":false, "error":"login failed"});
-              return;
-            }
-            console.log("getcid"+JSON.stringify({"login":true, "cid":row.cid},null,2));
-            if(res) res.json({"login":true, "cid":row.cid});
-          }
-      );
-    }
-    //maybe replaced with getallstores
-    module.exports.getbid = (username, passwordhash, res) =>{
-      db.get('select bid from Business where username = ? AND passwordhash = ?',
-          [username, passwordhash],
-          (err, row) =>{
-            if(err){
-              console.log(`[DB]getbidERROR: username(${username}), ${err}`);
-              console.log({"login":false, "error":"Internal error"});
-              if(res) res.json({"login":false, "error":"Internal error"});
-              return;
-            }
-            if(!row){
-              console.log(`[DB]getbid ${username} not found`);
-              console.log({"login":false, "error":"bad business login"});
-              if(res) res.json({"login":false, "error":"login failed"});
-              return;
-            }
-            console.log(JSON.stringify({"login":true, "bid":row.bid},null,2));
-            if(res) res.json({"login":true, "bid":row.bid});
-          }
-      );
-    }
-    module.exports.getsid = (username, passwordhash, res)=>{
-      db.get('select sid from Store where username = ? AND passwordhash = ?',
-          [username, passwordhash],
-          (err, row) =>{
-            if(err){
-              console.log(`[DB]getsidERROR: username(${username}), ${err}`);
-              console.log({"login":false, "error":"Internal error"});
-              if(res) res.json({"login":false, "error":"Internal error"});
-              return;
-            }
-            if(!row){
-              console.log(`[DB]getsid ${username} not found`);
-              console.log({"login":false, "error":"bad store login"});
-              if(res) res.json({"login":false, "error":"login failed"});
-              return;
-            }
-            console.log({"login":true, "sid":row.sid});
-            if(res) res.json({"login":true, "sid":row.sid});
-          }
-      );
-    }
-
-    module.exports.test = () =>{
-      /*
-      db.get('insert into abc(b) values (1); select last_insert_rowid();',
-          (err, rows) =>{
-            console.log(`TESTING TESTING rows:${rows}`);
-            util.inspect(rows);
-          }
-      );*/
-      /*
-      db.serialize(() => {
-        dbSum(1, 1, db);
-        dbSum(2, 2, db);
-        dbSum(3, 3, db);
-        dbSum(4, 4, db);
-        dbSum(5, 5, db);
-      });
-
-      // close the database connection
-      db.close((err) => {
-        if (err) {
-          return console.error(err.message);
-        }
-      });
-
-      function dbSum(a, b, db) {
-        db.get('SELECT (? + ?) sum', [a, b], (err, row) => {
-          if (err) {
-            console.error(err.message);
-          }
-          console.log(`The sum of ${a} and ${b} is ${row.sum}`);
-        });
-      }
-      */
-      return;
-
-      //only does 1 command at a time and ignores the one after
-      /*db.run('insert into Item values(1,"test",9,9);\
-          insert into Item values(1,"test2",9,9);');
-          */
-    }
-
 
     module.exports.storeaddreceipt =
       (susername,spasswordhash,cid,date,tax,subtotal,other,items,res)=>{
@@ -615,6 +574,7 @@ db.serialize(function () {
                       if(pass){
                         res.json({"login":true});
                       } else{//some errror occurred for item
+                        console.log({"login":false, "error":"Internal error item issue"});
                         res.json({"login":false, "error":"Internal error item issue"});
                       }
                   });//Promise done
@@ -685,6 +645,75 @@ db.serialize(function () {
     }
 
 /*
+    module.exports.getallusers = (res) =>{
+      cidjson = {
+        "login" : true,
+        cid : []
+      };
+      db.all('select cid from Customer', [],
+          (err, rows, res) => {
+            console.log('[DB]getallusers:' + JSON.stringify(rows));
+            //uidjson.uid
+
+          });
+    }
+    module.exports.printbid = function(){
+      console.log('[DB]printbid');
+      console.log('username\tpasswordhash\tbid');
+      db.each('select * from Business', [], function(err, row){
+        console.log(`${row.username}\t${row.passwordhash}\t${row.bid}`);
+      });
+    }
+*/
+
+
+
+
+    module.exports.test = () =>{
+      /*
+      db.get('insert into abc(b) values (1); select last_insert_rowid();',
+          (err, rows) =>{
+            console.log(`TESTING TESTING rows:${rows}`);
+            util.inspect(rows);
+          }
+      );*/
+      /*
+      db.serialize(() => {
+        dbSum(1, 1, db);
+        dbSum(2, 2, db);
+        dbSum(3, 3, db);
+        dbSum(4, 4, db);
+        dbSum(5, 5, db);
+      });
+
+      // close the database connection
+      db.close((err) => {
+        if (err) {
+          return console.error(err.message);
+        }
+      });
+
+      function dbSum(a, b, db) {
+        db.get('SELECT (? + ?) sum', [a, b], (err, row) => {
+          if (err) {
+            console.error(err.message);
+          }
+          console.log(`The sum of ${a} and ${b} is ${row.sum}`);
+        });
+      }
+      */
+      return;
+
+      //only does 1 command at a time and ignores the one after
+      /*db.run('insert into Item values(1,"test",9,9);\
+          insert into Item values(1,"test2",9,9);');
+          */
+    }
+
+
+
+
+/*
     //this doesn't work
     function customerlogin(username, passwordhash, type){
         var user; 
@@ -727,42 +756,6 @@ db.serialize(function () {
           });
     }
 */
-    module.exports.getstores = (busername,bpasswordhash,res) =>{
-      db.get('select bid,name from Business where username=? AND passwordhash=?',
-          [busername,bpasswordhash],
-          (err,row)=>{
-          if(err){
-            console.log(`[DB]getstoresERROR: username(${busername}), ${err}`);
-            console.log({"login":false, "error":"Internal error"});
-            if(res) res.json({"login":false, "error":"Internal error"});
-            return;
-          }
-          if(!row){
-            console.log(`[DB]getstoresERROR: username(${busername}) not found`);
-            console.log({"login":false, "error":"login failed"});
-            if(res) res.json({"login":false, "error":"login failed"});
-            return;
-          }
-          var storejson = {
-            "login":true,
-            "name":row.name,
-            "bid":row.bid,
-            "stores":[]
-          };
-          db.each('select sid from Store where bid=?',
-              [row.bid],
-              (err, rowstore)=>{
-                storejson["stores"].push(rowstore.sid);
-              },
-              (err,storecount)=>{
-                console.log(`[DB]getstores: username(${busername}): json:${storejson}`);
-                if(res) res.json(storejson);
-          });
 
-
-
-      });
-
-    }
 
 });

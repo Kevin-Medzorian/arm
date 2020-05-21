@@ -81,6 +81,13 @@ function storeSignUp(){
     console.log(stateVal);
     console.log(zipCodeVal);
     console.log(passwordVal);
+    if(streetVal.length === 0 || cityVal.length === 0 || stateVal.length === 0 || zipCodeVal.length === 0 || 
+        managerEmailVal.length === 0 || passwordVal.length === 0){
+        $(".error").html("Please fill all the necessary information");
+    }
+    if(passwordVal.length < 8){
+        $(".error").html("Password must be at least 8 characters long");
+    }
    // console.log(confirmVal);
     console.log("Sending POST request...");
     
@@ -244,7 +251,7 @@ function customerSignup() {
     const emailVal = $("#customer-email-signup").val();
     const passwordVal = $("#customer-password-signup").val();
     const confirmVal = $("#customer-password-confirm").val();
-    if(emailVal.length == 0){
+    if(emailVal.length === 0){
         $(".error").html("Email cannot be empty");
     }else if(checkPasswordConditions(passwordVal,confirmVal)){
         fetch("/customer-signup",{
@@ -300,7 +307,7 @@ function businessSignup() {
     bpassword = passwordVal;
     console.log(nameVal+emailVal+passwordVal);
     // Ensure password == confirm-password before attempting to signup.
-    if(nameVal.length == 0){
+    if(nameVal.length === 0){
         $(".error").html("Email cannot be empty");
     }else if(checkPasswordConditions(passwordVal,confirmVal)){
         fetch("/business-signup",{
@@ -506,10 +513,7 @@ function adjustNavbar(){
         $('.navbar-nav').css('background-color', 'transparent');
     }
 }
-function signOut(){
-    busername = null
-    bpassword = null
-}
+
 // On resize of the website, adjust the navbar.
 $(window).resize(function() {
     adjustNavbar();

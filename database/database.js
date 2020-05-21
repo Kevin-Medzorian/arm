@@ -372,7 +372,6 @@ db.serialize(function () {
               cidjson = {"login":true, "cid":row.cid};
               console.log(`[DB]addcustomer:${JSON.stringify(cidjson, null, 2)}`);
               if(res) res.json(cidjson);
-              else console.log("res is false :/");
         });
       }//iferr end
 

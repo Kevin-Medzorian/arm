@@ -33,6 +33,7 @@ app.get('/', function (req, res) {
 // Handle POST request for login
 // => req is the object for the requesting party (the client-side information)
 // => res is the response object we are sending back to the client.
+/*
 app.post('/login', function (req, res) {
         // req.body is now a loaded JSON structure, and **should** contain variables 'email' and 'password'
         // => We can verify whether this is the case later.... TODO
@@ -43,7 +44,7 @@ app.post('/login', function (req, res) {
 
         // Generic success message sent back to the client (its enforced that we have to send a response)
         res.send("Generic success!");
-});
+});*/
 
 app.listen(port, () => {
         console.log(`[WEBSERVER]\tServer active on port ${port}`);
@@ -155,8 +156,8 @@ app.post('/store-add-receipt', (req, res)=>{
       res.json({"login":false, "error": errorempty});
       return;
     }
-    if(aacid <= 0 || typeof(aacid) != 'number' || aasid <= 0 || tyepof(aasid) !=
-        'number' || typeof(aadate) != 'number'){
+    if(body.cid <= 0 || typeof(body.cid) != 'number' || body.sid <= 0 || tyepof(body.sid) !=
+        'number' || typeof(body.date) != 'number'){
       res.json(badinput);
       return;
     }
@@ -177,12 +178,43 @@ app.post('/store-add-receipt', (req, res)=>{
   }
 
 });
-
 app.post('/customer-add-receipt', (req, res)=>{
   console.log('customer-add-receipt');
+  const body=req.body;
+
+  try{
+    if(body.username.length == 0 || body.password.length == 0){
+      res.json({"login":false, "error":errorempty});
+      return;
+    }
+    if(typeof(body.date) != 'number' || body.date <= 0
+        || typeof(body.tax) != 'number' || body.tax < 0
+        || typeof(body.subtotal) != 'number' || body.subtotal < 0){
+      res.json(badinput);
+      return;
+    }
+    database.customeraddreceipt(
+      body.username,
+      body.password,
+      body.date,
+      body.tax,
+      body.subtotal,
+      body.other,
+      body.items,
+      res
+    );
+  } catch(err){
+    console.log(err);
+    res.json(badinput);
+  }
+});
+
+//=====================Get individual receipts
+app.post('/store-get-item', (req, res)=>{
 
 
 });
+
 
 /*
 // Example use of the database:

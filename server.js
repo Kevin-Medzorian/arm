@@ -207,8 +207,16 @@ app.post('/customer-add-receipt', (req, res)=>{
 });
 
 //=====================Get individual receipts
+app.post('/business-get-item', (req, res)=>{
+
+
+    database.getstoreitem(req.body.usermame, req.body.password, req.body.rid,
+        res);
+});
 app.post('/store-get-item', (req, res)=>{
 
+    database.getstoreitem(req.body.usermame, req.body.password, req.body.rid,
+        res);
 
 });
 

@@ -289,14 +289,15 @@ function customerSignup() {
 function businessSignup() {
     // Clear the User-Visible error field (exists for letting user know passwords dont match, etc..)
     $(".error").html("");
-    busername = emailVal
-    bpassword = passwordVal
+    
     // Grab appropriate values from HTML fields.
     const nameVal = $("#business-name-signup").val();
     const emailVal = $("#business-email-signup").val();
     const addressVal = $("#business-address-signup").val();
     const passwordVal = $("#business-password-signup").val();
     const confirmVal = $("#business-password-confirm").val();
+    busername = emailVal;
+    bpassword = passwordVal;
     console.log(nameVal+emailVal+passwordVal);
     // Ensure password == confirm-password before attempting to signup.
     if(nameVal.length == 0){

@@ -4,9 +4,8 @@
 const sqlite3 = require('sqlite3').verbose()
 let db = new sqlite3.Database('./database/cme-data.db');
 db.get("PRAGMA foreign_keys = ON")
-console.log("[DATABASE]\tInitialized sqlite3 Database");
-const blue = 'color:blue';
-const failjson = JSON.stringify({"status": false});
+console.log("[DB]\tInitialized sqlite3 Database");
+//const failjson = {"login": false};
 const util = require('util');
 
 // Ensures that asynchronous db statements wait until their completion before proceeding
@@ -14,12 +13,15 @@ db.serialize(function () {
     module.exports.close = ()=>{
       db.close();
     }
-    module.exports.date = function(year, month, day, hour, min){
+/*    module.exports.date = function(year, month, day, hour, min){
       //YYYY-MM-DDTHH:MM
       //the T is a separator between day and hour
       return toString(year) + '-' +  month + '-' + day + 'T' + hour + ':' + min;
     }
-
+    function print(str){
+      console.log(`[DB] str`);
+    }
+*/
     /*
     // Create basic, generic table if it doesnt exist.
     db.run('CREATE TABLE IF NOT EXISTS users (email text, password text)');
@@ -40,9 +42,9 @@ db.serialize(function () {
         console.log('>printTable');
         db.each('SELECT rowid AS idx, email, password FROM users', function (err, row) {
             if(err){
-              console.log("[DATABASE]" + err.message);
+              console.log("[DB]" + err.message);
             }
-            console.log("[DATABASE]\tRow " + row.idx + ": " + row.email + "\t" + row.password);
+            console.log("[DB]\tRow " + row.idx + ": " + row.email + "\t" + row.password);
         });
         console.log('<printTable');
         //printcid();
@@ -58,7 +60,7 @@ db.serialize(function () {
 
     //Creates tables
     module.exports.createtables = function(){
-      console.log("[DATABASE]\tcreateTables");
+      console.log("[DB]\tcreateTables");
       const addtable = 'CREATE TABLE IF NOT EXISTS ';
 
       db.run(addtable + 'Customer(\
@@ -143,7 +145,7 @@ db.serialize(function () {
 
     module.exports.resettables = function(){
       return;
-      console.log("[DATABASE]\tresetting. Careful...");
+      console.log("[DB]\tresetting. Careful...");
       db.run('drop table Item');
       db.run('drop table Receipt');
       db.run('drop table Customer;');
@@ -179,15 +181,22 @@ db.serialize(function () {
         [username, passwordhash],
         (err, rowin) => {
           if(err){
-            //res.json(failjson);
-            console.log(`[DATABASE]getallreceipts ${username} error1:${err}`);
+            console.log(`[DB]getallreceiptsERROR:username(${username}), ${err}`);
+            console.log({"login":false, "error":"Internal error"});
+            if(res) res.json({"login":false, "error":"Internal error"});
+            return;
           }
-          if(!rowin) console.log(`[DATABASE]getallreceipts:${username}none`);
+          if(!rowin){
+            console.log(`[DB]getallreceipts:${username} not found`);
+            console.log({"login":false, "error":"login failed"});
+            if(res) res.json({"login":false, "error":"login failed"});
+            return;
+          }
           receiptjson["login"] = true;
           receiptjson["cid"] = rowin.cid;
           receiptjson["receipts"] = [];
           //receiptjson["receipts"] = {};
-          console.log(`[DATABASE]cid: ${rowin.cid}`);
+          console.log(`[DB]cid: ${rowin.cid}`);
 
           promises = []
           //get receipts
@@ -197,8 +206,12 @@ db.serialize(function () {
             where R.cid = ? AND R.sid = S.sid AND S.bid = B.bid',
             [rowin.cid],
             (err, rowrec) => {
-              if(err) console.log(`[DATABASE]getallreceipts-rec:${rowin.cid}`);
-              if(!rowrec) console.log(`[DATABASE]getallreceipts-rec:no receipts`);
+              if(err){
+                console.log(`[DB]getallreceipts-recERROR:${rowin.cid}`);
+              }
+              if(!rowrec){
+                console.log(`[DB]getallreceipts-rec:no receipts`);
+              }
               receipt = {
                 "rid" : rowrec.rid,
                 "sid" : rowrec.sid,
@@ -215,45 +228,14 @@ db.serialize(function () {
               //enter items into receipt
               //promises pass by array, receipt pass by json?,
               getitem(promises, receipt, rowrec.rid);
-              /*
-              //promise to make sure items are all done before sending JSON
-              promises.push(new Promise((resolve, reject) =>{
-              //get items
-              db.each('select\
-                  name, quantity, unitcost\
-                  from Item\
-                  where rid = ?',
-                  [rowrec.rid],
-                  (err, rowitem) =>{
-
-                    //in wrong array since receipt gets updated :/
-
-                    console.log(`[DATABASE]itemname:${rowrec.rid},${rowitem.name}`);
-                    item = {
-                      "name" : rowitem.name,
-                      "quantity" : rowitem.quantity,
-                      "unitcost" : rowitem.unitcost
-                    };
-                    receipt["item"].push(item);
-                    console.log(receipt["item"]);
-                  }, (err, rowcountitem) =>{
-                    console.log(`item done ${rowrec.rid}`);
-                    if(rowcountitem)
-                      resolve(`${rowin.rid}:found`);
-                    else
-                      resolve(`${rowin.rid}:none`);
-                  }
-              );//item db.each end
-              }));//promise end
-              */
 
             }, (err, numreceipt) =>{
               Promise.all(promises)
                 .then(responses =>{
                     console.log(`PromiseDone:${responses}`);
                     console.log(JSON.stringify(receiptjson, null, 2));
-                    res.json(receiptjson);
-                });//print out receipt status
+                    if(res) res.json(receiptjson);
+                });//print out receipt login
             }
           );//receipt db.each end
 
@@ -279,7 +261,7 @@ db.serialize(function () {
               };
               receipt["item"].push(item);
             }, (err, rowcountitem) =>{
-              console.log(`[DATABASE]${rid}:${receipt["item"]}`);
+              //console.log(`[DB]${rid}:${receipt["item"]}`);
               if(rowcountitem)
                 resolve(`${rid}:${rowcountitem}`);
               else
@@ -289,30 +271,85 @@ db.serialize(function () {
       }));
     }
 
-    module.exports.getbusinessstorereceipt = (busername,bpasswordhash,sid)=>{
+    //TODO
+    module.exports.getbusinesstorereceipt =
+      (busername,bpasswordhash,sid,res=null)=>{
 
+        db.get('select 1 from Business B, Store S\
+            where username=? and passwordhash=? and ',
+            [business, bpasswordhash],
+            (err, row)=>{
+              if(err){
+                console.log(`[DB]getbusinessstorereceiptERROR: username(${busername}), sid(${sid}), ${err}`);
+                console.log({"login":false, "error":"Internal error"});
+                res.json({"login":false, "error":"Internal error"});
+                return;
+              }
+              if(!row){
+                console.log(`[DB]`);
+              }
+              
+        });
+      
 
     }
 
-    module.exports.getstorereceipt = (susername,spasswordhash)=>{
+    module.exports.getstorereceipt = (susername,spasswordhash,res=null)=>{
+      db.get('select sid from Store where username=? and passwordhash=?',
+          [susername, spasswordhash],
+          (err, rowsid)=>{
+            if(err){
+              console.log(`[DB]getstorereceiptERROR: username(${susername}), ${err}`);
+              console.log({"login":false, "error":"Internal error"});
+              res.json({"login":false, "error":"Internal error"});
+              return;
+            }
+            if(!row){
+              console.log(`[DB]getstorereceipt: username(${susername}) not found`);
+              console.log({"login":false, "error":"login failed"});
+              res.json({"login":false, "error":"login failed"});
+              return;
+            }
+
+            var storejson={
+              "login":true,
+              "receipts":[]
+            }
+            db.each('select rid,cid,date,tax,subtotal,other from Record where sid=?',
+                [rowsid.sid],
+                (err, rowrec)=>{
+                  storejson["receipts"].push({
+                    "rid":rowrec.rid,
+                    "cid":rowrec.cid,
+                    "date":rowrec.date,
+                    "tax":rowrec.tax,
+                    "subtotal":rowrec.subtotal,
+                    "other":rowrec.other
+                  });
+            },(err, count)=>{
+              console.log(`[DB]`);
+            
+            });
+      });
     }
+
 
 
 /*
     module.exports.getallusers = (res) =>{
       cidjson = {
-        "status" : true,
+        "login" : true,
         cid : []
       };
       db.all('select cid from Customer', [],
           (err, rows, res) => {
-            console.log('[DATABASE]getallusers:' + JSON.stringify(rows));
+            console.log('[DB]getallusers:' + JSON.stringify(rows));
             //uidjson.uid
 
           });
     }
     module.exports.printbid = function(){
-      console.log('%c[DATABASE]printbid', blue);
+      console.log('[DB]printbid');
       console.log('username\tpasswordhash\tbid');
       db.each('select * from Business', [], function(err, row){
         console.log(`${row.username}\t${row.passwordhash}\t${row.bid}`);
@@ -320,13 +357,25 @@ db.serialize(function () {
     }
 */
     //Add customer
-    module.exports.addcustomer = function(username, passwordhash, cid = null){
-      console.log('%c[DATABASE]addcustomer', blue);
+    module.exports.addcustomer = function(username, passwordhash, cid = null, res){
+      console.log('[DB]addcustomer');
       function iferr(err){
-        if(err){
-          console.log("[DATABASE]addbusiness error: " + err);
+        if(err){//most likely unique constraint failed
+          console.log(`[DB]addcustomerERROR:username${username}, ${err}`);
+          console.log({"login":false, "error":"Username already exists"});
+          if(res) res.json({"login":false, "error":"Username already exists"});
+          return;
         }
-      }
+        db.get('select cid from Customer where username=? and passwordhash=?',
+            [username,passwordhash],
+            (err, row)=>{
+              cidjson = {"login":true, "cid":row.cid};
+              console.log(`[DB]addcustomer:${JSON.stringify(cidjson, null, 2)}`);
+              if(res) res.json(cidjson);
+              else console.log("res is false :/");
+        });
+      }//iferr end
+
       if(cid){//custom cid
         db.run('INSERT INTO Customer VALUES (?,?,?)',
             [username, passwordhash, cid],iferr);
@@ -335,15 +384,25 @@ db.serialize(function () {
             [username, passwordhash],iferr);
       }
     }
-    module.exports.addbusiness = function(username,passwordhash,name,bid = null){
-      console.log('%c[DATABASE]addbusiness', blue);
+    module.exports.addbusiness = function(username,passwordhash,name,bid = null, res){
+      console.log('[DB]addbusiness');
       function iferr(err){
         if(err){
-          console.log("[DATABASE]addbusiness error: " + err);
-        }else{
-          console.log(`[DATABASE]addbusiness ${username} success`);
+          console.log(`[DB]addbusinessERROR:username${username}, ${err}`);
+          console.log({"login":false, "error":"Username or business name already exists"});
+          if(res) res.json({"login":false, "error":"Username or business name already exists"});
+          return;
         }
-      }
+        console.log(`[DB]addbusiness ${username} success`);
+        db.get('select bid from Business where username=? and passwordhash=?',
+            [username, passwordhash],
+            (err, row)=>{
+              var bidjson = {"login":true, "bid":row.bid};
+              console.log(`[DB]addbusiness:${JSON.stringify(bidjson, null, 2)}`);
+              if(res) res.json(bidjson);
+        });
+      }//iferr end
+
       if(bid){//custom bid
         db.run('INSERT INTO Business VALUES (?,?,?,?)',
             [username, passwordhash, bid, name], iferr);
@@ -353,20 +412,21 @@ db.serialize(function () {
             [username, passwordhash, name], iferr);
       }
     }
-    module.exports.addstore = (busername,bpasswordhash,susername,spasswordhash,street,city,state,zipcode) =>{
+    module.exports.addstore =
+      (busername,bpasswordhash,susername,spasswordhash,street,city,state,zipcode,res) =>{
       db.get('select bid from Business where username=? AND passwordhash=?',
           [busername,bpasswordhash],
           (err, row) =>{
             if(err){
-              console.log(`[DATABASE]addstore error: business username:${busername},${err}`);
-              console.log(failjson);
-              //res.json(failjson);
+              console.log(`[DB]addstoreERROR: business username:${busername},${err}`);
+              console.log({"login":false, "error":"Internal error"});
+              if(res) res.json({"login":false, "error":"Internal error"});
               return;
             }
             if(!row){
-              console.log(`[DATABASE]addstore business username(${busername}) combo does not exist`);
-              console.log(failjson);
-              //res.json(failjson);
+              console.log(`[DB]addstore business username(${busername}) combo does not exist`);
+              console.log({"login":false, "error":"bad business credentials"});
+              if(res) res.json({"login":false, "error":"Internal error"});
               return;
             }
             db.run('INSERT INTO Store(\
@@ -375,81 +435,86 @@ db.serialize(function () {
                 [susername,spasswordhash,row.bid,street,city,state,zipcode],
                 (err) =>{
                   if(err){
-                    console.log("[DATABASE]addstore error: " + err);
-                    console.log(failjson);
-                    //res.json(failjson);
+                    console.log("[DB]addstore error: " + err);
+                    console.log({"login":false, "error":"Username already exists"});
+                    if(res) res.json({"login":false, "error":"Username already exists"});
                     return;
-                  }else{
-                    console.log({"status":true});
-                    //res.json({"status":true});
                   }
-                }
-            );
-          }
-      );
+
+                  db.get('select sid from Store where username=? AND passwordhash=?',
+                      [susername, spasswordhash],
+                      (err, rowstore)=>{
+                        var storejson = {"login":true, "sid":rowstore.sid};
+                        console.log(`[DB]addstore:${storejson}`);
+                        if(res) res.json(storejson);
+                  });
+            });
+      });
     }
 
+    //maybe replaced by getallreceipts
     module.exports.getcid = (username, passwordhash, res) =>{
       console.log(`getcid: ${username},${passwordhash}`);
       db.get('select cid from Customer where username = ? AND passwordhash = ?',
           [username, passwordhash],
           (err, row) =>{
             if(err){
-              console.log(`[DATABASE]getcid error: username(${username}) ${err}`);
-              console.log(failjson);
-              res.json(failjson);
+              console.log(`[DB]getcidERROR:username(${username}), ${err}`);
+              console.log({"login":false, "error":"Internal error"});
+              if(res) res.json({"login":false, "error":"Internal error"});
               return;
             }
             if(!row){
-              console.log(`[DATABASE]getcid ${username} not found`);
-              console.log(failjson);
-              res.json(failjson);
+              console.log(`[DB]getcid ${username} not found`);
+              console.log({"login":false, "error":"bad customer login"});
+              if(res) res.json({"login":false, "error":"login failed"});
               return;
             }
-            console.log("getcid"+JSON.stringify({"status":true, "cid":row.cid},null,2));
-            res.json({"status":true, "cid":row.cid});
+            console.log("getcid"+JSON.stringify({"login":true, "cid":row.cid},null,2));
+            if(res) res.json({"login":true, "cid":row.cid});
           }
       );
     }
-    module.exports.getbid = (username, passwordhash) =>{
+    //maybe replaced with getallstores
+    module.exports.getbid = (username, passwordhash, res) =>{
       db.get('select bid from Business where username = ? AND passwordhash = ?',
           [username, passwordhash],
           (err, row) =>{
             if(err){
-              console.log(`[DATABASE]getbid error: username(${username}) ${err}`);
-              console.log(failjson);
-              //res.json(failjson);
+              console.log(`[DB]getbidERROR: username(${username}), ${err}`);
+              console.log({"login":false, "error":"Internal error"});
+              if(res) res.json({"login":false, "error":"Internal error"});
               return;
             }
             if(!row){
-              console.log(`[DATABASE]getbid ${username} not found`);
-              console.log(failjson);
-              //res.json(failjson);
+              console.log(`[DB]getbid ${username} not found`);
+              console.log({"login":false, "error":"bad business login"});
+              if(res) res.json({"login":false, "error":"login failed"});
               return;
             }
-            console.log(JSON.stringify({"status":true, "bid":row.bid},null,2));
-            //res.json({"status":true, "bid":row.bid);
+            console.log(JSON.stringify({"login":true, "bid":row.bid},null,2));
+            if(res) res.json({"login":true, "bid":row.bid});
           }
       );
     }
-    module.exports.getsid = (username, passwordhash)=>{
+    module.exports.getsid = (username, passwordhash, res)=>{
       db.get('select sid from Store where username = ? AND passwordhash = ?',
           [username, passwordhash],
           (err, row) =>{
             if(err){
-              console.log(`[DATABASE]getsid error: username(${username}) ${err}`);
-              console.log(failjson);
-              //res.json(failjson);
+              console.log(`[DB]getsidERROR: username(${username}), ${err}`);
+              console.log({"login":false, "error":"Internal error"});
+              if(res) res.json({"login":false, "error":"Internal error"});
               return;
             }
             if(!row){
-              console.log(`[DATABASE]getsid ${username} not found`);
-              console.log(failjson);
-              //res.json(failjson);
+              console.log(`[DB]getsid ${username} not found`);
+              console.log({"login":false, "error":"bad store login"});
+              if(res) res.json({"login":false, "error":"login failed"});
               return;
             }
-            console.log({"status":true, "sid":row.sid});
-            //res.json({"status":true, "sid":row.sid});
+            console.log({"login":true, "sid":row.sid});
+            if(res) res.json({"login":true, "sid":row.sid});
           }
       );
     }
@@ -487,78 +552,200 @@ db.serialize(function () {
         });
       }
       */
+      return;
 
       //only does 1 command at a time and ignores the one after
-      db.run('insert into Item values(1,"test",9,9);\
+      /*db.run('insert into Item values(1,"test",9,9);\
           insert into Item values(1,"test2",9,9);');
+          */
     }
 
 
-    module.exports.storeaddreceipt = (susername,spasswordhash,cid,date,tax,subtotal,other,items)=>{
+    module.exports.storeaddreceipt =
+      (susername,spasswordhash,cid,date,tax,subtotal,other,items,res)=>{
       //get sid, add receipt, get rid, add items
-      console.log('%c[DATABASE]storeaddreceipt', blue);
+      console.log('[DB]storeaddreceipt');
       db.get('select sid from Store where username=? AND passwordhash=?',
           [susername, spasswordhash],
           (err, rowsid) =>{
             if(err){
-              console.log(`[DATABASE]storeaddreceiptERROR: username(${susername}) ${err}`);
-              console.log(failjson);
-              //res.json(failjson);
+              console.log(`[DB]storeaddreceiptERROR: username(${susername}) ${err}`);
+              console.log({"login":false, "error":"Internal error"});
+              if(res) res.json({"login":false, "error":"Internal error"});
               return;
             }
             if(!rowsid){
-              console.log(`[DATABASE]storeaddreceiptERROR: username(${username}) not found`);
-              console.log(failjson);
-              //res.json(failjson);
+              console.log(`[DB]storeaddreceiptERROR: username(${username}) not found`);
+              console.log({"login":false, "error":"Bad store credentials"});
+              if(res) res.json({"login":false, "error":"Internal error"});
               return;
             }
-            db.serialize(()=>{
-                db.run('INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (?,?,?,?,?,?);',
-                    [cid,rowsid.sid,date,tax,subtotal,other],
-                    (err)=>{
-                      if(err){
-                        console.log(`[DATABASE]storeaddreceiptERROR:
-                            username${susername}, ${err}`);
-                      }
-                    }
-                )
-                .get('select last_insert_rowid() as rid',
-                    (err, rowrid) =>{
 
-                        item.forEach(val =>{
-                              db.run('insert into Item(?,?,?,?)',
-                                  [rowrid.rid,val.name,val.quantity,val.unitcost],
-                                  (err) =>{
-                                    if(err){
-                                      console.log(`storeaddreceiptERRORitem: username(${susername}), rid(${rowid.rid}), ${err}`);
-                                    }
-                              });
-                        });
-                });
-            });
+            db.run('INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (?,?,?,?,?,?);',
+                [cid,rowsid.sid,date,tax,subtotal,other],
+                (err)=>{
+                  if(err){
+                    console.log(`[DB]storeaddreceiptERROR: username${susername}, ${err}`);
+                    console.log({"login":false, "error":"Internal error"});
+                    res.json({"login":false, "error":"Internal error"});
+                    return;
+                  }
+
+                  var promises = []
+                  items.forEach(val =>{
+                      promises.push(new Promise((resolve, reject)=>{
+                        db.run('insert into Item(?,?,?,?)',
+                            [this.lastID,val.name,val.quantity,val.unitcost],
+                            (err) =>{
+                              if(err){
+                                console.log(`storeaddreceiptERRORitem: username(${susername}), rid(${rowid.rid}), ${err}`);
+                                reject(val.name);
+                                return;
+                              }
+                              resolve();
+                        });//db.run done
+                      }));
+                  });//forEach done
+                  Promise.all(promises)
+                  .then(response=>{
+                      var pass = true;
+                      response.forEach(val=>{
+                        if(val)
+                          pass = false;
+                      });
+                      if(pass){
+                        res.json({"login":true});
+                      } else{//some errror occurred for item
+                        res.json({"login":false, "error":"Internal error item issue"});
+                      }
+                  });//Promise done
+
+            });//Receipt done
 
       });
     }
 
-    module.exports.customeraddreceipt = ()=>{
+    module.exports.customeraddreceipt = (username, passwordhash, date, tax, subtotal, other, items, res)=>{
+      db.get('select cid from Customer where username=? and passwordhash=?',
+          [username, passwordhash],
+          (err, row)=>{
+            if(err){
+              console.log(`[DB]customeraddreceiptERROR: username(${username}), ${err}`);
+              console.log({"login":false, "error":"Internal error"});
+              res.json({"login":false, "error":"Internal error"});
+              return;
+            }
+            if(!row){
+              console.log(`[DB]customeraddreceiptERROR: username(${username}) not found`);
+              console.log({"login":false, "error":"login failed"});
+              res.json({"login":false, "error":"login failed"});
+              return;
+            }
 
+            db.run('insert into Receipt(cid,date,tax,subtotal,other) values(?,?,?,?,?)',
+                [row.cid, date, tax, subtotal, other],
+                (err)=>{
+                  if(err){
+                    console.log(`[DB]customeraddreceipt-recERROR: username(${username}), ${err}`);
+                    console.log({"login":false, "error":"Internal error"});
+                    res.json({"login":false, "error":"Internal error"});
+                    return;
+                  }
+                  //this.lastID is the last rowid
+
+
+                  var promises = []
+                  items.forEach(val=>{
+                    promises.push(new Promise((resolve, reject)=>{
+                      db.run('insert into Item values(?,?,?,?)',
+                          [this.lastID, val.name, val.quantity, val.unitcost],
+                          (err)=>{
+
+                          console.log(`[DB]customeraddreceipt-ItemERROR: username(${username}), rid(${this.lastID}), ${err}`);
+                      });//item done
+
+                    }));
+                  });//items done
+
+                  Promise.all(promises)
+                  .then(response=>{
+                      var pass = true;
+                      response.forEach(val=>{
+                        if(val)
+                          pass = false;
+                      });
+                      if(pass){
+                        res.json({"login":true});
+                      } else{//some errror occurred for item
+                        res.json({"login":false, "error":"Internal error item issue"});
+                      }
+                  });//Promise done
+            });//Receipt done
+
+      });//login done
     }
-    module.exports.getstores = (busername,bpasswordhash) =>{
+
+/*
+    //this doesn't work
+    function customerlogin(username, passwordhash, type){
+        var user; 
+        var id;
+        if(type == 'c'){
+          user = 'Customer';
+          id = 'cid';
+        } else if(type == 'b'){
+          user = 'Business';
+          id = 'bid';
+        } else{//store
+          user = 'Store';
+          id = 'sid';
+        }
+        promises = []
+        promises.push(new Promise((resolve, reject)=>{
+          //-1 is err, 0 can't login, id number login successful
+
+          db.get(`select ${id} from ${user} where username=? and passwordhash=?`,
+            [username, passwordhash],
+            (err, row)=>{
+
+              if(err){
+                console.log(`[DB]customerloginERROR: username(${username})`);
+                console.log({"login":false, "error":"Internal error"});
+                reject(-1);
+                return;
+              }
+              if(!row){
+                console.log(`[DB]customerlogin: username(${username}) not found`);
+                reject(0);
+                return;
+              }
+              resolve(row[id]);
+          });
+        }));
+        Promise.all(promises)
+          .then(response=>{
+             //I guess something here? Maybe use timeout
+          });
+    }
+*/
+    module.exports.getstores = (busername,bpasswordhash,res) =>{
       db.get('select bid,name from Business where username=? AND passwordhash=?',
           [busername,bpasswordhash],
           (err,row)=>{
           if(err){
-            console.log(`[DATABASE]getstoresERROR: username(${busername}), ${err}`);
-            //res.json(failjson);
+            console.log(`[DB]getstoresERROR: username(${busername}), ${err}`);
+            console.log({"login":false, "error":"Internal error"});
+            if(res) res.json({"login":false, "error":"Internal error"});
             return;
           }
           if(!row){
-            console.log(`[DATABASE]getstoresERROR: username(${busername}) not found`);
-            //res.json(failjson);
+            console.log(`[DB]getstoresERROR: username(${busername}) not found`);
+            console.log({"login":false, "error":"login failed"});
+            if(res) res.json({"login":false, "error":"login failed"});
             return;
           }
           var storejson = {
-            "success":true,
+            "login":true,
             "name":row.name,
             "bid":row.bid,
             "stores":[]
@@ -569,8 +756,8 @@ db.serialize(function () {
                 storejson["stores"].push(rowstore.sid);
               },
               (err,storecount)=>{
-                console.log(`[DATABASE]getstores: username(${busername}): json:${storejson}`);
-                //res.json(storejson);
+                console.log(`[DB]getstores: username(${busername}): json:${storejson}`);
+                if(res) res.json(storejson);
           });
 
 

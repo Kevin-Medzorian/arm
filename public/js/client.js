@@ -2,8 +2,9 @@
 var loggedIn = false;
 var receipts = null;
 var UID = null;
-var busername = null
-var bpassword = null
+var busername = null;
+var bpassword = null;
+var stores = [];
 
 
 /*
@@ -127,6 +128,7 @@ function storeSignUp(){
                 loggedIn = true;
                 UID = json.sid;
                 openStoreSession();
+                stores.push(UID);
             }else{
                 //some error
                 $(".store-error").html("Username already exists");
@@ -135,9 +137,40 @@ function storeSignUp(){
             alert(err); // If there is ANY error here, then send an alert to the browser.
         }
     });
+    
     event.preventDefault();
 }
 
+function displayStores(){
+    let result = "<table>";
+    result += "<th> Index </th>";
+    result += "<th> SID </th>"
+    let index = 1;
+     for(let store of stores){
+        result += "<tr><td>" + index + "</td><td>" + store + "</td></tr>";
+        index = index + 1;
+     }
+    /* result += "</table>";
+     console.log("result");
+     console.log(result);*/
+     /*result += "<tr>\
+     <th>Firstname</th>\
+     <th>Lastname</th>\
+     <th>Age</th>\
+   </tr>\
+   <tr>\
+     <td>Jill</td>\
+     <td>Smith</td>\
+     <td>50</td>\
+   </tr>\
+   <tr>\
+     <td>Eve</td>\
+     <td>Jackson</td>\
+     <td>94</td>\
+   </tr>\
+ </table>"*/
+     $(".show-stores").html(result);
+}
 
 /*
     Called whenever the store "login!" button is clicked.
@@ -222,6 +255,8 @@ function businessLogin() {
                 loggedIn = true;
                 receipts = json.receipts;
                 UID = json.bid;
+                stores = json.stores;
+                console.log(stores);
                 openBusinessSession();
             } else{
                 $(".error").html("Username or password is incorrect");

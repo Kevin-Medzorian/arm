@@ -281,3 +281,20 @@ h1.gradient {
 .store-error{
   color: red;
 }
+
+table{
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  border-spacing: 2px;
+}
+
+th{
+  border: 1px solid black;
+  text-align: center;
+  padding: 8px;
+}
+
+td{
+  display: table-cell;
+  vertical-align: inherit;
+}

@@ -68,13 +68,14 @@ function customerLogin() {
     Then, makes POST request on "/"
 */
 function storeSignUp(){
-    $(".error").html("");
+    $(".store-error").html("");
     const streetVal = $("#store-street").val();
     const cityVal = $("#store-city").val();
     const stateVal = $("#store-state").val();
     const zipCodeVal = $("#store-zipcode").val();
     const managerEmailVal = $("#store-manager-email").val();
     const passwordVal = $("#store-password").val();
+    const confirmVal = $("#store-confirm-password").val();
     //const confirmVal = $("#store-confirm-password").val();
     console.log(streetVal);
     console.log(cityVal);
@@ -83,10 +84,18 @@ function storeSignUp(){
     console.log(passwordVal);
     if(streetVal.length === 0 || cityVal.length === 0 || stateVal.length === 0 || zipCodeVal.length === 0 || 
         managerEmailVal.length === 0 || passwordVal.length === 0){
-        $(".error").html("Please fill all the necessary information");
+        $(".store-error").html("Please fill all the necessary information");
+        return;
     }
+    console.log(passwordVal)
     if(passwordVal.length < 8){
-        $(".error").html("Password must be at least 8 characters long");
+        console.log("Hello");
+        $(".store-error").html("Password must be at least 8 characters long");
+        return;
+    }
+    if(!checkPasswordConditions(passwordVal,confirmVal)){
+        $(".store-error").html("Password must match");
+        return;
     }
    // console.log(confirmVal);
     console.log("Sending POST request...");
@@ -120,7 +129,7 @@ function storeSignUp(){
                 openStoreSession();
             }else{
                 //some error
-                $(".error").html("Username already exists");
+                $(".store-error").html("Username already exists");
             }
         }catch(err) {
             alert(err); // If there is ANY error here, then send an alert to the browser.

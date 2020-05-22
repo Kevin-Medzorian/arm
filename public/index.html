@@ -503,11 +503,12 @@
       <input type="text" id="store-state" class="form-control mt-3" placeholder="State" autofocus />
       <input type="text" id="store-zipcode" class="form-control mt-3" placeholder="Zipcode" autofocus />
       <input type="text" id="store-manager-email" class="form-control mt-3" placeholder="Manager Email" />
-      <input type="text" id="store-password" class="form-control mt-3" placeholder="Password" />
-      <!--<input type="text" id="store-confirm-password" class="form-control mt-3" placeholder="Confirm Password" /> -->
+      <input type="password" id="store-password" class="form-control mt-3" placeholder="Password" />
+      <input type="password" id="store-confirm-password" class="form-control mt-3" placeholder="Confirm Password" />
       <button class="btn btn-lg btn-primary btn-rounded" id="add-store-btn" style="border-radius: 30px;"
-       onclick = "storeSignUp()"href="#addstore" type="submit">Add Store!</button>  <!-- add onclick method in the tag-->
-      <!--</div>-->
+       onclick = "storeSignUp()" href="#addstore" type="submit">Add Store!</button>  <!-- add onclick method in the tag-->
+       <div class="store-error"></div>
+          <!-- Custom error-text area in case we need to tell the user something (bad login, etc..) -->
 
       <div class="tab-pane fade" id="manage-stores" role="tabpanel" aria-labelledby="pills-spending-tab">
 

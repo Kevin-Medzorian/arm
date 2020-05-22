@@ -83,7 +83,7 @@ function storeSignUp(){
     console.log(stateVal);
     console.log(zipCodeVal);
     console.log(passwordVal);
-    if(streetVal.length === 0 || cityVal.length === 0 || stateVal.length === 0 || zipCodeVal.length === 0 || 
+    if(streetVal.length === 0 || cityVal.length === 0 || stateVal.length === 0 || zipCodeVal.length === 0 ||
         managerEmailVal.length === 0 || passwordVal.length === 0){
         $(".store-error").html("Please fill all the necessary information");
         return;
@@ -100,7 +100,7 @@ function storeSignUp(){
     }
    // console.log(confirmVal);
     console.log("Sending POST request...");
-    
+
     fetch("/store-signup",{
         method: "POST",
         body: JSON.stringify({
@@ -113,7 +113,7 @@ function storeSignUp(){
             state : stateVal,
             zipcode : zipCodeVal
         }),
-        
+
         headers:{
             "Content-type": "application/json; charset=UTF-8"
         }
@@ -137,7 +137,7 @@ function storeSignUp(){
             alert(err); // If there is ANY error here, then send an alert to the browser.
         }
     });
-    
+
     event.preventDefault();
 }
 
@@ -206,7 +206,21 @@ function storeLogin() {
     // Displaying results to console
     .then(json => {
         console.log(json);
-        
+        try{
+            if(json.login){
+                loggedIn = true;
+               // receipts = json.receipts;
+               // UID = json.bid;
+               // stores = json.stores;
+              //  console.log(stores);
+                openStoreSession();
+            } else{
+                $(".error").html("Username or password is incorrect");
+            }
+        } catch(err) {
+            alert(err); // If there is ANY error here, then send an alert to the browser.
+        }
+
     })
     .catch((error) => {
         alert(error);
@@ -223,7 +237,7 @@ function businessLogin() {
     // TODO
     // Clear the User-Visible error field (exists for letting user know passwords dont match, etc..)
     $(".error").html("");
-    
+
     const emailVal = $("#business-email-login").val();
     const passwordVal = $("#business-password-login").val();
     console.log(emailVal + passwordVal);
@@ -340,7 +354,7 @@ function customerSignup() {
 function businessSignup() {
     // Clear the User-Visible error field (exists for letting user know passwords dont match, etc..)
     $(".error").html("");
-    
+
     // Grab appropriate values from HTML fields.
     const nameVal = $("#business-name-signup").val();
     const emailVal = $("#business-email-signup").val();

@@ -206,6 +206,20 @@ function storeLogin() {
     // Displaying results to console
     .then(json => {
         console.log(json);
+        try{
+            if(json.login){
+                loggedIn = true;
+               // receipts = json.receipts;
+               // UID = json.bid;
+               // stores = json.stores;
+              //  console.log(stores);
+                openStoreSession();
+            } else{
+                $(".error").html("Username or password is incorrect");
+            }
+        } catch(err) {
+            alert(err); // If there is ANY error here, then send an alert to the browser.
+        }
 
     })
     .catch((error) => {

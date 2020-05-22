@@ -95,7 +95,8 @@
           <a class="nav-link p-2 active" id="customer-login-tab" data-toggle="tab" href="#customerLogin" role="tab"
             aria-controls="customerLogin" aria-selected="true">
             <img style="width:25px; height:25px;" src="images/user.png" />
-            <div id="customer-login-text" style="display:inline;">Customer</div><!-- This is just the text in the customer tab area -->
+            <div id="customer-login-text" style="display:inline;">Customer</div>
+            <!-- This is just the text in the customer tab area -->
           </a>
         </li>
 
@@ -115,7 +116,7 @@
             <img style="width:25px; height:25px;" src="images/store.png" />
             <div id="store-login-text" style="display:inline;"></div>
           </a>
-        </li>        
+        </li>
 
       </ul>
       <div class="tab-content" id="loginTabContent">
@@ -479,7 +480,7 @@
     <ul class="nav nav-pills fixed-top session-top justify-content-center" id="top-navbar" role="tablist">
       <li class="nav-item">
         <a class="nav-link h3 m-1 active" id="pills-id-tab" data-toggle="pill" href="#manage-stores" role="tab"
-          aria-controls="manage-stores" aria-selected="true">Manage Stores</a>
+          aria-controls="manage-stores" aria-selected="true">Stores</a>
       </li>
       <li class="nav-item">
         <a class="nav-link h3 m-1" id="pills-receipts-tab" data-toggle="pill" href="#receipts-businesses" role="tab"
@@ -487,34 +488,50 @@
       </li>
       <li class="nav-item">
         <a class="nav-link h3 m-1" id="pills-spending-tab" data-toggle="pill" href="#view-product-statistics" role="tab"
-          aria-controls="view-product-statistics" aria-selected="false">View Product Statistics</a>
+          aria-controls="view-product-statistics" aria-selected="false">Product Stats</a>
       </li>
       <li class="nav-item">
         <a class="nav-link h3 m-1" id="pills-account-tab" data-toggle="pill" href="#account-business" role="tab"
-          aria-controls="account-business" aria-selected="false">Account</a>
+          aria-controls="account-business" aria-selected="false">Profile</a>
       </li>
     </ul>
 
+    <div class="tab-pane fade show active mt-5" id="manage-stores" role="tabpanel" aria-labelledby="pills-manage-stores-tab">
+      <!--<div class = "h-100 row align-items-center" id="center-texts-store-input"> NEED TO WORK HERE!-->
+      <input type="text" id="store-street" class="form-control mt-3" placeholder="Street" autofocus />
+      <input type="text" id="store-city" class="form-control mt-3" placeholder="City" autofocus />
+      <input type="text" id="store-state" class="form-control mt-3" placeholder="State" autofocus />
+      <input type="text" id="store-zipcode" class="form-control mt-3" placeholder="Zipcode" autofocus />
+      <input type="text" id="store-manager-email" class="form-control mt-3" placeholder="Manager Email" />
+      <input type="password" id="store-password" class="form-control mt-3" placeholder="Password" />
+      <input type="password" id="store-confirm-password" class="form-control mt-3" placeholder="Confirm Password" />
+      <button class="btn btn-lg btn-primary btn-rounded" id="add-store-btn" style="border-radius: 30px;"
+       onclick = "storeSignUp()" href="#addstore" type="submit">Add Store!</button>  <!-- add onclick method in the tag-->
+       <div class="store-error"></div>
+          <!-- Custom error-text area in case we need to tell the user something (bad login, etc..) -->
 
+          <button class="btn btn-lg btn-primary btn-rounded" id="show-store-btn" style="border-radius: 30px;"
+          onclick = "displayStores()" href="#showstore" type="submit">Show Stores!</button>
+        <div class="show-stores" ></div>
+    </div>
 
-    <div class="tab-pane fade" id="manage-stores" role="tabpanel" aria-labelledby="pills-spending-tab">
+    <div class="tab-pane fade" id="receipts-businesses" role="tabpanel" aria-labelledby="pills-receipts-businesses-tab">
 
     </div>
-    <div class="tab-pane fade" id="receipts-businesses" role="tabpanel" aria-labelledby="pills-spending-tab">
+    <div class="tab-pane fade" id="view-product-statistics" role="tabpanel"
+      aria-labelledby="pills-product-statistics-tab">
 
     </div>
-    <div class="tab-pane fade" id="view-product-statistics" role="tabpanel" aria-labelledby="pills-spending-tab">
 
-    </div>
-
-    <div class="tab-pane fade" id="account-business" role="tabpanel" aria-labelledby="pills-spending-tab">
+    <div class="tab-pane fade" id="account-business" role="tabpanel" aria-labelledby="pills-account-business-tab">
       <div class="row">
         <div class="col text-center">
-          <button class="btn btn-primary" onclick="location.href='/'">Logout</button>
+          <button class="btn btn-primary" onclick = "location.href='/'" >Logout</button>
         </div>
       </div>
     </div>
   </div>
+
 </body>
 
 </html>

@@ -2,6 +2,9 @@
 var loggedIn = false;
 var receipts = null;
 var UID = null;
+var busername = null;
+var bpassword = null;
+var stores = [];
 
 
 /*
@@ -60,6 +63,114 @@ function customerLogin() {
 
     event.preventDefault(); // Prevent page from reloading.
 }
+/*
+    Called when the business clicks the add store
+    Grabs apppropriate HTML fields
+    Then, makes POST request on "/"
+*/
+function storeSignUp(){
+    $(".store-error").html("");
+    const streetVal = $("#store-street").val();
+    const cityVal = $("#store-city").val();
+    const stateVal = $("#store-state").val();
+    const zipCodeVal = $("#store-zipcode").val();
+    const managerEmailVal = $("#store-manager-email").val();
+    const passwordVal = $("#store-password").val();
+    const confirmVal = $("#store-confirm-password").val();
+    //const confirmVal = $("#store-confirm-password").val();
+    console.log(streetVal);
+    console.log(cityVal);
+    console.log(stateVal);
+    console.log(zipCodeVal);
+    console.log(passwordVal);
+    if(streetVal.length === 0 || cityVal.length === 0 || stateVal.length === 0 || zipCodeVal.length === 0 ||
+        managerEmailVal.length === 0 || passwordVal.length === 0){
+        $(".store-error").html("Please fill all the necessary information");
+        return;
+    }
+    console.log(passwordVal)
+    if(passwordVal.length < 8){
+        console.log("Hello");
+        $(".store-error").html("Password must be at least 8 characters long");
+        return;
+    }
+    if(!checkPasswordConditions(passwordVal,confirmVal)){
+        $(".store-error").html("Password must match");
+        return;
+    }
+   // console.log(confirmVal);
+    console.log("Sending POST request...");
+
+    fetch("/store-signup",{
+        method: "POST",
+        body: JSON.stringify({
+            busername : busername,
+            bpassword: bpassword,
+            susername : managerEmailVal,
+            spassword : passwordVal,
+            street : streetVal,
+            city : cityVal,
+            state : stateVal,
+            zipcode : zipCodeVal
+        }),
+
+        headers:{
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        try{
+            console.log(json);
+            if(json.login){
+                console.log("store login true");
+                loggedIn = true;
+                UID = json.sid;
+                openStoreSession();
+                stores.push(UID);
+            }else{
+                //some error
+                $(".store-error").html("Username already exists");
+            }
+        }catch(err) {
+            alert(err); // If there is ANY error here, then send an alert to the browser.
+        }
+    });
+
+    event.preventDefault();
+}
+
+function displayStores(){
+    let result = "<table>";
+    result += "<th> Index </th>";
+    result += "<th> SID </th>"
+    let index = 1;
+     for(let store of stores){
+        result += "<tr><td>" + index + "</td><td>" + store + "</td></tr>";
+        index = index + 1;
+     }
+    /* result += "</table>";
+     console.log("result");
+     console.log(result);*/
+     /*result += "<tr>\
+     <th>Firstname</th>\
+     <th>Lastname</th>\
+     <th>Age</th>\
+   </tr>\
+   <tr>\
+     <td>Jill</td>\
+     <td>Smith</td>\
+     <td>50</td>\
+   </tr>\
+   <tr>\
+     <td>Eve</td>\
+     <td>Jackson</td>\
+     <td>94</td>\
+   </tr>\
+ </table>"*/
+     $(".show-stores").html(result);
+}
 
 /*
     Called whenever the store "login!" button is clicked.
@@ -95,7 +206,7 @@ function storeLogin() {
     // Displaying results to console
     .then(json => {
         console.log(json);
-        
+
     })
     .catch((error) => {
         alert(error);
@@ -112,11 +223,12 @@ function businessLogin() {
     // TODO
     // Clear the User-Visible error field (exists for letting user know passwords dont match, etc..)
     $(".error").html("");
-    
+
     const emailVal = $("#business-email-login").val();
     const passwordVal = $("#business-password-login").val();
     console.log(emailVal + passwordVal);
-
+    busername = emailVal
+    bpassword = passwordVal
     console.log("Sending POST request...");
 
     // POST request using fetch()
@@ -143,6 +255,8 @@ function businessLogin() {
                 loggedIn = true;
                 receipts = json.receipts;
                 UID = json.bid;
+                stores = json.stores;
+                console.log(stores);
                 openBusinessSession();
             } else{
                 $(".error").html("Username or password is incorrect");
@@ -181,7 +295,7 @@ function customerSignup() {
     const emailVal = $("#customer-email-signup").val();
     const passwordVal = $("#customer-password-signup").val();
     const confirmVal = $("#customer-password-confirm").val();
-    if(emailVal.length == 0){
+    if(emailVal.length === 0){
         $(".error").html("Email cannot be empty");
     }else if(checkPasswordConditions(passwordVal,confirmVal)){
         fetch("/customer-signup",{
@@ -233,16 +347,11 @@ function businessSignup() {
     const addressVal = $("#business-address-signup").val();
     const passwordVal = $("#business-password-signup").val();
     const confirmVal = $("#business-password-confirm").val();
+    busername = emailVal;
+    bpassword = passwordVal;
     console.log(nameVal+emailVal+passwordVal);
     // Ensure password == confirm-password before attempting to signup.
-<<<<<<< HEAD
-    if(passwordVal == confirmVal){
-    // Fetch
-      // run openStoreSession
-    } else {
-        $(".error").html("Passwords do not match."); // Set user-visible test field.
-=======
-    if(nameVal.length == 0){
+    if(nameVal.length === 0){
         $(".error").html("Email cannot be empty");
     }else if(checkPasswordConditions(passwordVal,confirmVal)){
         fetch("/business-signup",{
@@ -275,7 +384,6 @@ function businessSignup() {
                 alert(err); // If there is ANY error here, then send an alert to the browser.
             }
         });
->>>>>>> 3e0891981ce2d34c1ddb67e845b5a58f1d1f9518
     }
 
     event.preventDefault(); // Prevent page from reloading.
@@ -449,6 +557,7 @@ function adjustNavbar(){
         $('.navbar-nav').css('background-color', 'transparent');
     }
 }
+
 // On resize of the website, adjust the navbar.
 $(window).resize(function() {
     adjustNavbar();

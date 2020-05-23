@@ -472,8 +472,52 @@
   </div>
 
   <!-- Div that contains our entire store-session page. -->
-  <div id="store-session" style="display:none;">
-    <h1>Hello world</h1>
+  <div id="store-session" style = "display:none;">
+  <div>
+    <style>
+        h3 {
+            border: 1px solid black;
+        }
+    </style>
+  </div>
+  <div>
+  </div>
+
+  <h1 style = "color:blue; font-size:300%;">Items:</h1>
+  <hr>
+  <header style = "display:table;  margin:auto;" >
+    <div style ="display:table-cell;">
+		<h2 style = "padding: 45px">Name</h2>
+    </div>
+    <div style ="display:table-cell;">
+        <h2 style = "padding: 45px;">Cost</h2>
+    </div>
+    <div style ="display:table-cell;">
+        <h2 style = "padding: 45px;">Quantity</h2>
+    </div>
+  </header>
+  <input type="button" value="+" style="float: right;">
+
+  <header style = "display:table-row-group; float:right;" >
+	<div style ="display:table-row; padding: 35px;">
+		<h3>Subtotal:</h3>
+    </div>
+	<div style ="display:table-row; padding: 35px;">
+		<h3>Tax:</h3>
+    </div>
+	<div style ="display:table-row; padding: 35px;">
+		<h3>Total:</h3>
+    </div>
+  </header>
+
+  <header style = "display:table-row-group; float:left" >
+      <div style ="display:table-cell;">
+		  <h3>Customer ID:</h3>
+      </div>
+      <div style ="display:table-cell; float:right">
+          <input type="button" value="Send Receipt" style="float: right;">
+      </div>
+  </header>
 
   </div>
 

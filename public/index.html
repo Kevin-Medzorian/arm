@@ -500,22 +500,27 @@
 
   <header style = "display:table-row-group; float:right;" >
 	<div style ="display:table-row; padding: 35px;">
-		<h3>Subtotal:</h3>
+		<label for="stotal">Subtotal:</label>
+		<input type="text" id="stotal" name="stotal"><br><br>
     </div>
 	<div style ="display:table-row; padding: 35px;">
-		<h3>Tax:</h3>
+		<label for="tax">Tax:</label>
+		<input type="text" id="tax" name="tax"><br><br>
     </div>
 	<div style ="display:table-row; padding: 35px;">
-		<h3>Total:</h3>
+		<label for="total">Total:</label>
+		<input type="text" id="total" name="total"><br><br>
     </div>
   </header>
 
   <header style = "display:table-row-group; float:left" >
       <div style ="display:table-cell;">
-		  <h3>Customer ID:</h3>
+	    <label for="cid">Customer ID:</label>
+		<input type="text" id="cid" name="cid"><br><br>
       </div>
       <div style ="display:table-cell; float:right">
-          <input type="button" value="Send Receipt" style="float: right;">
+           <button class="btn btn-lg btn-primary btn-rounded" id="show-store-btn" style="border-radius: 30px;"
+            onclick = "storeaddreceipt(cid, tax, stotal, total)" href="#showstore" type="submit">Send Receipt</button>
       </div>
   </header>
 

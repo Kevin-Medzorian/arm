@@ -6,6 +6,7 @@ var busername = null;
 var bpassword = null;
 var stores = [];
 
+google.charts.load('current', {'packages':['corechart']});
 
 /*
     Called whenever the customer "login!" button is clicked.
@@ -417,6 +418,71 @@ function openCustomerSession(){
 
     // Set up our UID-text to be equal to our UID
     $("#uid-text").html(UID);
+
+
+
+        const months = ["January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"];
+        var disp = [];
+        var mons = [];
+        var thisDate = new Date(Date.now());
+        var start = thisDate.getMonth();
+        var i;
+        for (i = 0; i < 5; i++) {
+          disp.push({
+            name: months[(start + months.length) % months.length],
+            index: (start + months.length) % months.length,
+            total: 0
+          });
+          mons.push(disp[i].index);
+          start -= 1;
+        }
+
+        var i;
+        for (i=0;i<receipts.length;i++) {
+          var date = new Date(parseInt(receipts[i]["date"]));
+
+          // Check same year
+          if (date.getYear() == thisDate.getYear()) {
+
+            // Check months
+            var j;
+            for (j=0;j<disp.length;j++) {
+              if (date.getMonth() == disp[j].index) {
+                disp[j].total += receipts[i]["subtotal"] + receipts[i]["tax"];
+              }
+            }
+          }
+        }
+
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+          [disp[4].name, disp[4].total],
+          [disp[3].name, disp[3].total],
+          [disp[2].name, disp[2].total],
+          [disp[1].name, disp[1].total],
+          [disp[0].name, disp[0].total]
+        ]);
+
+        // Set chart options
+        var options = {'title':'How Much Pizza I Ate Last Night',
+                       'width':400,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+
+
+
+
+
+
+
 }
 
 /*

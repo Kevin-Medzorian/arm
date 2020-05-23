@@ -459,7 +459,7 @@ function openCustomerSession(){
         // Create the data table.
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Topping');
-        data.addColumn('number', 'Slices');
+        data.addColumn('number', 'Dollars');
         data.addRows([
           [disp[4].name, disp[4].total],
           [disp[3].name, disp[3].total],
@@ -469,7 +469,7 @@ function openCustomerSession(){
         ]);
 
         // Set chart options
-        var options = {'title':'How Much Pizza I Ate Last Night',
+        var options = {'title':'Monthly Spending',
                        'width':400,
                        'height':300};
 

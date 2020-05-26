@@ -98,9 +98,9 @@ db.serialize(function () {
             rid integer PRIMARY KEY,\
             cid integer,\
             sid integer,\
-            date integer NOT NULL,\
-            tax integer NOT NULL,\
-            subtotal integer NOT NULL,\
+            date integer check(typeof(date) = "integer"),\
+            tax integer check(typeof(date) = "integer"),\
+            subtotal integer integer check(typeof(date) = "integer"),\
             other TEXT,\
             FOREIGN KEY(cid) REFERENCES Customer(cid),\
             FOREIGN KEY(sid) REFERENCES Store(sid))',
@@ -111,8 +111,8 @@ db.serialize(function () {
       db.run(addtable + 'Item(\
             rid integer,\
             name TEXT NOT NULL,\
-            quantity integer NOT NULL check(typeof(quantity) = "integer"),\
-            unitcost integer NOT NULL check(typeof(unitcost) = "integer"),\
+            quantity integer check(typeof(quantity) = "integer"),\
+            unitcost integer check(typeof(unitcost) = "integer"),\
             FOREIGN KEY(rid) REFERENCES Receipt(rid))',
           (err) =>{
             console.log("createtables-Item: ", err);
@@ -241,7 +241,7 @@ db.serialize(function () {
                 [susername,spasswordhash,row.bid,street,city,state,zipcode],
                 (err) =>{
                   if(err){
-                    console.log("[DB]addstore error: " + err);
+                    console.log(`[DB]addstore error: username(${username}), $(err)`);
                     console.log({"login":false, "error":"Username already exists"});
                     if(res) res.json({"login":false, "error":"Username already exists"});
                     return;
@@ -350,7 +350,12 @@ db.serialize(function () {
           db.each('select sid from Store where bid=?',
               [row.bid],
               (err, rowstore)=>{
-                storejson["stores"].push(rowstore.sid);
+                storejson["stores"].push({
+                    "sid":rowstore.sid,
+                    "street":rowstore.street,
+                    "state":rowstore.state,
+                    "zipcode":rowstore.zipcode
+                });
               },
               (err,storecount)=>{
                 console.log(`[DB]getstores: username(${busername}): json:${storejson}`);

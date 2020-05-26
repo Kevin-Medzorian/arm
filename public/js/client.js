@@ -128,7 +128,7 @@ function storeSignUp(){
                 console.log("store login true");
                 loggedIn = true;
                 UID = json.sid;
-                openStoreSession();
+                //openStoreSession();
                 stores.push(UID);
             }else{
                 //some error
@@ -418,6 +418,7 @@ function openCustomerSession(){
 
     // Set up our UID-text to be equal to our UID
     $("#uid-text").html(UID);
+    showAllReceipts();
 
 
 
@@ -527,6 +528,64 @@ function openSignupForm(){
     $('#signup-form').fadeIn('slow');
 }
 
+/* TODO: Abhik */
+function viewReceipt(receiptIndex) {
+    console.log("Clicked " + receiptIndex);
+}
+
+/*
+    Displays all receipts, called when you click the receipts button on the menu
+*/
+function showAllReceipts(){
+    // TODO: display warning for no receipts
+    let result = '';
+    if (receipts.length == 0) { // no receipts, display message
+        result += '<div class="no-receipts">No receipts.</div>';
+    } else {
+        result += '<div class="row">';
+        let index = 0;
+        for(let receipt of receipts){ // TODO: limit the number of receipts seen if too many in database
+            result += '<div class="col-lg-4 col-md-6 mt-3">';
+            result += '<button onclick="viewReceipt(this.value)" class="receipt-list" value=' + index + '>';
+            result += '<span class="left receipt-list-store">' + receipt.name + '</span>';
+            result += '<span class="right receipt-list-date">' + receipt.date + '</span>';
+            result += '<br>';
+            result += '<span class="left">';
+            result += '<span class="receipt-list-subtitle"># of Items: </span>';
+            result += '<span class="receipt-list-subtext">' + receipt.item.length + '</span>';
+            result += '</span>';
+            result += '<span class="right">';
+            result += '<span class="receipt-list-subtitle">Total: $</span>';
+            const total = receipt.subtotal + receipt.tax;
+            result += '<span class="receipt-list-subtext">' + total + '</span>';
+            result += '</span></button></div>';
+
+            index = index + 1;
+        }
+        result += "</div>";
+    }
+     /*
+     <div class="row">
+        <div class="col-lg-4 col-md-6 mt-3">
+            <div class="receipt-list">
+            <span class="left receipt-list-store">Business</span>
+            <span class="right receipt-list-date">12/12/2000</span>
+            <br>
+            <span class="left">
+                <span class="receipt-list-subtitle"># of Items:</span>
+                <span class="receipt-list-subtext">5</span>
+            </span>
+            <span class="right">
+                <span class="receipt-list-subtitle">Total:</span>
+                <span class="receipt-list-subtext">$100.20</span>
+            </span>
+            </div>
+        </div>
+    </div>
+    */
+    $(".show-all-receipts").html(result);
+    // Note for elsewhere: enter key for login doesnt work
+}
 
 /*
     !!! The following is somewhat complicated custom jQuery code for custom website functionality. !!!

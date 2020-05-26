@@ -234,11 +234,30 @@ h1.gradient {
 }
 
 /* Receipts styles */
+.no-receipts {
+  text-align: center;
+  font-size: 48px;
+  color: rgb(146, 48, 48)
+}
+
+.row { /* fixes extra horizontal scroll bar */
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.show-all-receipts {
+  width: 100vw; /* entire screen, used to fix weird bootstrap issue */
+}
+
 .receipt-list {
+  text-align: left;
   border-radius: 20px;
+  border-color: transparent;
   background-color: rgb(200,200,200);
   height: 100px;
-  padding: 5px;
+  width: 90%;
+  padding: 5px 20px;
+  margin-left: 5%;
 }
 
 .left{

@@ -52,6 +52,7 @@ app.listen(port, () => {
 
 
 const errorempty = "Fields can't be empty";
+const emptyerror = {"login":false, errorempty};
 const badinput = {"login":false, "error": "bad input"};
 //==================SIGN UP REQUESTS
 // Adds a customer to the database
@@ -59,7 +60,7 @@ app.post('/customer-signup', (req, res) => {
   console.log(`customer-signup`)
   try{
     if(req.body.email.length == 0 || req.body.password.length == 0){
-      res.json({"login": false, "error": errorempty});
+      res.json(emptyerror);
       return;
     }
     database.addcustomer(req.body.email, req.body.password, null, res);
@@ -73,7 +74,7 @@ app.post('/business-signup', (req, res) => {
   try{
     if(req.body.email.length == 0 || req.body.password.length == 0 ||
         req.body.name.length == 0){
-      res.json({"login": false, "error": errorempty});
+      res.json(emptyerror);
       return;
     }
     database.addbusiness(req.body.email, req.body.password, req.body.name, null, res);
@@ -88,7 +89,7 @@ app.post('/store-signup', (req, res)=>{
   try{
     if(body.busername.length == 0 || body.bpassword.length == 0 ||
         body.susername.length == 0 || body.spassword.length == 0){
-      res.json({"login": false, "error": errorempty});
+      res.json(emptyerror);
       return;
     }
     database.addstore(body.busername, body.bpassword, body.susername,
@@ -105,7 +106,7 @@ app.post('/customer-login', (req, res) => {
   console.log(`/customer-login`);
   try{
     if(req.body.email.length == 0 || req.body.password.length == 0){
-      res.json({"login": false, "error": errorempty});
+      res.json(emptyerror);
       return;
     }
     database.getallreceipts(req.body.email, req.body.password, res);
@@ -119,7 +120,7 @@ app.post('/business-login', (req, res) => {
   try{
     //json: {'email':'', 'password': ''}
     if(req.body.email.length == 0 || req.body.password.length == 0){
-      res.json({"login": false, "error": errorempty});
+      res.json(emptyerror);
       return;
     }
     database.getstores(req.body.email, req.body.password, res);
@@ -133,7 +134,7 @@ app.post('/store-login', (req, res) => {
   try{
     //json: {'email':'', 'password': ''}
     if(req.body.email.length == 0 || req.body.password.length == 0){
-      res.json({"login": false, "error": errorempty});
+      res.json(emptyerror);
       return;
     }
     database.getsid(req.body.email, req.body.password, res);
@@ -208,15 +209,44 @@ app.post('/customer-add-receipt', (req, res)=>{
 
 //=====================Get individual receipts
 app.post('/business-get-item', (req, res)=>{
+    try{
+      if(req.body.username.length == 0 || req.body.password == 0 ||
+          !req.body.rid){
+        res.json({"login":false, "error":errorempty});
+        return;
+      }
+      if(typeof(req.body.rid) != 'number'){
+        res.json(badinput);
+        return;
+      }
+      database.getstoreitem(req.body.usermame, req.body.password, req.body.rid,
+          res);
+
+    } catch(err){
+      console.log(err);
+      res.json(badinput);
+    }
 
 
-    database.getstoreitem(req.body.usermame, req.body.password, req.body.rid,
-        res);
 });
 app.post('/store-get-item', (req, res)=>{
+    try{
+      if(req.body.username.length == 0 || req.body.password == 0 ||
+          !req.body.rid){
+        res.json({"login":false, "error":errorempty});
+        return;
+      }
+      if(typeof(req.body.rid) != 'number'){
+        res.json(badinput);
+        return;
+      }
+      database.getstoreitem(req.body.usermame, req.body.password, req.body.rid,
+          res);
 
-    database.getstoreitem(req.body.usermame, req.body.password, req.body.rid,
-        res);
+    } catch(err){
+      console.log(err);
+      res.json(badinput);
+    }
 
 });
 

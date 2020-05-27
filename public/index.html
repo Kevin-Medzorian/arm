@@ -139,7 +139,7 @@
             </label>
           </div>--> <!-- Might not be implemented. -->
 
-          <button class="btn btn-lg btn-primary btn-block" onclick="customerLogin()">Log in</button>
+          <button class="btn btn-lg btn-primary btn-block" id="customer-login-button" onclick="customerLogin()">Log in</button>
           <!-- Uses our custom javascript -->
 
           <p class="text-center mt-2">
@@ -170,7 +170,7 @@
             </label>
           </div>--> <!-- Might not be implemented in time. -->
 
-          <button class="btn btn-lg btn-primary btn-block" onclick="businessLogin()">Log in</button>
+          <button class="btn btn-lg btn-primary btn-block" id="business-login-button" onclick="businessLogin()">Log in</button>
           <!-- Uses our custom javascript -->
 
           <p class="text-center mt-2">
@@ -201,7 +201,7 @@
             </label>
           </div> --> <!-- Might not be implemented in time. -->
 
-          <button class="btn btn-lg btn-primary btn-block" onclick="storeLogin()">Log in</button>
+          <button class="btn btn-lg btn-primary btn-block" id="store-login-button" onclick="storeLogin()">Log in</button>
           <!-- Uses our custom javascript -->
 
           <p class="text-center mt-2">
@@ -390,7 +390,7 @@
           <!-- Search Box -->
           <div class="row search-receipts fixed-top">
             <input type="text" id="search-input" placeholder="Search...">
-            <button type="submit" onclick="searchReceipt()"><img src="images/search.png"></i></button>
+            <button type="submit" id="search-button" onclick="searchReceipt()"><img src="images/search.png"></i></button>
           </div>
 
           <!-- All Receipts shown from showAllReceipts in client.js -->

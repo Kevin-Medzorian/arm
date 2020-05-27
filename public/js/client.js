@@ -420,8 +420,6 @@ function openCustomerSession(){
     $("#uid-text").html(UID);
     showAllReceipts();
 
-
-
     const months = ["January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"];
     var disp = [];
@@ -588,21 +586,24 @@ function showAllReceipts(){
 */
 function searchReceipt(){
     const keyword = $("#search-input").val();
+    const regex = new RegExp(keyword, 'i');
+
     if (keyword == "" || !receipts || receipts.length == 0) { // empty search or no receipts, show all receipts
         showAllReceipts();
     } else {
         let result = '<div class="row">';
         let index = 0;
         for(let receipt of receipts){ // TODO: limit the number of receipts seen if too many in database
-            console.log(keyword);
-            console.log(new Date(keyword).getDate());
-            if (receipt.name.toLowerCase() == keyword.toLowerCase() || receipt.date == new Date(keyword).getDate()) {
+            var d = new Date(parseInt(receipt.date));
+            const dateStr = "" + (d.getMonth() + 1) +"/" + d.getDate() + "/" + d.getFullYear();
+            // if receipt matches with keyword as a regex
+            if (receipt.name.search(regex) != -1 || dateStr.search(regex) != -1) {
 
                 // below is copied from showAllReceipts
                 result += '<div class="col-lg-4 col-md-6 mt-3">';
                 result += '<button onclick="viewReceipt(this.value)" class="receipt-list" value=' + index + '>';
                 result += '<span class="left receipt-list-store">' + receipt.name + '</span>';
-                result += '<span class="right receipt-list-date">' + receipt.date + '</span>';
+                result += '<span class="right receipt-list-date">' + dateStr + '</span>';
                 result += '<br>';
                 result += '<span class="left">';
                 result += '<span class="receipt-list-subtitle"># of Items: </span>';
@@ -686,6 +687,46 @@ $(document).ready(function () {
         $('#customer-login-text').html("Customer");
         $('#store-login-text').html("");
         $('#business-login-text').html("");
+    });
+
+    
+    // Set up enter function for search receipt bar
+    $("#search-input").keypress(function(event) { 
+        if (event.keyCode === 13) { 
+            $("#search-button").click(); 
+        } 
+    }); 
+
+    // Set up enter function for login
+    $("#customer-email-login").keypress(function(event) { 
+        if (event.keyCode === 13) { 
+            $("#customer-login-button").click(); 
+        } 
+    });
+    $("#customer-password-login").keypress(function(event) { 
+        if (event.keyCode === 13) { 
+            $("#customer-login-button").click(); 
+        } 
+    });
+    $("#business-email-login").keypress(function(event) { 
+        if (event.keyCode === 13) { 
+            $("#business-login-button").click(); 
+        } 
+    });
+    $("#business-password-login").keypress(function(event) { 
+        if (event.keyCode === 13) { 
+            $("#business-login-button").click(); 
+        } 
+    });
+    $("#store-email-login").keypress(function(event) { 
+        if (event.keyCode === 13) { 
+            $("#store-login-button").click(); 
+        } 
+    });
+    $("#store-password-login").keypress(function(event) { 
+        if (event.keyCode === 13) { 
+            $("#store-login-button").click(); 
+        } 
     });
 
     $('#toggler').on('click', function(){

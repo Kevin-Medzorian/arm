@@ -239,6 +239,7 @@ h1.gradient {
   display: inline-block;
   text-align: right;
   margin-top: 10px;
+  left: 75vw;
 }
 .search-receipts input[type=text] {
   padding: 6px;
@@ -278,6 +279,7 @@ h1.gradient {
   .search-receipts {
     text-align: center;
     margin-top: 70px;
+    left: 0;
   }
   .search-receipts button {
     margin-right: 0px;
@@ -295,6 +297,7 @@ h1.gradient {
   .search-receipts {
     text-align: center;
     margin-top: 10px;
+    left: 0;
   }
   .search-receipts input[type=text] {
     width: 245px;

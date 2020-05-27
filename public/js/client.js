@@ -441,7 +441,7 @@ function openCustomerSession(){
 
     if(receipts){
       for (i=0; i < receipts.length; i++) {
-        var date = new Date(receipts[i]["date"]);
+        var date = new Date(parseInt(receipts[i]["date"]));
 
         // Check same year
         if (date.getYear() == thisDate.getYear()) {
@@ -541,10 +541,12 @@ function showAllReceipts(){
         result += '<div class="row">';
         let index = 0;
         for(let receipt of receipts){ // TODO: limit the number of receipts seen if too many in database
+            var d = new Date(parseInt(receipt.date));
+            const dateStr = "" + (d.getMonth() + 1) +"/" + d.getDate() + "/" + d.getFullYear();
             result += '<div class="col-lg-4 col-md-6 mt-3">';
             result += '<button onclick="viewReceipt(this.value)" class="receipt-list" value=' + index + '>';
             result += '<span class="left receipt-list-store">' + receipt.name + '</span>';
-            result += '<span class="right receipt-list-date">' + receipt.date + '</span>';
+            result += '<span class="right receipt-list-date">' + dateStr + '</span>';
             result += '<br>';
             result += '<span class="left">';
             result += '<span class="receipt-list-subtitle"># of Items: </span>';

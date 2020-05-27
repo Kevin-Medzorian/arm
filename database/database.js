@@ -2,7 +2,7 @@
 //https://github.com/mapbox/node-sqlite3/wiki/API#databasegetsql-param--callback
 //^ is api for node js sqlite
 const sqlite3 = require('sqlite3').verbose()
-let db = new sqlite3.Database('./database/cme-data.db');
+let db = new sqlite3.Database('./database/arm-data.db');
 db.get("PRAGMA foreign_keys = ON")
 console.log("[DB]\tInitialized sqlite3 Database");
 //const failjson = {"login": false};

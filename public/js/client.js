@@ -274,7 +274,7 @@ function businessLogin() {
                 console.log(stores);
                 openBusinessSession();
             } else{
-                $(".error").html("Username or password is incorrect");
+                $(".error").html("Email or password is incorrect");
             }
         } catch(err) {
             alert(err); // If there is ANY error here, then send an alert to the browser.
@@ -336,7 +336,7 @@ function customerSignup() {
                     openCustomerSession();
                 }else{
                     //some error
-                    $(".error").html("Username already exists");
+                    $(".error").html("Email already exists");
                 }
             }catch(err) {
                 alert(err); // If there is ANY error here, then send an alert to the browser.
@@ -393,7 +393,7 @@ function businessSignup() {
                     openBusinessSession();
                 }else{
                     //some error
-                    $(".error").html("Username already exists");
+                    $(".error").html("Email already exists");
                 }
             }catch(err) {
                 alert(err); // If there is ANY error here, then send an alert to the browser.

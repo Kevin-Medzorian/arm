@@ -422,67 +422,62 @@ function openCustomerSession(){
 
 
 
-        const months = ["January", "February", "March", "April", "May", "June",
-          "July", "August", "September", "October", "November", "December"];
-        var disp = [];
-        var mons = [];
-        var thisDate = new Date(Date.now());
-        var start = thisDate.getMonth();
-        var i;
-        for (i = 0; i < 5; i++) {
-          disp.push({
-            name: months[(start + months.length) % months.length],
-            index: (start + months.length) % months.length,
-            total: 0
-          });
-          mons.push(disp[i].index);
-          start -= 1;
-        }
+    const months = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"];
+    var disp = [];
+    var mons = [];
+    var thisDate = new Date();
+    var start = thisDate.getMonth();
+    var i;
+    for (i = 0; i < 5; i++) {
+      disp.push({
+        name: months[(start + months.length) % months.length],
+        index: (start + months.length) % months.length,
+        total: 0
+      });
+      mons.push(disp[i].index);
+      start -= 1;
+    }
 
-        var i;
-        for (i=0;i<receipts.length;i++) {
-          var date = new Date(parseInt(receipts[i]["date"]));
+    if(receipts){
+      for (i=0; i < receipts.length; i++) {
+        var date = new Date(receipts[i]["date"]);
 
-          // Check same year
-          if (date.getYear() == thisDate.getYear()) {
+        // Check same year
+        if (date.getYear() == thisDate.getYear()) {
 
-            // Check months
-            var j;
-            for (j=0;j<disp.length;j++) {
-              if (date.getMonth() == disp[j].index) {
-                disp[j].total += receipts[i]["subtotal"] + receipts[i]["tax"];
-              }
+          // Check months
+          var j;
+          for (j=0; j < disp.length; j++) {
+            if (date.getMonth() == disp[j].index) {
+              disp[j].total += receipts[i]["subtotal"] + receipts[i]["tax"];
             }
           }
         }
+      }
+    }
 
 
-        // Create the data table.
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Topping');
-        data.addColumn('number', 'Dollars');
-        data.addRows([
-          [disp[4].name, disp[4].total],
-          [disp[3].name, disp[3].total],
-          [disp[2].name, disp[2].total],
-          [disp[1].name, disp[1].total],
-          [disp[0].name, disp[0].total]
-        ]);
+    // Create the data table.
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Topping');
+    data.addColumn('number', 'Dollars');
+    data.addRows([
+      [disp[4].name, disp[4].total],
+      [disp[3].name, disp[3].total],
+      [disp[2].name, disp[2].total],
+      [disp[1].name, disp[1].total],
+      [disp[0].name, disp[0].total]
+    ]);
 
-        // Set chart options
-        var options = {'title':'Monthly Spending',
-                       'width':400,
-                       'height':300};
+    // Set chart options
+    var options = {'title':'Monthly Spending',
+                   'width':400,
+                   'height':300};
 
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
-
-
-
-
-
-
+    // Instantiate and draw our chart, passing in some options.
+    var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
 
 }
 
@@ -539,7 +534,8 @@ function viewReceipt(receiptIndex) {
 function showAllReceipts(){
     // TODO: display warning for no receipts
     let result = '';
-    if (receipts.length == 0) { // no receipts, display message
+    //if customer signs up, no receipts to show. receipt is null
+    if (!receipts || receipts.length == 0) { // no receipts, display message
         result += '<div class="no-receipts">No receipts.</div>';
     } else {
         result += '<div class="row">';

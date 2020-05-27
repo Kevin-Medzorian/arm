@@ -532,7 +532,6 @@ function viewReceipt(receiptIndex) {
     Displays all receipts, called when you click the receipts button on the menu
 */
 function showAllReceipts(){
-    // TODO: display warning for no receipts
     let result = '';
     //if customer signs up, no receipts to show. receipt is null
     if (!receipts || receipts.length == 0) { // no receipts, display message
@@ -580,7 +579,44 @@ function showAllReceipts(){
     </div>
     */
     $(".show-all-receipts").html(result);
-    // Note for elsewhere: enter key for login doesnt work
+}
+
+/*
+    Receipt search bar functionality. Allows for searches of business name or date.
+*/
+function searchReceipt(){
+    const keyword = $("#search-input").val();
+    if (keyword == "" || !receipts || receipts.length == 0) { // empty search or no receipts, show all receipts
+        showAllReceipts();
+    } else {
+        let result = '<div class="row">';
+        let index = 0;
+        for(let receipt of receipts){ // TODO: limit the number of receipts seen if too many in database
+            console.log(keyword);
+            console.log(new Date(keyword).getDate());
+            if (receipt.name.toLowerCase() == keyword.toLowerCase() || receipt.date == new Date(keyword).getDate()) {
+
+                // below is copied from showAllReceipts
+                result += '<div class="col-lg-4 col-md-6 mt-3">';
+                result += '<button onclick="viewReceipt(this.value)" class="receipt-list" value=' + index + '>';
+                result += '<span class="left receipt-list-store">' + receipt.name + '</span>';
+                result += '<span class="right receipt-list-date">' + receipt.date + '</span>';
+                result += '<br>';
+                result += '<span class="left">';
+                result += '<span class="receipt-list-subtitle"># of Items: </span>';
+                result += '<span class="receipt-list-subtext">' + receipt.item.length + '</span>';
+                result += '</span>';
+                result += '<span class="right">';
+                result += '<span class="receipt-list-subtitle">Total: $</span>';
+                const total = receipt.subtotal + receipt.tax;
+                result += '<span class="receipt-list-subtext">' + total + '</span>';
+                result += '</span></button></div>';
+            }
+            index = index + 1;
+        }
+        result += "</div>";
+        $(".show-all-receipts").html(result);
+    }
 }
     
 /*

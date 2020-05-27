@@ -234,6 +234,76 @@ h1.gradient {
 }
 
 /* Receipts styles */
+/* Style the search box on view all receipts page */
+.search-receipts {
+  display: inline-block;
+  text-align: right;
+  margin-top: 10px;
+}
+.search-receipts input[type=text] {
+  padding: 6px;
+  font-size: 24px;
+  border: none;
+  border-radius: 10px;
+  width: 245px;
+}
+
+.search-receipts input[type=text]:focus {
+  outline: none;
+}
+
+.search-receipts button {
+  background: rgb(200,200,200);
+  border-radius: 10px;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  margin-right: 16px;
+  vertical-align: top;
+}
+
+.search-receipts button:focus {
+  outline: none;
+}
+
+.search-receipts img {
+  margin-top: -2px;
+  margin-left: -8px;
+  width: 50px;
+  height: 50px;
+}
+
+/* When the screen is less than 1300px wide, move search to middle below navbar */
+@media screen and (max-width: 1300px) and (min-width: 768px) {
+  .search-receipts {
+    text-align: center;
+    margin-top: 70px;
+  }
+  .search-receipts button {
+    margin-right: 0px;
+  }
+  .search-receipts input[type=text] {
+    width: 400px;
+  }
+  .show-all-receipts {
+    margin-top: 70px;
+  }
+}
+
+/* When the screen is less than 768 wide, move search to middle top */
+@media screen and (max-width: 767px) {
+  .search-receipts {
+    text-align: center;
+    margin-top: 10px;
+  }
+  .search-receipts input[type=text] {
+    width: 245px;
+  }
+  .show-all-receipts {
+    margin-top: 10px;
+  }
+}
+
 .no-receipts {
   text-align: center;
   font-size: 48px;
@@ -252,7 +322,7 @@ h1.gradient {
 .receipt-list {
   text-align: left;
   border-radius: 20px;
-  border-color: transparent;
+  border: none;
   background-color: rgb(200,200,200);
   height: 100px;
   width: 90%;
@@ -293,6 +363,7 @@ h1.gradient {
 .receipt-list-subtext{
   font-size: 20px;
 }
+/* End receipts styles */
 
 #store-street { width: 650px; border: 1px solid #999999; padding: 5px; }
 #add-store-button {padding: 5px;}

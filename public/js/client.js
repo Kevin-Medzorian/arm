@@ -686,6 +686,10 @@ function adjustNavbar(){
         $('.navbar-nav').css('border-radius', '30px 0px 0px 30px');
         $('.navbar-nav').css('margin-right', '0px');
         $('.navbar-nav').css('background-color', 'rgba(250,250,250, 0.8)');
+
+        // for search bar in receipts
+        //$('.search-receipts').css('margin-top', '10px');
+        //$('.show-all-receipts').css('margin-top', '10px');
     } else {
         if(loggedIn){
             $('#bot-navbar').hide();
@@ -694,6 +698,19 @@ function adjustNavbar(){
         $('.navbar-nav').css('border-radius', '4px 4px 4px 30px');
         $('.navbar-nav').css('margin-right', '1vw');
         $('.navbar-nav').css('background-color', 'transparent');
+
+        // for search bar in receipts
+        /*if(screen.width < 1300){
+            $('.search-receipts').css('margin-top', '70px');
+            $('.search-receipts').css('text-align', 'center');
+            $('.search-receipts input[type=text]').css('width', '400px');
+            $('.show-all-receipts').css('margin-top', '70px');
+        } else {
+            $('.search-receipts').css('margin-top', '10px');
+            $('.search-receipts').css('text-align', 'right');
+            $('.search-receipts input[type=text]').css('width', '245px');
+            $('.show-all-receipts').css('margin-top', '10px');
+        }*/
     }
 }
 

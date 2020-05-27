@@ -20,7 +20,7 @@ function customerLogin() {
     const emailVal = $("#customer-email-login").val();
     const passwordVal = $("#customer-password-login").val();
     if(emailVal.length === 0 || passwordVal.length === 0){
-        $(".error").html("Username and password should not be empty");
+        $(".error").html("Email and password should not be empty");
     }else{
         console.log("Sending POST request...");
 
@@ -51,7 +51,7 @@ function customerLogin() {
                     UID = json.cid;
                     openCustomerSession();
                 } else{
-                    $(".error").html("Username or password is incorrect");
+                    $(".error").html("Email or password is incorrect");
                 }
             } catch(err) {
                 alert(err); // If there is ANY error here, then send an alert to the browser.
@@ -128,11 +128,11 @@ function storeSignUp(){
                 console.log("store login true");
                 loggedIn = true;
                 UID = json.sid;
-                openStoreSession();
+                //openStoreSession();
                 stores.push(UID);
             }else{
                 //some error
-                $(".store-error").html("Username already exists");
+                $(".store-error").html("Email already exists");
             }
         }catch(err) {
             alert(err); // If there is ANY error here, then send an alert to the browser.
@@ -216,7 +216,7 @@ function storeLogin() {
               //  console.log(stores);
                 openStoreSession();
             } else{
-                $(".error").html("Username or password is incorrect");
+                $(".error").html("Email or password is incorrect");
             }
         } catch(err) {
             alert(err); // If there is ANY error here, then send an alert to the browser.
@@ -441,7 +441,7 @@ function openCustomerSession(){
 
     if(receipts){
       for (i=0; i < receipts.length; i++) {
-        var date = new Date(receipts[i]["date"]);
+        var date = new Date(parseInt(receipts[i]["date"]));
 
         // Check same year
         if (date.getYear() == thisDate.getYear()) {
@@ -528,7 +528,7 @@ function viewReceipt(receiptIndex) {
     console.log("Clicked " + receiptIndex);
 }
 
-/* 
+/*
     Displays all receipts, called when you click the receipts button on the menu
 */
 function showAllReceipts(){
@@ -540,10 +540,12 @@ function showAllReceipts(){
         result += '<div class="row">';
         let index = 0;
         for(let receipt of receipts){ // TODO: limit the number of receipts seen if too many in database
+            var d = new Date(parseInt(receipt.date));
+            const dateStr = "" + (d.getMonth() + 1) +"/" + d.getDate() + "/" + d.getFullYear();
             result += '<div class="col-lg-4 col-md-6 mt-3">';
             result += '<button onclick="viewReceipt(this.value)" class="receipt-list" value=' + index + '>';
             result += '<span class="left receipt-list-store">' + receipt.name + '</span>';
-            result += '<span class="right receipt-list-date">' + receipt.date + '</span>';
+            result += '<span class="right receipt-list-date">' + dateStr + '</span>';
             result += '<br>';
             result += '<span class="left">';
             result += '<span class="receipt-list-subtitle"># of Items: </span>';
@@ -618,7 +620,7 @@ function searchReceipt(){
         $(".show-all-receipts").html(result);
     }
 }
-    
+
 /*
     !!! The following is somewhat complicated custom jQuery code for custom website functionality. !!!
 */

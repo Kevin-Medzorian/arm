@@ -20,7 +20,7 @@ function customerLogin() {
     const emailVal = $("#customer-email-login").val();
     const passwordVal = $("#customer-password-login").val();
     if(emailVal.length === 0 || passwordVal.length === 0){
-        $(".error").html("Username and password should not be empty");
+        $(".error").html("Email and password should not be empty");
     }else{
         console.log("Sending POST request...");
 
@@ -51,7 +51,7 @@ function customerLogin() {
                     UID = json.cid;
                     openCustomerSession();
                 } else{
-                    $(".error").html("Username or password is incorrect");
+                    $(".error").html("Email or password is incorrect");
                 }
             } catch(err) {
                 alert(err); // If there is ANY error here, then send an alert to the browser.
@@ -132,7 +132,7 @@ function storeSignUp(){
                 stores.push(UID);
             }else{
                 //some error
-                $(".store-error").html("Username already exists");
+                $(".store-error").html("Email already exists");
             }
         }catch(err) {
             alert(err); // If there is ANY error here, then send an alert to the browser.
@@ -216,7 +216,7 @@ function storeLogin() {
               //  console.log(stores);
                 openStoreSession();
             } else{
-                $(".error").html("Username or password is incorrect");
+                $(".error").html("Email or password is incorrect");
             }
         } catch(err) {
             alert(err); // If there is ANY error here, then send an alert to the browser.

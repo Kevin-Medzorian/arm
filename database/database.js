@@ -241,7 +241,7 @@ db.serialize(function () {
                 [susername,spasswordhash,row.bid,street,city,state,zipcode],
                 (err) =>{
                   if(err){
-                    console.log(`[DB]addstore error: username(${username}), $(err)`);
+                    console.log(`[DB]addstore error: username(${susername}), $(err)`);
                     console.log({"login":false, "error":"Username already exists"});
                     if(res) res.json({"login":false, "error":"Username already exists"});
                     return;
@@ -475,7 +475,7 @@ db.serialize(function () {
               return;
             }
             if(!rowsid){
-              console.log(`[DB]storeaddreceiptERROR: username(${username}) not found`);
+              console.log(`[DB]storeaddreceiptERROR: username(${susername}) not found`);
               console.log({"login":false, "error":"Bad store credentials"});
               if(res) res.json({"login":false, "error":"Internal error"});
               return;
@@ -600,7 +600,7 @@ db.serialize(function () {
                 return;
               }
               if(!row){
-                console.log(`[DB]getbusinessstorereceipt: username(${username}), sid(${sid}) not found`);
+                console.log(`[DB]getbusinessstorereceipt: username(${busername}), sid(${sid}) not found`);
                 res.json({"login":false, "error":"login failed"});
                 return;
               }
@@ -656,12 +656,12 @@ db.serialize(function () {
         [busername, bpassword, rid],
         (err, row)=>{
           if(err){
-            console.log(`[DB]getbusinessitemERROR: username(${username}), rid(${rid}), ${err}`);
+            console.log(`[DB]getbusinessitemERROR: username(${busername}), rid(${rid}), ${err}`);
             res.json({"login":false, "error":"Internal error"});
             return;
           }
           if(!row){
-            console.log(`[DB]getbusinessitem: username(${username}), rid(${rid}) not found`);
+            console.log(`[DB]getbusinessitem: username(${busername}), rid(${rid}) not found`);
             res.json({"login":false, "error":"login failed"});
             return;
           }
@@ -676,12 +676,12 @@ db.serialize(function () {
         [susername, spassword, rid],
         (err, row)=>{
           if(err){
-            console.log(`[DB]getstoreitemERROR: username(${username}), rid(${rid}), ${err}`);
+            console.log(`[DB]getstoreitemERROR: username(${susername}), rid(${rid}), ${err}`);
             res.json({"login":false, "error":"Internal error"});
             return;
           }
           if(!row){
-            console.log(`[DB]getstoreitem: username(${username}), rid(${rid}) not found`);
+            console.log(`[DB]getstoreitem: username(${susername}), rid(${rid}) not found`);
             res.json({"login":false, "error":"login failed"});
             return;
           }

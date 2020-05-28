@@ -1,5 +1,5 @@
 /*Run this file with:
- sqlite3 cme-data.db < sometable.sql
+ sqlite3 arm-data.db < sometable.sql
 */
 
 /*

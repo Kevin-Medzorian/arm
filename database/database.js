@@ -271,18 +271,19 @@ db.serialize(function () {
             "bid":row.bid,
             "stores":[]
           };
-          db.each('select sid from Store where bid=?',
+          db.each('select sid, street, city, state, zipcode from Store where bid=?',
               [row.bid],
               (err, rowstore)=>{
                 storejson.stores.push({
                     "sid":rowstore.sid,
                     "street":rowstore.street,
+                    "city":rowstore.city,
                     "state":rowstore.state,
                     "zipcode":rowstore.zipcode
                 });
               },
               (err,storecount)=>{
-                console.log(`[DB]getstores: username(${busername}): json:${storejson}`);
+                console.log(`[DB]getstores: username(${busername}):\njson:${JSON.stringify(storejson, null, 2)}`);
                 if(res) res.json(storejson);
           });
 

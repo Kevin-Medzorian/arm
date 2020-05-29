@@ -500,14 +500,19 @@
       <input type="text" id="store-manager-email" class="form-control mt-3" placeholder="Manager Email" />
       <input type="password" id="store-password" class="form-control mt-3" placeholder="Password" />
       <input type="password" id="store-confirm-password" class="form-control mt-3" placeholder="Confirm Password" />
-      <button class="btn btn-lg btn-primary btn-rounded" id="add-store-btn" style="border-radius: 30px;"
-       onclick = "storeSignUp()" href="#addstore" type="submit">Add Store!</button>  <!-- add onclick method in the tag-->
-       <div class="store-error"></div>
-          <!-- Custom error-text area in case we need to tell the user something (bad login, etc..) -->
 
-          <button class="btn btn-lg btn-primary btn-rounded" id="show-store-btn" style="border-radius: 30px;"
-          onclick = "displayStores()" href="#showstore" type="submit">Show Stores!</button>
-        <div class="show-stores" ></div>
+      <button class="btn btn-lg btn-primary btn-rounded" id="add-store-btn"
+            style="border-radius: 30px; margin-top: 0.5em;"
+       onclick = "storeSignUp()" href="#addstore" type="submit">Add Store!</button>  <!-- add onclick method in the tag-->
+
+      <div class="store-error"></div>
+        <!-- Custom error-text area in case we need to tell the user something (bad login, etc..) -->
+
+        <button class="btn btn-lg btn-primary btn-rounded" id="show-store-btn"
+        style="border-radius: 30px; margin-top: 0.5em; margin-bottom: 0.5em"
+        onclick = "displayStores()" href="#showstore" type="submit">Show Stores!</button>
+      <div class="show-stores" ></div>
+
     </div>
 
     <div class="tab-pane fade" id="receipts-businesses" role="tabpanel" aria-labelledby="pills-receipts-businesses-tab">

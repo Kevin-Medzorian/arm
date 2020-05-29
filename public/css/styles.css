@@ -388,6 +388,7 @@ th{
 }
 
 td{
+  border: 1px solid black;
   display: table-cell;
   vertical-align: inherit;
 }

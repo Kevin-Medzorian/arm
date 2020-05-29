@@ -143,12 +143,17 @@ function storeSignUp(){
 }
 
 function displayStores(){
-    let result = "<table>";
+    let result = `<table style="background-color: #0b8ca1;">`;
     result += "<th> Index </th>";
     result += "<th> SID </th>";
+    result += "<th> Street </th>";
+    result += "<th> City </th>";
+    result += "<th> State </th>";
+    result += "<th> Zipcode </th>";
     let index = 1;
      for(let store of stores){
-        result += "<tr><td>" + index + "</td><td>" + store + "</td></tr>";
+        result += `<tr><td style="text-align:center;">` + index + "</td><td>" + store.sid + "</td><td>" + store.street + "</td><td>" + 
+          store.city + "</td><td>" + store.state + "</td><td>" + store.zipcode + "</td></tr>";
         index = index + 1;
      }
     /* result += "</table>";

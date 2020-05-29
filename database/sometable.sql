@@ -56,17 +56,17 @@ CREATE TABLE Item(
 );
 
 
-INSERT INTO "Business"(username,passwordhash,bid,name) VALUES('b1','p1',123,'Ralph');
-INSERT INTO "Business"(username,passwordhash,bid,name) VALUES('b2','p2',234,'School');
-INSERT INTO "Business"(username,passwordhash,bid,name) VALUES('Target','expect more pay less',235,'Target');
+INSERT INTO "Business"(username,passwordhash,bid,name) VALUES('b1@gmail.com','p1',123,'Ralph');
+INSERT INTO "Business"(username,passwordhash,bid,name) VALUES('b2@gmail.com','p2',234,'School');
 INSERT INTO "Business"(username,passwordhash,bid,name) VALUES('target@gmail.com','target12',236,'Target12');
 
-INSERT INTO "Store"(username,passwordhash,sid,bid,street,city,state,zipcode) VALUES('s1','c1',123,123,'s','c','s','z');
-INSERT INTO "Store"(username,passwordhash,sid,bid,street,city,state,zipcode) VALUES('s2','c2',127,234,'a','b','c','z');
+INSERT INTO "Store"(username,passwordhash,sid,bid,street,city,state,zipcode) VALUES('s1@gmail.com','c1',123,123,'s','c','s','z');
+insert into "Store"(username,passwordhash,sid, bid,street,city,state,zipcode) values ('s3@gmail.com', 'c3', 124, 123, '1', '2', '3', '4');
+INSERT INTO "Store"(username,passwordhash,sid,bid,street,city,state,zipcode) VALUES('s2@gmail.com','c2',127,234,'a','b','c','z');
 
-INSERT INTO "Customer"(username,passwordhash,cid) VALUES('user1','code1',1234);
-INSERT INTO "Customer"(username,passwordhash,cid) VALUES('u2','c2',2345);
-INSERT INTO "Customer" VALUES('u3','c3',12345);
+INSERT INTO "Customer"(username,passwordhash,cid) VALUES('user1@gmail.com','code1',1234);
+INSERT INTO "Customer"(username,passwordhash,cid) VALUES('u2@gmail.com','c2',2345);
+INSERT INTO "Customer" VALUES('u3@gmail.com','c3',12345);
 
 INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(1,12345,123,cast(strftime('%s','2020-05-26 12:30:00') as integer),1,1,NULL);
 INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(2,12345,123,cast(strftime('%s','2020-04-01 02:30:00') as integer),3,4,'otherstuff');

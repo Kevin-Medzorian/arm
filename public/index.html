@@ -412,6 +412,24 @@
 
   <!-- Div that contains our entire store-session page. -->
   <div id="store-session" style = "display:none;">
+  <ul class="nav nav-pills fixed-top session-top justify-content-center" id="top-navbar" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link h3 m-1 active" id="pills-id-tab" data-toggle="pill" href="#manage-stores" role="tab"
+          aria-controls="manage-stores" aria-selected="true">Stores</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link h3 m-1" id="pills-receipts-tab" data-toggle="pill" href="#receipts-businesses" role="tab"
+          aria-controls="receipts-businesses" aria-selected="false">Receipts</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link h3 m-1" id="pills-spending-tab" data-toggle="pill" href="#view-product-statistics" role="tab"
+          aria-controls="view-product-statistics" aria-selected="false">Product Stats</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link h3 m-1" id="pills-account-tab" data-toggle="pill" href="#account-business" role="tab"
+          aria-controls="account-business" aria-selected="false">Profile</a>
+      </li>
+    </ul>
   <div>
     <style>
         h3 {
@@ -427,15 +445,19 @@
   <header style = "display:table;  margin:auto;" >
     <div style ="display:table-cell;">
 		<h2 style = "padding: 45px">Name</h2>
+		<input type="text" id="itemName" name="itemName"><br><br>
     </div>
     <div style ="display:table-cell;">
         <h2 style = "padding: 45px;">Cost</h2>
+		<input type="text" id="itemCost" name="itemCost"><br><br>
     </div>
     <div style ="display:table-cell;">
         <h2 style = "padding: 45px;">Quantity</h2>
+		<input type="text" id="itemQuantity" name="itemQuantity"><br><br>
     </div>
   </header>
-  <input type="button" value="+" style="float: right;">
+  <button class="btn btn-lg btn-primary btn-rounded" id="show-store-btn" style="border-radius: 30px;"
+            onclick = "storeAddReceiptItem()" href="#showstore" type="submit">Add Item</button>
 
   <header style = "display:table-row-group; float:right;" >
 	<div style ="display:table-row; padding: 35px;">
@@ -459,7 +481,7 @@
       </div>
       <div style ="display:table-cell; float:right">
            <button class="btn btn-lg btn-primary btn-rounded" id="show-store-btn" style="border-radius: 30px;"
-            onclick = "storeaddreceipt()" href="#showstore" type="submit">Send Receipt</button>
+            onclick = "storeAddReceipt()" href="#showstore" type="submit">Send Receipt</button>
       </div>
   </header>
 

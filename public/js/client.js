@@ -5,6 +5,7 @@ var UID = null;
 var busername = null;
 var bpassword = null;
 var stores = [];
+var currentItems = [];
 
 google.charts.load('current', {'packages':['corechart']});
 
@@ -71,7 +72,7 @@ function customerLogin() {
 */
 function storeSignUp(){
     $(".store-error").html("");
-    const streetVal = $("#store-street").val();
+	const streetVal = $("#store-street").val();
     const cityVal = $("#store-city").val();
     const stateVal = $("#store-state").val();
     const zipCodeVal = $("#store-zipcode").val();
@@ -140,6 +141,90 @@ function storeSignUp(){
     });
 
     event.preventDefault();
+}
+
+/*
+    Called when the business clicks the send receipt button
+    Grabs apppropriate HTML fields
+    Then, makes POST request on "/"
+*/
+function storeAddReceipt(){
+	$(".store-error").html("");
+	const cid = $("#cid").val();
+	const subtotal = $("#stotal").val();
+	const total = $("#total").val();
+	const tax = $("#tax").val();
+	const sid = UID;
+	console.log(cid);
+	console.log(subtotal);
+	console.log(total);
+	console.log(tax);
+
+	if(cid.length === 0){
+		$(".store-error").html("Please enter a Customer ID");
+        return;
+	}
+
+	console.log("Sending POST request...");
+
+	fetch("/store-add-receipt",{
+		method: "POST",
+		 body: JSON.stringify({
+            cid : cid,
+			sid : sid,
+			date : timeSinceEpoch,
+			tax : tax, // in cents,
+			subtotal : subtotal, // in cents
+			other : "some custom text",
+			items : [
+				{    // the rid in db gets auto incremented
+					name : items[0],
+					quantity : 2,
+					unitcost : 99 // in cents
+				}
+			]
+
+        }),
+
+		headers:{
+            "Content-type": "application/json; charset=UTF-8"
+        }
+	})
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        try{
+            console.log(json);
+            if(json.login){
+                console.log("store login true");
+                loggedIn = true;
+               // UID = json.sid;
+               // openStoreSession();
+               // stores.push(UID);
+            }else{
+                //some error
+                $(".store-error").html("Username already exists");
+            }
+        }catch(err) {
+            alert(err); // If there is ANY error here, then send an alert to the browser.
+        }
+    });
+
+    event.preventDefault();
+}
+/*
+    Called when the business clicks the add item button
+    Grabs apppropriate HTML fields
+    Then, adds to item array "/"
+*/
+function storeAddReceiptItem(){
+
+	const itemName = $("#itemName").val();
+	const itemCost = $("#itemCost").val();
+	const itemQuantity = $("#itemQuantity").val();
+
+	items.push(itemName);
+
 }
 
 function displayStores(){

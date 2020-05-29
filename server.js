@@ -2,9 +2,9 @@
 
 // Define custom package imports
 const express = require('express');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 // Database import from the database folder
-const database = require('./database/database.js')
+const database = require('./database/database.js');
 
 // Port we are running the server on. Can be any free port.
 const port = 3000;
@@ -57,7 +57,7 @@ const badinput = {"login":false, "error": "bad input"};
 //==================SIGN UP REQUESTS
 // Adds a customer to the database
 app.post('/customer-signup', (req, res) => {
-  console.log(`customer-signup`)
+  console.log(`customer-signup`);
   try{
     if(req.body.email.length == 0 || req.body.password.length == 0){
       res.json(emptyerror);
@@ -154,7 +154,7 @@ app.post('/store-add-receipt', (req, res)=>{
       res.json({"login":false, "error": errorempty});
       return;
     }
-    if(body.cid <= 0 || typeof(body.cid) != 'number' || body.sid <= 0 || tyepof(body.sid) !=
+    if(body.cid <= 0 || typeof(body.cid) != 'number' || body.sid <= 0 || typeof(body.sid) !=
         'number' || typeof(body.date) != 'number'){
       res.json(badinput);
       return;
@@ -185,9 +185,9 @@ app.post('/customer-add-receipt', (req, res)=>{
       res.json({"login":false, "error":errorempty});
       return;
     }
-    if(typeof(body.date) != 'number' || body.date <= 0
-        || typeof(body.tax) != 'number' || body.tax < 0
-        || typeof(body.subtotal) != 'number' || body.subtotal < 0){
+    if(typeof(body.date) != 'number' || body.date <= 0 ||
+        typeof(body.tax) != 'number' || body.tax < 0 ||
+        typeof(body.subtotal) != 'number' || body.subtotal < 0){
       res.json(badinput);
       return;
     }
@@ -301,43 +301,42 @@ if(1==0){
   */
 
   //adding customer to database
-  var customerusername = "Rahul"
-  var customerpassword = "ARM3453"
-  database.addcustomer(customerusername,customerpassword)
+  var customerusername = "Rahul";
+  var customerpassword = "ARM3453";
+  database.addcustomer(customerusername,customerpassword);
   sleep(5000);
   //get username -- here username will be Rahul
-  database.getcid(customerusername,customerpassword)
+  database.getcid(customerusername,customerpassword);
   console.log("Expected \"success\"  res");
 
   //should fail -- no username found in database
-  username = "dflk39"
-  database.getcid(username,password)
-  console.log("Expected failure res")
+  username = "dflk39";
+  database.getcid(username,password);
+  console.log("Expected failure res");
 
   //adding business
-  var businessName = "Target"
-  var businesspassword = "expect more pay less"
-  database.addbusiness(businessName,businesspassword, businessName)
+  var businessName = "Target";
+  var businesspassword = "expect more pay less";
+  database.addbusiness(businessName,businesspassword, businessName);
   console.log("Expected \"success\"  res");
   sleep(5000);
   //adding store
-  var storename = "Store110"
+  var storename = "Store110";
   //type = "S"
-  var storepassword = "daf;ksj"
-  var street = "mystreet"
-  var city = "mycity"
-  var state = "CA"
-  var zipcode = "12345"
+  var storepassword = "daf;ksj";
+  var street = "mystreet";
+  var city = "mycity";
+  var state = "CA";
+  var zipcode = "12345";
   database.addstore(businessName,businesspassword,storename,storepassword,street,
-      city, state, zipcode)
+      city, state, zipcode);
   console.log("Expected \"success\"  res");
 
   sleep(5000);
   //adding store name with same business name should fail
-  storeId = "Target"
   database.addstore(businessName,businesspassword,storename,storepassword,street,
-      city, state, zipcode)
-  console.log("Expected \"failure\"  res")
+      city, state, zipcode);
+  console.log("Expected \"failure\"  res");
   /*
   //adding a store with another store with same address should fail
   storeId = "aflkjs"
@@ -346,3 +345,4 @@ if(1==0){
   console.log("Expected \"failure\"  res")
   */
 }
+

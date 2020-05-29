@@ -19,7 +19,7 @@ function customerLogin() {
     // Grab the appropriate HTML field data
     const emailVal = $("#customer-email-login").val();
     const passwordVal = $("#customer-password-login").val();
-    if(emailVal.length === 0 || passwordVal.length === 0){
+    if(emailVal.length == 0 || passwordVal.length == 0){
         $(".error").html("Email and password should not be empty");
     }else{
         console.log("Sending POST request...");
@@ -39,7 +39,7 @@ function customerLogin() {
             }
         })
         // Converting to JSON
-        .then(response => response.json())  // => Uncomment whenever backend implements "/customer-login"
+        .then(response => response.json())
         // Displaying results to console
         .then(json => {
 
@@ -89,7 +89,7 @@ function storeSignUp(){
         $(".store-error").html("Please fill all the necessary information");
         return;
     }
-    console.log(passwordVal)
+    console.log(passwordVal);
     if(passwordVal.length < 8){
         console.log("Hello");
         $(".store-error").html("Password must be at least 8 characters long");
@@ -145,7 +145,7 @@ function storeSignUp(){
 function displayStores(){
     let result = "<table>";
     result += "<th> Index </th>";
-    result += "<th> SID </th>"
+    result += "<th> SID </th>";
     let index = 1;
      for(let store of stores){
         result += "<tr><td>" + index + "</td><td>" + store + "</td></tr>";
@@ -242,8 +242,8 @@ function businessLogin() {
     const emailVal = $("#business-email-login").val();
     const passwordVal = $("#business-password-login").val();
     console.log(emailVal + passwordVal);
-    busername = emailVal
-    bpassword = passwordVal
+    busername = emailVal;
+    bpassword = passwordVal;
     console.log("Sending POST request...");
 
     // POST request using fetch()
@@ -264,7 +264,7 @@ function businessLogin() {
     .then(response => response.json())
     // Displaying results to console
     .then(json => {
-        console.log(json)
+        console.log(json);
         try{
             if(json.login){
                 loggedIn = true;
@@ -359,7 +359,7 @@ function businessSignup() {
     // Grab appropriate values from HTML fields.
     const nameVal = $("#business-name-signup").val();
     const emailVal = $("#business-email-signup").val();
-    const addressVal = $("#business-address-signup").val();
+    //const addressVal = $("#business-address-signup").val();
     const passwordVal = $("#business-password-signup").val();
     const confirmVal = $("#business-password-confirm").val();
     busername = emailVal;
@@ -439,7 +439,7 @@ function openCustomerSession(){
 
     if(receipts){
       for (i=0; i < receipts.length; i++) {
-        var date = new Date(parseInt(receipts[i]["date"]));
+        var date = new Date(receipts[i].date);
 
         // Check same year
         if (date.getYear() == thisDate.getYear()) {
@@ -448,7 +448,7 @@ function openCustomerSession(){
           var j;
           for (j=0; j < disp.length; j++) {
             if (date.getMonth() == disp[j].index) {
-              disp[j].total += receipts[i]["subtotal"] + receipts[i]["tax"];
+              disp[j].total += receipts[i].subtotal + receipts[i].tax;
             }
           }
         }
@@ -731,12 +731,12 @@ $(document).ready(function () {
 
     $('#toggler').on('click', function(){
         if(!$('.navbar-nav').is(':visible')){
-            $('#toggler-icon').css('background-image', 'url("/images/toggler-close.png")')
+            $('#toggler-icon').css('background-image', 'url("/images/toggler-close.png")');
         } else {
-            $('#toggler-icon').css('background-image', 'url("/images/toggler-down.png")')
+            $('#toggler-icon').css('background-image', 'url("/images/toggler-down.png")');
         }
-        $('#toggler').fadeOut(112)
-        $('#toggler').fadeIn(112)
+        $('#toggler').fadeOut(112);
+        $('#toggler').fadeIn(112);
     });
     $('#login-close').click(function () {
         $('#login-form').fadeOut('slow');

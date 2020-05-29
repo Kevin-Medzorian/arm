@@ -21,7 +21,7 @@ function customerLogin() {
     const emailVal = $("#customer-email-login").val();
     const passwordVal = $("#customer-password-login").val();
     if(emailVal.length === 0 || passwordVal.length === 0){
-        $(".error").html("Username and password should not be empty");
+        $(".error").html("Email and password should not be empty");
     }else{
         console.log("Sending POST request...");
 
@@ -52,7 +52,7 @@ function customerLogin() {
                     UID = json.cid;
                     openCustomerSession();
                 } else{
-                    $(".error").html("Username or password is incorrect");
+                    $(".error").html("Email or password is incorrect");
                 }
             } catch(err) {
                 alert(err); // If there is ANY error here, then send an alert to the browser.
@@ -129,11 +129,11 @@ function storeSignUp(){
                 console.log("store login true");
                 loggedIn = true;
                 UID = json.sid;
-                openStoreSession();
+                //openStoreSession();
                 stores.push(UID);
             }else{
                 //some error
-                $(".store-error").html("Username already exists");
+                $(".store-error").html("Email already exists");
             }
         }catch(err) {
             alert(err); // If there is ANY error here, then send an alert to the browser.
@@ -301,7 +301,7 @@ function storeLogin() {
               //  console.log(stores);
                 openStoreSession();
             } else{
-                $(".error").html("Username or password is incorrect");
+                $(".error").html("Email or password is incorrect");
             }
         } catch(err) {
             alert(err); // If there is ANY error here, then send an alert to the browser.
@@ -359,7 +359,7 @@ function businessLogin() {
                 console.log(stores);
                 openBusinessSession();
             } else{
-                $(".error").html("Username or password is incorrect");
+                $(".error").html("Email or password is incorrect");
             }
         } catch(err) {
             alert(err); // If there is ANY error here, then send an alert to the browser.
@@ -421,7 +421,7 @@ function customerSignup() {
                     openCustomerSession();
                 }else{
                     //some error
-                    $(".error").html("Username already exists");
+                    $(".error").html("Email already exists");
                 }
             }catch(err) {
                 alert(err); // If there is ANY error here, then send an alert to the browser.
@@ -478,7 +478,7 @@ function businessSignup() {
                     openBusinessSession();
                 }else{
                     //some error
-                    $(".error").html("Username already exists");
+                    $(".error").html("Email already exists");
                 }
             }catch(err) {
                 alert(err); // If there is ANY error here, then send an alert to the browser.
@@ -505,69 +505,62 @@ function openCustomerSession(){
     $("#uid-text").html(UID);
     showAllReceipts();
 
+    const months = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"];
+    var disp = [];
+    var mons = [];
+    var thisDate = new Date();
+    var start = thisDate.getMonth();
+    var i;
+    for (i = 0; i < 5; i++) {
+      disp.push({
+        name: months[(start + months.length) % months.length],
+        index: (start + months.length) % months.length,
+        total: 0
+      });
+      mons.push(disp[i].index);
+      start -= 1;
+    }
 
+    if(receipts){
+      for (i=0; i < receipts.length; i++) {
+        var date = new Date(parseInt(receipts[i]["date"]));
 
-        const months = ["January", "February", "March", "April", "May", "June",
-          "July", "August", "September", "October", "November", "December"];
-        var disp = [];
-        var mons = [];
-        var thisDate = new Date(Date.now());
-        var start = thisDate.getMonth();
-        var i;
-        for (i = 0; i < 5; i++) {
-          disp.push({
-            name: months[(start + months.length) % months.length],
-            index: (start + months.length) % months.length,
-            total: 0
-          });
-          mons.push(disp[i].index);
-          start -= 1;
-        }
+        // Check same year
+        if (date.getYear() == thisDate.getYear()) {
 
-        var i;
-        for (i=0;i<receipts.length;i++) {
-          var date = new Date(parseInt(receipts[i]["date"]));
-
-          // Check same year
-          if (date.getYear() == thisDate.getYear()) {
-
-            // Check months
-            var j;
-            for (j=0;j<disp.length;j++) {
-              if (date.getMonth() == disp[j].index) {
-                disp[j].total += receipts[i]["subtotal"] + receipts[i]["tax"];
-              }
+          // Check months
+          var j;
+          for (j=0; j < disp.length; j++) {
+            if (date.getMonth() == disp[j].index) {
+              disp[j].total += receipts[i]["subtotal"] + receipts[i]["tax"];
             }
           }
         }
+      }
+    }
 
 
-        // Create the data table.
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Topping');
-        data.addColumn('number', 'Dollars');
-        data.addRows([
-          [disp[4].name, disp[4].total],
-          [disp[3].name, disp[3].total],
-          [disp[2].name, disp[2].total],
-          [disp[1].name, disp[1].total],
-          [disp[0].name, disp[0].total]
-        ]);
+    // Create the data table.
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Topping');
+    data.addColumn('number', 'Dollars');
+    data.addRows([
+      [disp[4].name, disp[4].total],
+      [disp[3].name, disp[3].total],
+      [disp[2].name, disp[2].total],
+      [disp[1].name, disp[1].total],
+      [disp[0].name, disp[0].total]
+    ]);
 
-        // Set chart options
-        var options = {'title':'Monthly Spending',
-                       'width':400,
-                       'height':300};
+    // Set chart options
+    var options = {'title':'Monthly Spending',
+                   'width':400,
+                   'height':300};
 
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
-
-
-
-
-
-
+    // Instantiate and draw our chart, passing in some options.
+    var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
 
 }
 
@@ -618,22 +611,24 @@ function viewReceipt(receiptIndex) {
     console.log("Clicked " + receiptIndex);
 }
 
-/* 
+/*
     Displays all receipts, called when you click the receipts button on the menu
 */
 function showAllReceipts(){
-    // TODO: display warning for no receipts
     let result = '';
-    if (receipts.length == 0) { // no receipts, display message
+    //if customer signs up, no receipts to show. receipt is null
+    if (!receipts || receipts.length == 0) { // no receipts, display message
         result += '<div class="no-receipts">No receipts.</div>';
     } else {
         result += '<div class="row">';
         let index = 0;
         for(let receipt of receipts){ // TODO: limit the number of receipts seen if too many in database
+            var d = new Date(parseInt(receipt.date));
+            const dateStr = "" + (d.getMonth() + 1) +"/" + d.getDate() + "/" + d.getFullYear();
             result += '<div class="col-lg-4 col-md-6 mt-3">';
             result += '<button onclick="viewReceipt(this.value)" class="receipt-list" value=' + index + '>';
             result += '<span class="left receipt-list-store">' + receipt.name + '</span>';
-            result += '<span class="right receipt-list-date">' + receipt.date + '</span>';
+            result += '<span class="right receipt-list-date">' + dateStr + '</span>';
             result += '<br>';
             result += '<span class="left">';
             result += '<span class="receipt-list-subtitle"># of Items: </span>';
@@ -669,9 +664,49 @@ function showAllReceipts(){
     </div>
     */
     $(".show-all-receipts").html(result);
-    // Note for elsewhere: enter key for login doesnt work
 }
-    
+
+/*
+    Receipt search bar functionality. Allows for searches of business name or date.
+*/
+function searchReceipt(){
+    const keyword = $("#search-input").val();
+    const regex = new RegExp(keyword, 'i');
+
+    if (keyword == "" || !receipts || receipts.length == 0) { // empty search or no receipts, show all receipts
+        showAllReceipts();
+    } else {
+        let result = '<div class="row">';
+        let index = 0;
+        for(let receipt of receipts){ // TODO: limit the number of receipts seen if too many in database
+            var d = new Date(parseInt(receipt.date));
+            const dateStr = "" + (d.getMonth() + 1) +"/" + d.getDate() + "/" + d.getFullYear();
+            // if receipt matches with keyword as a regex
+            if (receipt.name.search(regex) != -1 || dateStr.search(regex) != -1) {
+
+                // below is copied from showAllReceipts
+                result += '<div class="col-lg-4 col-md-6 mt-3">';
+                result += '<button onclick="viewReceipt(this.value)" class="receipt-list" value=' + index + '>';
+                result += '<span class="left receipt-list-store">' + receipt.name + '</span>';
+                result += '<span class="right receipt-list-date">' + dateStr + '</span>';
+                result += '<br>';
+                result += '<span class="left">';
+                result += '<span class="receipt-list-subtitle"># of Items: </span>';
+                result += '<span class="receipt-list-subtext">' + receipt.item.length + '</span>';
+                result += '</span>';
+                result += '<span class="right">';
+                result += '<span class="receipt-list-subtitle">Total: $</span>';
+                const total = receipt.subtotal + receipt.tax;
+                result += '<span class="receipt-list-subtext">' + total + '</span>';
+                result += '</span></button></div>';
+            }
+            index = index + 1;
+        }
+        result += "</div>";
+        $(".show-all-receipts").html(result);
+    }
+}
+
 /*
     !!! The following is somewhat complicated custom jQuery code for custom website functionality. !!!
 */
@@ -737,6 +772,46 @@ $(document).ready(function () {
         $('#customer-login-text').html("Customer");
         $('#store-login-text').html("");
         $('#business-login-text').html("");
+    });
+
+    
+    // Set up enter function for search receipt bar
+    $("#search-input").keypress(function(event) { 
+        if (event.keyCode === 13) { 
+            $("#search-button").click(); 
+        } 
+    }); 
+
+    // Set up enter function for login
+    $("#customer-email-login").keypress(function(event) { 
+        if (event.keyCode === 13) { 
+            $("#customer-login-button").click(); 
+        } 
+    });
+    $("#customer-password-login").keypress(function(event) { 
+        if (event.keyCode === 13) { 
+            $("#customer-login-button").click(); 
+        } 
+    });
+    $("#business-email-login").keypress(function(event) { 
+        if (event.keyCode === 13) { 
+            $("#business-login-button").click(); 
+        } 
+    });
+    $("#business-password-login").keypress(function(event) { 
+        if (event.keyCode === 13) { 
+            $("#business-login-button").click(); 
+        } 
+    });
+    $("#store-email-login").keypress(function(event) { 
+        if (event.keyCode === 13) { 
+            $("#store-login-button").click(); 
+        } 
+    });
+    $("#store-password-login").keypress(function(event) { 
+        if (event.keyCode === 13) { 
+            $("#store-login-button").click(); 
+        } 
     });
 
     $('#toggler').on('click', function(){

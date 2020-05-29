@@ -1,5 +1,5 @@
 /*Run this file with:
- sqlite3 cme-data.db < sometable.sql
+ sqlite3 arm-data.db < sometable.sql
 */
 
 /*
@@ -68,10 +68,10 @@ INSERT INTO "Customer"(username,passwordhash,cid) VALUES('user1','code1',1234);
 INSERT INTO "Customer"(username,passwordhash,cid) VALUES('u2','c2',2345);
 INSERT INTO "Customer" VALUES('u3','c3',12345);
 
-INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(1,12345,123,1,1,1,NULL);
-INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(2,12345,123,2,3,4,'otherstuff');
-INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(3,1234,127,1,2,3,NULL);
-INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(4,1234,127,1,2,3,'otherstuff2');
+INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(1,12345,123,cast(strftime('%s','2020-05-26 12:30:00') as integer),1,1,NULL);
+INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(2,12345,123,cast(strftime('%s','2020-04-01 02:30:00') as integer),3,4,'otherstuff');
+INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(3,1234,127,cast(strftime('%s','2020-02-26 12:30:00') as integer),2,3,NULL);
+INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(4,1234,127,cast(strftime('%s','2020-01-26 12:30:00') as integer),2,3,'otherstuff2');
 
 INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(1,'a',1,2);
 INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(1,'a',2,3);

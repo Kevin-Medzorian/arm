@@ -85,7 +85,7 @@
     </div>
 
     <!-- This is where we define our Login form -->
-    <form class="form-login" id="login-form">
+    <div class="form-login" id="login-form">
       <button class="btn close" id="login-close" href="#home">x</button>
       <!-- Close button for our login form. Functionality is defined in client.js -->
       <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -120,25 +120,26 @@
         </li>
 
       </ul>
+      <img class="img-fluid mb-3 d-block" src="images/login.png" alt="">
+
       <div class="tab-content" id="loginTabContent">
         <!-- This is where we define the content area for the tabs' body' -->
 
         <!-- Below is the actual content area for our CUSTOMER login tab -->
-        <div class="tab-pane fade show active" id="customerLogin" role="tabpanel" aria-labelledby="customer-tab">
-          <img class="img-fluid mb-3 d-block" src="images/login.png" alt="">
+        <div class="tab-pane show active" id="customerLogin" role="tabpanel" aria-labelledby="customer-tab">
 
           <input type="email" id="customer-email-login" class="form-control" placeholder="Email address" autofocus>
           <!-- Email input -->
           <input type="password" id="customer-password-login" class="form-control" placeholder="Password">
           <!-- Password input -->
 
-          <div class="checkbox mb-1">
+          <!--<div class="checkbox mb-1">
             <label>
               <input type="checkbox" value="remember-me" data-size="xl"> Remember me!
             </label>
-          </div>
+          </div>--> <!-- Might not be implemented. -->
 
-          <button class="btn btn-lg btn-primary btn-block" onclick="customerLogin()">Log in</button>
+          <button class="btn btn-lg btn-primary btn-block" id="customer-login-button" onclick="customerLogin()">Log in</button>
           <!-- Uses our custom javascript -->
 
           <p class="text-center mt-2">
@@ -156,21 +157,20 @@
         </div>
 
         <!-- Below is the actual content area for our BUSINESS login tab -->
-        <div class="tab-pane fade" id="businessLogin" role="tabpanel" aria-labelledby="business-login-tab">
-          <img class="img-fluid mb-3 d-block" src="images/login.png" alt="">
+        <div class="tab-pane" id="businessLogin" role="tabpanel" aria-labelledby="business-login-tab">
 
           <input type="email" id="business-email-login" class="form-control" placeholder="Email address" autofocus>
           <!-- Email input -->
           <input type="password" id="business-password-login" class="form-control" placeholder="Password">
           <!-- Password input -->
 
-          <div class="checkbox mb-1">
+          <!--<div class="checkbox mb-1">
             <label>
               <input type="checkbox" value="remember-me" data-size="xl"> Remember me!
             </label>
-          </div>
+          </div>--> <!-- Might not be implemented in time. -->
 
-          <button class="btn btn-lg btn-primary btn-block" onclick="businessLogin()">Log in</button>
+          <button class="btn btn-lg btn-primary btn-block" id="business-login-button" onclick="businessLogin()">Log in</button>
           <!-- Uses our custom javascript -->
 
           <p class="text-center mt-2">
@@ -188,21 +188,20 @@
         </div>
 
         <!-- Below is the actual content area for our STORE login tab -->
-        <div class="tab-pane fade" id="storeLogin" role="tabpanel" aria-labelledby="store-login-tab">
-          <img class="img-fluid mb-3 d-block" src="images/login.png" alt="">
+        <div class="tab-pane" id="storeLogin" role="tabpanel" aria-labelledby="store-login-tab">
 
           <input type="email" id="store-email-login" class="form-control" placeholder="Email address" autofocus>
           <!-- Email input -->
           <input type="password" id="store-password-login" class="form-control" placeholder="Password">
           <!-- Password input -->
 
-          <div class="checkbox mb-1">
+          <!-- <div class="checkbox mb-1">
             <label>
               <input type="checkbox" value="remember-me" data-size="xl"> Remember me!
             </label>
-          </div>
+          </div> --> <!-- Might not be implemented in time. -->
 
-          <button class="btn btn-lg btn-primary btn-block" onclick="storeLogin()">Log in</button>
+          <button class="btn btn-lg btn-primary btn-block" id="store-login-button" onclick="storeLogin()">Log in</button>
           <!-- Uses our custom javascript -->
 
           <p class="text-center mt-2">
@@ -219,10 +218,10 @@
           </p>
         </div>
       </div>
-    </form> <!-- End of our entire login form DIV -->
+    </div> <!-- End of our entire login form DIV -->
 
     <!-- Sign Up Form (but uses style from the class "form-login" ) -->
-    <form class="form-login" id="signup-form">
+    <div class="form-login" id="signup-form">
       <button class="btn close" id="signup-close" href="#">x</button> <!-- Close button for the signup form -->
 
       <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -310,7 +309,7 @@
           </p>
         </div>
       </div>
-    </form> <!-- End of the signup form -->
+    </div> <!-- End of the signup form -->
   </div> <!-- End of the home page DIV -->
 
   <div id="customer-session" style="display:none;">
@@ -388,8 +387,14 @@
 
       <!-- Receipts page -->
       <div class="tab-pane fade" id="receipts" role="tabpanel" aria-labelledby="pills-receipts-tab">
-        <div class="show-all-receipts">
-        </div>
+          <!-- Search Box -->
+          <span class="search-receipts fixed-top">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button type="submit" id="search-button" onclick="searchReceipt()"><img src="images/search.png"></i></button>
+          </span>
+
+          <!-- All Receipts shown from showAllReceipts in client.js -->
+          <div class="show-all-receipts"></div>
       </div>
       
 

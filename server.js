@@ -219,7 +219,7 @@ app.post('/business-get-item', (req, res)=>{
         res.json(badinput);
         return;
       }
-      database.getstoreitem(req.body.usermame, req.body.password, req.body.rid,
+      database.getbusinessitem(req.body.usermame, req.body.password, req.body.rid,
           res);
 
     } catch(err){
@@ -275,9 +275,10 @@ return;
 */
 //database.test();
 
-var fs = require('fs');
+//var fs = require('fs');
 //https://www.w3schools.com/nodejs/nodejs_filesystem.asp
 //write my outputs to file
+
 // Rahul test cases here
 //
 if(1==0){

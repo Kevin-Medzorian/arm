@@ -263,6 +263,14 @@ h1.gradient {
   vertical-align: top;
 }
 
+.view-all-button {
+  background: rgb(100, 169, 255);
+  border-radius: 10px;
+  cursor: pointer;
+  align-self: center;
+  vertical-align: bottom;
+}
+
 .search-receipts button:focus {
   outline: none;
 }

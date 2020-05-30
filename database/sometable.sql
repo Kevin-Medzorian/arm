@@ -70,21 +70,21 @@ INSERT INTO "Customer" VALUES('u3@gmail.com','c3',12345);
 
 INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(1,12345,123,cast(strftime('%s','2020-05-26 12:30:00') as integer),1,1,NULL);
 INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(2,12345,123,cast(strftime('%s','2020-04-01 02:30:00') as integer),3,4,'otherstuff');
-INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(3,1234,127,cast(strftime('%s','2020-02-26 12:30:00') as integer),2,3,NULL);
-INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(4,1234,127,cast(strftime('%s','2020-01-26 12:30:00') as integer),2,3,'otherstuff2');
+INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(3,1234,127,cast(strftime('%s','2020-02-26 12:30:00') as integer),250,2100,NULL);
+INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(4,1234,127,cast(strftime('%s','2020-01-26 12:30:00') as integer),250,300,'otherstuff2');
 
-INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(1,'a',1,2);
-INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(1,'a',2,3);
-INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(1,'test',9,9);
-INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(1,'test',9,9);
-INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(2,'a',3,4);
-INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(2,'a',3,5);
+INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(1,'a',1,200);
+INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(1,'a',2,300);
+INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(1,'test',9,900);
+INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(1,'test',9,900);
+INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(2,'a',3,400);
+INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(2,'a',3,500);
 
 INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(3,'food',1,300);
 INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(3,'food1',1,300);
 INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(3,'food2',2,300);
 INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(3,'food3',3,300);
-INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(4,'meal1',1,1);
-INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(4,'meal2',2,2);
-INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(4,'meal3',3,3);
+INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(4,'meal1',1,100);
+INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(4,'meal2',2,200);
+INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(4,'meal3',3,300);
 

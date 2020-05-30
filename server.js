@@ -321,12 +321,12 @@ if(1==0){
   console.log("Expected \"success\"  res");
   sleep(5000);
   //adding store
-  var storename = "Store110";
+  var storename = "Lootable";
   //type = "S"
-  var storepassword = "daf;ksj";
-  var street = "mystreet";
-  var city = "mycity";
-  var state = "CA";
+  var storepassword = "lootMe";
+  var street = "riotStreet";
+  var city = "Minneapolis";
+  var state = "MN";
   var zipcode = "12345";
   database.addstore(businessName,businesspassword,storename,storepassword,street,
       city, state, zipcode);

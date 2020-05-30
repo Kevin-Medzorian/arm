@@ -6,6 +6,9 @@ var busername = null;
 var bpassword = null;
 var stores = [];
 var currentItems = [];
+var itemsResult = "<table><th> Name </th><th> Cost </th><th> Quantity </th>";
+var subtotal = 0.0;
+var total = 0.0;
 
 google.charts.load('current', {'packages':['corechart']});
 
@@ -151,10 +154,12 @@ function storeSignUp(){
 function storeAddReceipt(){
 	$(".store-error").html("");
 	const cid = $("#cid").val();
-	const subtotal = $("#stotal").val();
-	const total = $("#total").val();
+	
+	//const total = $("#total").val();
 	const tax = $("#tax").val();
 	const sid = UID;
+	//const subtotalHtml = $("#stotalval");
+	const receiptDate = "6/1/2020";  //todays date?
 	console.log(cid);
 	console.log(subtotal);
 	console.log(total);
@@ -172,17 +177,11 @@ function storeAddReceipt(){
 		 body: JSON.stringify({
             cid : cid,
 			sid : sid,
-			date : timeSinceEpoch,
+			date : receiptDate,
 			tax : tax, // in cents,
 			subtotal : subtotal, // in cents
 			other : "some custom text",
-			items : [
-				{    // the rid in db gets auto incremented
-					name : items[0],
-					quantity : 2,
-					unitcost : 99 // in cents
-				}
-			]
+			items : currentItems
 
         }),
 
@@ -219,11 +218,54 @@ function storeAddReceipt(){
 */
 function storeAddReceiptItem(){
 
+	console.log("adding item!");
 	const itemName = $("#itemName").val();
 	const itemCost = $("#itemCost").val();
 	const itemQuantity = $("#itemQuantity").val();
+	const tax = $("#tax").val();
 
-	items.push(itemName);
+	//currentItems.push(itemName);
+
+	var completeItem = { name: itemName, unitcost: itemCost, quantity : itemQuantity};
+
+	var itemString = JSON.stringify(completeItem);
+	
+	currentItems.push(itemString);
+	
+	
+	itemsResult += "<tr><td>" + itemName + "</td><td>" + itemCost + "</td><td>" + itemQuantity + "</td></tr>";
+
+	//inject into html here
+
+	$(".items-list").html(itemsResult);
+	//$(".items-list").html(<table> <th>Index</th> </table>);
+
+	var subtotalHtml = $("#stotalval");
+
+	//subtotal += itemCost;
+
+	//$("#stotalval").value= "20.0f";
+
+	var subTcurrent = parseFloat(subtotal);
+	var itemCostCurrent = parseFloat(itemCost);
+	var itemQtyCurrent = parseInt(itemQuantity);
+	var subTFinal = subTcurrent + (itemCostCurrent*itemQtyCurrent);
+	var subTRounded = subTFinal.toFixed(2);
+	console.log(subTRounded);
+	subtotal = subTRounded;
+
+	var taxF = parseFloat(tax);
+	var totalV = taxF + subTFinal;
+	var totalVRound = totalV.toFixed(2);
+
+	document.getElementById('stotalval').innerHTML = subTRounded; 
+
+	document.getElementById('totalval').innerHTML = totalVRound; 
+
+	//var subtotalString = "<label for="subtotal">";
+	//<label for="male">Male</label>
+
+	//$(".subtotal-value").html("");
 
 }
 

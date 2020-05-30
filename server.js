@@ -174,7 +174,7 @@ app.post('/store-add-receipt', (req, res)=>{
     console.log(err);
     res.json(badinput);
   }
-
+  console.log(body);
 });
 app.post('/customer-add-receipt', (req, res)=>{
   console.log('customer-add-receipt');

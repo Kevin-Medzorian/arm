@@ -447,6 +447,7 @@
 
   <h1 style = "color:blue; font-size:300%;">Items:</h1>
   <hr>
+  <div class="items-list" ></div>
   <header style = "display:table;  margin:auto;" >
     <div style ="display:table-cell;">
 		<h2 style = "padding: 45px">Name</h2>
@@ -462,12 +463,12 @@
     </div>
   </header>
   <button class="btn btn-lg btn-primary btn-rounded" id="show-store-btn" style="border-radius: 30px;"
-            onclick = "storeAddReceiptItem()" href="#showstore" type="submit">Add Item</button>
+            onclick = "storeAddReceiptItem()">Add Item</button>
 
   <header style = "display:table-row-group; float:right;" >
 	<div style ="display:table-row; padding: 35px;">
 		<label for="stotal">Subtotal:</label>
-		<input type="text" id="stotal" name="stotal"><br><br>
+		<label for="stotalval" id="stotalval">0.00</label><br><br>
     </div>
 	<div style ="display:table-row; padding: 35px;">
 		<label for="tax">Tax:</label>
@@ -475,7 +476,7 @@
     </div>
 	<div style ="display:table-row; padding: 35px;">
 		<label for="total">Total:</label>
-		<input type="text" id="total" name="total"><br><br>
+		<label for="totalval" id="totalval">0.00</label><br><br>
     </div>
   </header>
 

@@ -1,18 +1,20 @@
 //Note: Vim by default doesn't highlight well multiline strings
 //https://github.com/mapbox/node-sqlite3/wiki/API#databasegetsql-param--callback
 //^ is api for node js sqlite
-const sqlite3 = require('sqlite3').verbose()
+/* jshint multistr: true*/
+//jshint.com for nice coding checks
+const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('./database/arm-data.db');
-db.get("PRAGMA foreign_keys = ON")
+db.get("PRAGMA foreign_keys = ON");
 console.log("[DB]\tInitialized sqlite3 Database");
 
-const util = require('util');
+//const util = require('util');
 
 // Ensures that asynchronous db statements wait until their completion before proceeding
 db.serialize(function () {
     module.exports.close = ()=>{
       db.close();
-    }
+    };
 
     //Creates tables
     module.exports.createtables = function(){
@@ -76,7 +78,7 @@ db.serialize(function () {
 
 
       console.log('<createtables');
-    }
+    };
 
     module.exports.resettables = function(){
       return;
@@ -86,7 +88,7 @@ db.serialize(function () {
       db.run('drop table Customer;');
       db.run('drop table Store;');
       db.run('drop table Business;');
-    }
+    };
 
 
     module.exports.addcustomer = function(username, passwordhash, cid = null, res){
@@ -101,7 +103,7 @@ db.serialize(function () {
         db.get('select cid from Customer where username=? and passwordhash=?',
             [username,passwordhash],
             (err, row)=>{
-              cidjson = {"login":true, "cid":row.cid};
+              var cidjson = {"login":true, "cid":row.cid};
               console.log(`[DB]addcustomer:${JSON.stringify(cidjson, null, 2)}`);
               if(res) res.json(cidjson);
         });
@@ -114,7 +116,7 @@ db.serialize(function () {
         db.run('INSERT INTO Customer(username,passwordhash) VALUES (?,?)',
             [username, passwordhash],iferr);
       }
-    }
+    };
     module.exports.addbusiness = function(username,passwordhash,name,bid = null, res){
       console.log('[DB]addbusiness');
       function iferr(err){
@@ -142,7 +144,7 @@ db.serialize(function () {
         db.run('INSERT INTO Business(username,passwordhash,name) VALUES (?,?,?)',
             [username, passwordhash, name], iferr);
       }
-    }
+    };
     module.exports.addstore = (busername,bpasswordhash,
       susername,spasswordhash,street,city,state,zipcode,res) =>{
 
@@ -182,7 +184,7 @@ db.serialize(function () {
                   });
             });
       });
-    }
+    };
 
     //replaced by getallreceipts
     module.exports.getcid = (username, passwordhash, res) =>{
@@ -204,7 +206,7 @@ db.serialize(function () {
             if(res) res.json({"login":true, "cid":row.cid});
           }
       );
-    }
+    };
     //replaced with getstores
     module.exports.getbid = (username, passwordhash, res) =>{
       db.get('select bid from Business where username = ? AND passwordhash = ?',
@@ -226,7 +228,7 @@ db.serialize(function () {
             if(res) res.json({"login":true, "bid":row.bid});
           }
       );
-    }
+    };
     //still in use
     module.exports.getsid = (username, passwordhash, res)=>{
       db.get('select sid from Store where username = ? AND passwordhash = ?',
@@ -246,7 +248,7 @@ db.serialize(function () {
             if(res) res.json({"login":true, "sid":row.sid});
           }
       );
-    }
+    };
     module.exports.getstores = (busername,bpasswordhash,res) =>{
       db.get('select bid,name from Business where username=? AND passwordhash=?',
           [busername,bpasswordhash],
@@ -269,27 +271,28 @@ db.serialize(function () {
             "bid":row.bid,
             "stores":[]
           };
-          db.each('select sid from Store where bid=?',
+          db.each('select sid, street, city, state, zipcode from Store where bid=?',
               [row.bid],
               (err, rowstore)=>{
-                storejson["stores"].push({
+                storejson.stores.push({
                     "sid":rowstore.sid,
                     "street":rowstore.street,
+                    "city":rowstore.city,
                     "state":rowstore.state,
                     "zipcode":rowstore.zipcode
                 });
               },
               (err,storecount)=>{
-                console.log(`[DB]getstores: username(${busername}): json:${storejson}`);
+                console.log(`[DB]getstores: username(${busername}):\njson:${JSON.stringify(storejson, null, 2)}`);
                 if(res) res.json(storejson);
           });
 
       });
 
-    }
+    };
     //given username of customer
     module.exports.getallreceipts = (username, passwordhash, res) =>{
-      var receiptjson = {}
+      var receiptjson = {};
       db.get('select cid from Customer C where username = ? and passwordhash = ?',
         [username, passwordhash],
         (err, rowin) => {
@@ -305,13 +308,13 @@ db.serialize(function () {
             if(res) res.json({"login":false, "error":"login failed"});
             return;
           }
-          receiptjson["login"] = true;
-          receiptjson["cid"] = rowin.cid;
-          receiptjson["receipts"] = [];
+          receiptjson.login = true;
+          receiptjson.cid = rowin.cid;
+          receiptjson.receipts = [];
           //receiptjson["receipts"] = {};
           console.log(`[DB]cid: ${rowin.cid}`);
 
-          var promises = []
+          var promises = [];
           //get receipts
           db.each('select\
             R.rid, S.sid, B.name, R.date, R.tax, R.subtotal, R.other\
@@ -335,7 +338,7 @@ db.serialize(function () {
                 "other" : rowrec.other,
                 "item" : []
               };
-              receiptjson["receipts"].push(receipt);
+              receiptjson.receipts.push(receipt);
               //receiptjson["receipts"][rid] = receipt;
 
               //enter items into receipt
@@ -355,7 +358,7 @@ db.serialize(function () {
         });//login done
 
       //return stuff;
-    }
+    };
     //get all receipts for the other accounts
     let getallitems = (promises, receipt, rid) =>{//preserves receipt reference
       promises.push(new Promise((resolve, reject) =>{
@@ -371,7 +374,7 @@ db.serialize(function () {
                 "quantity" : rowitem.quantity,
                 "unitcost" : rowitem.unitcost
               };
-              receipt["item"].push(item);
+              receipt.item.push(item);
             }, (err, rowcountitem) =>{
               //console.log(`[DB]${rid}:${receipt["item"]}`);
               if(rowcountitem)
@@ -381,7 +384,7 @@ db.serialize(function () {
             }
         );//item db.each end
       }));
-    }
+    };
 
     module.exports.storeaddreceipt =
       (susername,spasswordhash,cid,date,tax,subtotal,other,items,res)=>{
@@ -413,14 +416,14 @@ db.serialize(function () {
                     return;
                   }
 
-                  var promises = []
+                  var promises = [];
                   items.forEach(val =>{
                       promises.push(new Promise((resolve, reject)=>{
                         db.run('insert into Item(?,?,?,?)',
                             [this.lastID,val.name,val.quantity,val.unitcost],
                             (err) =>{
                               if(err){
-                                console.log(`storeaddreceiptERRORitem: username(${susername}), rid(${rowid.rid}), ${err}`);
+                                console.log(`storeaddreceiptERRORitem: username(${susername}), rid(${rowsid.rid}), ${err}`);
                                 reject(val.name);
                                 return;
                               }
@@ -446,7 +449,7 @@ db.serialize(function () {
             });//Receipt done
 
       });
-    }/////////////////////////////////
+    };
     module.exports.customeraddreceipt = (username, passwordhash, date, tax, subtotal, other, items, res)=>{
       db.get('select cid from Customer where username=? and passwordhash=?',
           [username, passwordhash],
@@ -476,15 +479,16 @@ db.serialize(function () {
                   //this.lastID is the last rowid
 
 
-                  var promises = []
+                  var promises = [];
                   items.forEach(val=>{
                     promises.push(new Promise((resolve, reject)=>{
                       db.run('insert into Item values(?,?,?,?)',
                           [this.lastID, val.name, val.quantity, val.unitcost],
                           (err)=>{
-
-                          console.log(`[DB]customeraddreceipt-ItemERROR: username(${username}), rid(${this.lastID}), ${err}`);
-                          if(res) res.json()
+                            if(err){
+                              console.log(`[DB]customeraddreceipt-ItemERROR: username(${username}), rid(${this.lastID}), ${err}`);
+                              if(res) res.json();
+                            }
                       });//item done
 
                     }));
@@ -507,7 +511,7 @@ db.serialize(function () {
             });//Receipt done
 
       });//login done
-    }
+    };
 
     //from a business, get all of a store's receipts, not item
     module.exports.getbusinessstorereceipt =
@@ -530,7 +534,7 @@ db.serialize(function () {
               }
               getreceipt(sid, res);
         });
-    }
+    };
     module.exports.getstorereceipt = (susername,spasswordhash,res=null)=>{
       db.get('select sid from Store where username=? and passwordhash=?',
           [susername, spasswordhash],
@@ -540,7 +544,7 @@ db.serialize(function () {
               if(res) res.json({"login":false, "error":"Internal error"});
               return;
             }
-            if(!row){
+            if(!rowsid){
               console.log(`[DB]getstorereceipt: username(${susername}) not found`);
               console.log({"login":false, "error":"login failed"});
               if(res) res.json({"login":false, "error":"login failed"});
@@ -549,16 +553,16 @@ db.serialize(function () {
 
             getreceipt(rowsid.sid, res);
       });
-    }
+    };
     function getreceipt(sid, res){
       var receiptjson={
         "login":true,
         "receipts":[]
-      }
+      };
       db.each('select rid,cid,date,tax,subtotal,other from Record where sid=?',
           [sid],
           (err, rowrec)=>{
-            receiptjson["receipts"].push({
+            receiptjson.receipts.push({
               "rid":rowrec.rid,
               "cid":rowrec.cid,
               "date":rowrec.date,
@@ -590,7 +594,7 @@ db.serialize(function () {
           }
           getanitem(rid, res);
       });
-    }
+    };
     module.exports.getstoreitem = (susername, spassword, rid, res)=>{
       db.get('select 1 from Store S, Receipt R\
         where S.username=? and S.passwordhash=? and R.rid=? and S.sid=R.sid',
@@ -609,7 +613,7 @@ db.serialize(function () {
           getanitem(rid, res);
         });
 
-    }
+    };
     function getanitem(rid, res){
       console.log(`rid: ${rid}`);
       //console.log(`beforeitemjson: ${itemjson}`);
@@ -617,7 +621,7 @@ db.serialize(function () {
         "login":true,
         "rid":rid,
         "item":[]
-      }
+      };
 
       db.each('select name, quantity, unitcost from Item where rid=?',
         [rid],
@@ -626,7 +630,7 @@ db.serialize(function () {
             console.log(`[DB]getanitemERROReach: rid(${rid}), ${err}`);
             return;
           }
-          itemjson["item"].push({
+          itemjson.item.push({
             "name":row.name,
             "quantity":row.quantity,
             "unitcost":row.unitcost
@@ -645,3 +649,4 @@ db.serialize(function () {
     }
 
 });
+

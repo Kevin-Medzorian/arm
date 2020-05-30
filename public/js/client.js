@@ -23,7 +23,7 @@ function customerLogin() {
     // Grab the appropriate HTML field data
     const emailVal = $("#customer-email-login").val();
     const passwordVal = $("#customer-password-login").val();
-    if(emailVal.length === 0 || passwordVal.length === 0){
+    if(emailVal.length == 0 || passwordVal.length == 0){
         $(".error").html("Email and password should not be empty");
     }else{
         console.log("Sending POST request...");
@@ -43,7 +43,7 @@ function customerLogin() {
             }
         })
         // Converting to JSON
-        .then(response => response.json())  // => Uncomment whenever backend implements "/customer-login"
+        .then(response => response.json())
         // Displaying results to console
         .then(json => {
 
@@ -93,7 +93,7 @@ function storeSignUp(){
         $(".store-error").html("Please fill all the necessary information");
         return;
     }
-    console.log(passwordVal)
+    console.log(passwordVal);
     if(passwordVal.length < 8){
         console.log("Hello");
         $(".store-error").html("Password must be at least 8 characters long");
@@ -270,12 +270,17 @@ function storeAddReceiptItem(){
 }
 
 function displayStores(){
-    let result = "<table>";
+    let result = `<table style="background-color: #0b8ca1;">`;
     result += "<th> Index </th>";
-    result += "<th> SID </th>"
+    result += "<th> SID </th>";
+    result += "<th> Street </th>";
+    result += "<th> City </th>";
+    result += "<th> State </th>";
+    result += "<th> Zipcode </th>";
     let index = 1;
      for(let store of stores){
-        result += "<tr><td>" + index + "</td><td>" + store + "</td></tr>";
+        result += `<tr><td style="text-align:center;">` + index + "</td><td>" + store.sid + "</td><td>" + store.street + "</td><td>" + 
+          store.city + "</td><td>" + store.state + "</td><td>" + store.zipcode + "</td></tr>";
         index = index + 1;
      }
     /* result += "</table>";
@@ -369,8 +374,8 @@ function businessLogin() {
     const emailVal = $("#business-email-login").val();
     const passwordVal = $("#business-password-login").val();
     console.log(emailVal + passwordVal);
-    busername = emailVal
-    bpassword = passwordVal
+    busername = emailVal;
+    bpassword = passwordVal;
     console.log("Sending POST request...");
 
     // POST request using fetch()
@@ -391,7 +396,7 @@ function businessLogin() {
     .then(response => response.json())
     // Displaying results to console
     .then(json => {
-        console.log(json)
+        console.log(json);
         try{
             if(json.login){
                 loggedIn = true;
@@ -486,7 +491,7 @@ function businessSignup() {
     // Grab appropriate values from HTML fields.
     const nameVal = $("#business-name-signup").val();
     const emailVal = $("#business-email-signup").val();
-    const addressVal = $("#business-address-signup").val();
+    //const addressVal = $("#business-address-signup").val();
     const passwordVal = $("#business-password-signup").val();
     const confirmVal = $("#business-password-confirm").val();
     busername = emailVal;
@@ -566,7 +571,7 @@ function openCustomerSession(){
 
     if(receipts){
       for (i=0; i < receipts.length; i++) {
-        var date = new Date(parseInt(receipts[i]["date"]));
+        var date = new Date(receipts[i].date);
 
         // Check same year
         if (date.getYear() == thisDate.getYear()) {
@@ -575,7 +580,7 @@ function openCustomerSession(){
           var j;
           for (j=0; j < disp.length; j++) {
             if (date.getMonth() == disp[j].index) {
-              disp[j].total += receipts[i]["subtotal"] + receipts[i]["tax"];
+              disp[j].total += receipts[i].subtotal + receipts[i].tax;
             }
           }
         }
@@ -650,7 +655,56 @@ function openSignupForm(){
 
 /* TODO: Abhik */
 function viewReceipt(receiptIndex) {
-    console.log("Clicked " + receiptIndex);
+    //console.log("Clicked " + receiptIndex);
+
+    //let result = '';
+    var receipt = receipts[receiptIndex];
+    //alert(receipt.name);
+
+    //get the date
+    var d = new Date(parseInt(receipt.date));
+    const dateStr = "" + (d.getMonth() + 1) +"/" + d.getDate() + "/" + d.getFullYear();
+
+    let result = '';
+    result += '<h1 class="receipt-center">' + receipt.name + ' ' + dateStr + '</h1>';
+    result += '<h4 class="text-center">' + 'STORE ID: ' +receipt.sid +'</h4>' ;
+    result += '<table align="center" class="receiptTab" cellspacing="0">';
+    result += '<thead>'
+    result += '<tr class="headings">'
+    result += '<th class="product">Item</td>'
+    result += '<th class="price">Price</td>'
+    result += '<th class="quantity">Quantity</td>'
+    result += '</tr>'
+    result += '</thead>'
+    result += '<tbody>'
+
+    var products = receipt.item;
+    for (let index of products){
+        result+=    '<tr>'
+        result+=    '<td class="product">'+ index.name+'</td>'
+        result+=    '<td class="price">'+ index.unitcost +'</td>'
+        result+=    '<td class="quantity">'+ index.quantity +'</td>'
+        result+=    '</tr>'
+    }
+
+    result += '</tbody>'
+    result += '</table>'
+
+    result += '<h4 class="text-center">' + 'Total : ' + receipt.subtotal + '</h4>' 
+    result += '<h4 class="text-center">' + 'Tax : ' + receipt.tax + '</h4>' 
+    result += '<h4 class="text-center">' + 'Amount Due : ' + (receipt.subtotal + receipt.tax) + '</h4>' 
+    result += '<button class="view-all-button" onclick="viewAll()" >View All Receipts</button>'
+
+    $("#customer-session").hide();
+    $('#individual').fadeIn();
+    //result += '<h1 class = "text-center">'+ receipt.name + ' ' + dateStr +'</h1>' 
+    $(".individual-receipt").html(result);
+}
+
+function viewAll(){
+    $('#individual').hide();
+    $("#customer-session").fadeIn();
+
 }
 
 /*
@@ -858,12 +912,12 @@ $(document).ready(function () {
 
     $('#toggler').on('click', function(){
         if(!$('.navbar-nav').is(':visible')){
-            $('#toggler-icon').css('background-image', 'url("/images/toggler-close.png")')
+            $('#toggler-icon').css('background-image', 'url("/images/toggler-close.png")');
         } else {
-            $('#toggler-icon').css('background-image', 'url("/images/toggler-down.png")')
+            $('#toggler-icon').css('background-image', 'url("/images/toggler-down.png")');
         }
-        $('#toggler').fadeOut(112)
-        $('#toggler').fadeIn(112)
+        $('#toggler').fadeOut(112);
+        $('#toggler').fadeIn(112);
     });
     $('#login-close').click(function () {
         $('#login-form').fadeOut('slow');

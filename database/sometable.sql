@@ -68,10 +68,10 @@ INSERT INTO "Customer"(username,passwordhash,cid) VALUES('user1@gmail.com','code
 INSERT INTO "Customer"(username,passwordhash,cid) VALUES('u2@gmail.com','c2',2345);
 INSERT INTO "Customer" VALUES('u3@gmail.com','c3',12345);
 
-INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(1,12345,123,cast(strftime('%s','2020-05-26 12:30:00') as integer),1,1,NULL);
-INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(2,12345,123,cast(strftime('%s','2020-04-01 02:30:00') as integer),3,4,'otherstuff');
+INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(1,12345,123,cast(strftime('%s','2020-05-26 12:30:00') as integer),1234,17000,NULL);
+INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(2,12345,123,cast(strftime('%s','2020-04-01 02:30:00') as integer),500,2700,'otherstuff');
 INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(3,1234,127,cast(strftime('%s','2020-02-26 12:30:00') as integer),250,2100,NULL);
-INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(4,1234,127,cast(strftime('%s','2020-01-26 12:30:00') as integer),250,300,'otherstuff2');
+INSERT INTO "Receipt"(rid,cid,sid,date,tax,subtotal,other) VALUES(4,1234,127,cast(strftime('%s','2020-01-26 12:30:00') as integer),262,1400,'otherstuff2');
 
 INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(1,'a',1,200);
 INSERT INTO "Item"(rid,name,quantity,unitcost) VALUES(1,'a',2,300);

@@ -150,7 +150,7 @@ app.post('/store-add-receipt', (req, res)=>{
 //susername,spasswordhash,cid,date,tax,subtotal,other,items,res
   const body = req.body;
   try{
-    if(body.username.length == 0 || body.passwordhash == 0){
+    if(body.email.length == 0 || body.password == 0){
       res.json({"login":false, "error": errorempty});
       return;
     }
@@ -160,7 +160,7 @@ app.post('/store-add-receipt', (req, res)=>{
       return;
     }
     database.storeaddreceipt(
-        body.username,
+        body.email,
         body.password,
         body.cid,
         body.date,

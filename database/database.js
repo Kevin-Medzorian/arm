@@ -591,7 +591,6 @@ db.serialize(function () {
               if(res) res.json({"login":false, "error":"login failed"});
               return;
             }
-
             getreceipt(rowsid.sid, res);
       });
     };

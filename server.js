@@ -138,7 +138,8 @@ app.post('/store-login', (req, res) => {
       return;
     }
     //database.getsid(req.body.email, req.body.password, res);
-    database.getstorereceipt = (req.body.email, req.body.password, res);
+    console.log(`${req.body.email}, ${req.body.password}, ${res}`);
+    database.getstorereceipt(req.body.email, req.body.password, res);
   } catch(err){
     console.log(err);
     res.json(badinput);

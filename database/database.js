@@ -8,7 +8,7 @@ let db = new sqlite3.Database('./database/arm-data.db');
 db.get("PRAGMA foreign_keys = ON");
 console.log("[DB]\tInitialized sqlite3 Database");
 
-//const util = require('util');
+const util = require('util');
 
 // Ensures that asynchronous db statements wait until their completion before proceeding
 db.serialize(function () {
@@ -325,6 +325,7 @@ db.serialize(function () {
             (err, rowrec) => {
               if(err){
                 console.log(`[DB]getallreceipts-recERROR:${rowin.cid}`);
+                return;
               }
               // if(!rowrec){
               //   console.log(`[DB]getallreceipts-rec:no receipts`);
@@ -334,20 +335,20 @@ db.serialize(function () {
               if(receiptjson.locations[rowrec.sid] === undefined){
                 receiptjson.locations[rowrec.sid] = 1;
                 promises.push(new Promise((resolve, reject)=>{
-                  db.get('select street, city, state, zipcode from State\ where sid = ?',
+                  db.get('select street, city, state, zipcode from Store where sid = ?',
                       [rowrec.sid],
                       (err, rowloc)=>{
                         if(err){
-                          console.log(`[DB]getallreceiptsGetLocERROR: sid(${rowrec.sid})`);
+                          console.log(`[DB]getallreceiptsGetLocERROR: sid(${rowrec.sid}), ${err}`);
                           reject();
                           return;
                         }
-                        if(!row1){
+                        if(!rowloc){
                           console.log(`[DB]getallreceiptsGetLocNone: sid(${rowrec.sid})`);
                           reject();
                           return;
                         }
-                        receipt.location[rowrec.sid] = {
+                        receiptjson.locations[rowrec.sid] = {
                           "street":rowloc.street,
                           "city":rowloc.city,
                           "state":rowloc.state,
@@ -442,52 +443,53 @@ db.serialize(function () {
 
             db.get('select 1 from Customer where cid=?', [cid], (err, rowcid)=>{
               if(!rowcid){
-                
-
+                console.log(`[DB]storeaddreceipt: unknown cid(${cid})`);
+                if(res) res.json({"login":false, "error":"bad cid"});
+                return;
               }
 
-            });
-            db.run('INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (?,?,?,?,?,?);',
-                [cid,rowsid.sid,date,tax,subtotal,other],
-                (err)=>{
-                  if(err){
-                    console.log(`[DB]storeaddreceiptERROR: username(${susername}), ${err}`);
-                    console.log({"login":false, "error":"Internal error"});
-                    if(res) res.json({"login":false, "error":"Internal error"});
-                    return;
-                  }
+              db.run('INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (?,?,?,?,?,?);',
+                  [cid,rowsid.sid,date,tax,subtotal,other],
+                  (err)=>{
+                    if(err){
+                      console.log(`[DB]storeaddreceiptERROR: username(${susername}), ${err}`);
+                      console.log({"login":false, "error":"Internal error"});
+                      if(res) res.json({"login":false, "error":"Internal error"});
+                      return;
+                    }
 
-                  var promises = [];
-                  items.forEach(val =>{
-                      promises.push(new Promise((resolve, reject)=>{
-                        db.run('insert into Item(?,?,?,?)',
-                            [this.lastID,val.name,val.quantity,val.unitcost],
-                            (err) =>{
-                              if(err){
-                                console.log(`storeaddreceiptERRORitem: username(${susername}), rid(${this.lastID}), ${err}`);
-                                reject(val.name);
-                                return;
-                              }
-                              resolve();
-                        });//db.run done
-                      }));
-                  });//forEach done
-                  Promise.all(promises)
-                  .then(response=>{
-                      var pass = true;
-                      response.forEach(val=>{
-                        if(val)
-                          pass = false;
-                      });
-                      if(pass){
-                        if(res) res.json({"login":true});
-                      } else{//some errror occurred for item
-                        console.log({"login":false, "error":"Internal error item issue"});
-                        if(res) res.json({"login":false, "error":"Internal error item issue"});
-                      }
-                  });//Promise done
+                    var promises = [];
+                    items.forEach(val =>{
+                        promises.push(new Promise((resolve, reject)=>{
+                          db.run('insert into Item(?,?,?,?)',
+                              [this.lastID,val.name,val.quantity,val.unitcost],
+                              (err) =>{
+                                if(err){
+                                  console.log(`storeaddreceiptERRORitem: username(${susername}), rid(${this.lastID}), ${err}`);
+                                  reject(val.name);
+                                  return;
+                                }
+                                resolve();
+                          });//db.run done
+                        }));
+                    });//forEach done
+                    Promise.all(promises)
+                    .then(response=>{
+                        var pass = true;
+                        response.forEach(val=>{
+                          if(val)
+                            pass = false;
+                        });
+                        if(pass){
+                          if(res) res.json({"login":true});
+                        } else{//some errror occurred for item
+                          console.log({"login":false, "error":"Internal error item issue"});
+                          if(res) res.json({"login":false, "error":"Internal error item issue"});
+                        }
+                    });//Promise done
 
-            });//Receipt done
+              });//Receipt done
+            });//check cid done
 
       });
     };

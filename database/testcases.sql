@@ -66,12 +66,12 @@ Insert into Item values(101, 'soda', 1, 600);
 
 
 Insert into Receipt values(102, 10000000, 10000001, cast(strftime('%s','2020-05-22 12:30:00') as integer), 100, 1100, NULL);
-Insert into Item values(100, 'book', 1, 800);
-Insert into Item values(100, 'water', 3, 100);
+Insert into Item values(102, 'book', 1, 800);
+Insert into Item values(102, 'water', 3, 100);
 Insert into Receipt values(103, 10000000, 10000001, cast(strftime('%s','2020-04-21 12:30:00') as integer), 0, 600, NULL);
-Insert into Item values(101, 'coffee', 2, 200);
-Insert into Item values(101, 'water', 1, 200);
+Insert into Item values(103, 'coffee', 2, 200);
+Insert into Item values(103, 'water', 1, 200);
 Insert into Receipt values(104, 10000000, 10000001, cast(strftime('%s','2020-03-20 12:30:00') as integer), 100, 700, NULL);
-Insert into Item values(101, 'coffee', 2, 200);
-Insert into Item values(101, 'bagel', 1, 300);
+Insert into Item values(104, 'coffee', 2, 200);
+Insert into Item values(104, 'bagel', 1, 300);
 

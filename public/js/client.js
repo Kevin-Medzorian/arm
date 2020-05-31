@@ -133,9 +133,17 @@ function storeSignUp(){
             if(json.login){
                 console.log("store login true");
                 loggedIn = true;
-                UID = json.sid;
+                //UID = json.sid;
                 //openStoreSession();
-                stores.push(UID);
+                console.log(UID);
+                stores.push({
+                    sid : json.sid,
+                    street : streetVal,
+                    city : cityVal,
+                    state : stateVal,
+                    zipcode : zipCodeVal
+                });
+
             }else{
                 //some error
                 $(".store-error").html("Email already exists");
@@ -281,7 +289,8 @@ function displayStores(){
     result += "<th> State </th>";
     result += "<th> Zipcode </th>";
     let index = 1;
-     for(let store of stores){
+    console.log(stores);
+    for(let store of stores){
         result += `<tr><td style="text-align:center;">` + index + "</td><td>" + store.sid + "</td><td>" + store.street + "</td><td>" + 
           store.city + "</td><td>" + store.state + "</td><td>" + store.zipcode + "</td></tr>";
         index = index + 1;
@@ -349,7 +358,7 @@ function storeLogin() {
                  UID = json.sid;
 				 susername = emailVal;
 				 spassword = passwordVal;
-               // stores = json.stores;
+                 //stores = json.stores;
               //  console.log(stores);
                 openStoreSession();
             } else{

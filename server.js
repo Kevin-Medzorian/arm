@@ -137,7 +137,8 @@ app.post('/store-login', (req, res) => {
       res.json(emptyerror);
       return;
     }
-    database.getsid(req.body.email, req.body.password, res);
+    //database.getsid(req.body.email, req.body.password, res);
+    database.getstorereceipt = (req.body.email, req.body.password, res)=>{
   } catch(err){
     console.log(err);
     res.json(badinput);
@@ -181,7 +182,7 @@ app.post('/customer-add-receipt', (req, res)=>{
   const body=req.body;
 
   try{
-    if(body.username.length == 0 || body.password.length == 0){
+    if(body.email.length == 0 || body.password.length == 0){
       res.json({"login":false, "error":errorempty});
       return;
     }
@@ -192,7 +193,7 @@ app.post('/customer-add-receipt', (req, res)=>{
       return;
     }
     database.customeraddreceipt(
-      body.username,
+      body.email,
       body.password,
       body.date,
       body.tax,
@@ -207,10 +208,11 @@ app.post('/customer-add-receipt', (req, res)=>{
   }
 });
 
+
 //=====================Get individual receipts
 app.post('/business-get-item', (req, res)=>{
     try{
-      if(req.body.username.length == 0 || req.body.password == 0 ||
+      if(req.body.email.length == 0 || req.body.password == 0 ||
           !req.body.rid){
         res.json({"login":false, "error":errorempty});
         return;
@@ -231,7 +233,7 @@ app.post('/business-get-item', (req, res)=>{
 });
 app.post('/store-get-item', (req, res)=>{
     try{
-      if(req.body.username.length == 0 || req.body.password == 0 ||
+      if(req.body.email.length == 0 || req.body.password == 0 ||
           !req.body.rid){
         res.json({"login":false, "error":errorempty});
         return;
@@ -346,3 +348,13 @@ if(1==0){
   */
 }
 
+database.storeaddreceipt('s1@gmail.com', 'c1', 1234, -1, 111, 222, null, 
+    [
+    {
+    "name":"stuff",
+    "quantity":2,
+    "unitcost":301
+    }
+    ],
+    null);
+//susername,spasswordhash,cid,date,tax,subtotal,other,items,res

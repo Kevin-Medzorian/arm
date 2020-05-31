@@ -381,12 +381,9 @@ function storeLogin() {
             try{
                 if(json.login){
                     loggedIn = true;
-                // receipts = json.receipts;
                     UID = json.sid;
                     susername = emailVal;
                     spassword = passwordVal;
-                    //stores = json.stores;
-                //  console.log(stores);
                     openStoreSession();
                 } else{
                     $(".error").html("Email or password is incorrect");

@@ -229,7 +229,7 @@ db.serialize(function () {
           }
       );
     };
-    //still in use
+    //now using getstores()
     module.exports.getsid = (username, passwordhash, res)=>{
       db.get('select sid from Store where username = ? AND passwordhash = ?',
           [username, passwordhash],
@@ -440,6 +440,13 @@ db.serialize(function () {
             }
             console.log(`[DB]Date is: ${date}`);
 
+            db.get('select 1 from Customer where cid=?', [cid], (err, rowcid)=>{
+              if(!rowcid){
+                
+
+              }
+
+            });
             db.run('INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (?,?,?,?,?,?);',
                 [cid,rowsid.sid,date,tax,subtotal,other],
                 (err)=>{
@@ -457,7 +464,7 @@ db.serialize(function () {
                             [this.lastID,val.name,val.quantity,val.unitcost],
                             (err) =>{
                               if(err){
-                                console.log(`storeaddreceiptERRORitem: username(${susername}), rid(${rowsid.rid}), ${err}`);
+                                console.log(`storeaddreceiptERRORitem: username(${susername}), rid(${this.lastID}), ${err}`);
                                 reject(val.name);
                                 return;
                               }
@@ -569,7 +576,7 @@ db.serialize(function () {
               getreceipt(sid, res);
         });
     };
-    module.exports.getstorereceipt = (susername,spasswordhash,res=null)=>{
+    module.exports.getstorereceipt = (susername,spasswordhash,res)=>{
       db.get('select sid from Store where username=? and passwordhash=?',
           [susername, spasswordhash],
           (err, rowsid)=>{

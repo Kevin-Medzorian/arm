@@ -56,6 +56,11 @@ CREATE TABLE Item(
 );
 
 
+/*
+insert into Business values ('f89weah', '8y9b8rwIU', 10000000, '2389gao');
+insert into Store values ('lfadsj', 'jaslf', 10000000, 10000000, '', '', '', '');
+insert into Customer values ('jqto3EW', '890wyG', 10000000);
+*/
 INSERT INTO "Business"(username,passwordhash,bid,name) VALUES('b1@gmail.com','p1',123,'Ralph');
 INSERT INTO "Business"(username,passwordhash,bid,name) VALUES('b2@gmail.com','p2',234,'School');
 INSERT INTO "Business"(username,passwordhash,bid,name) VALUES('target@gmail.com','target12',236,'Target12');

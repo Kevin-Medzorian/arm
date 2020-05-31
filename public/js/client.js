@@ -354,50 +354,52 @@ function storeLogin() {
     // Grabs appropriate HTML field data.
     const emailVal = $("#store-email-login").val();
     const passwordVal = $("#store-password-login").val();
+    if(emailVal.length === 0 || passwordVal.length === 0){
+        $(".error").html("Email and password should not be empty");
+    }else{
+        console.log("Sending POST request...");
 
-    console.log("Sending POST request...");
-
-    // POST request using fetch()  on "/store-login"
-    fetch("/store-login", {
-        // Adding method type
-        method: "POST",
-        // Adding body or contents to send
-        body: JSON.stringify({
-            email: emailVal,
-            password: passwordVal
-        }),
-        // Adding headers to the request
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
-    })
-    // Converting to JSON
-    .then(response => response.json())
-    // Displaying results to console
-    .then(json => {
-        console.log(json);
-        try{
-            if(json.login){
-                loggedIn = true;
-               // receipts = json.receipts;
-                 UID = json.sid;
-				 susername = emailVal;
-				 spassword = passwordVal;
-                 //stores = json.stores;
-              //  console.log(stores);
-                openStoreSession();
-            } else{
-                $(".error").html("Email or password is incorrect");
+        // POST request using fetch()  on "/store-login"
+        fetch("/store-login", {
+            // Adding method type
+            method: "POST",
+            // Adding body or contents to send
+            body: JSON.stringify({
+                email: emailVal,
+                password: passwordVal
+            }),
+            // Adding headers to the request
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
             }
-        } catch(err) {
-            alert(err); // If there is ANY error here, then send an alert to the browser.
-        }
+        })
+        // Converting to JSON
+        .then(response => response.json())
+        // Displaying results to console
+        .then(json => {
+            console.log(json);
+            try{
+                if(json.login){
+                    loggedIn = true;
+                // receipts = json.receipts;
+                    UID = json.sid;
+                    susername = emailVal;
+                    spassword = passwordVal;
+                    //stores = json.stores;
+                //  console.log(stores);
+                    openStoreSession();
+                } else{
+                    $(".error").html("Email or password is incorrect");
+                }
+            } catch(err) {
+                alert(err); // If there is ANY error here, then send an alert to the browser.
+            }
 
-    })
-    .catch((error) => {
-        alert(error);
-    });
-
+        })
+        .catch((error) => {
+            alert(error);
+        });
+    }
     event.preventDefault(); // Prevent page from reloading.
 }
 
@@ -409,51 +411,54 @@ function businessLogin() {
     // TODO
     // Clear the User-Visible error field (exists for letting user know passwords dont match, etc..)
     $(".error").html("");
-
     const emailVal = $("#business-email-login").val();
     const passwordVal = $("#business-password-login").val();
-    console.log(emailVal + passwordVal);
-    busername = emailVal;
-    bpassword = passwordVal;
-    console.log("Sending POST request...");
+    if(emailVal.length == 0 || passwordVal == 0){
+        $(".error").html("Email and password should not be empty");
+    }else{
+        console.log(emailVal + passwordVal);
+        busername = emailVal;
+        bpassword = passwordVal;
+        console.log("Sending POST request...");
 
-    // POST request using fetch()
-    fetch("/business-login", {
-        // Adding method type
-        method: "POST",
-        // Adding body or contents to send
-        body: JSON.stringify({
-            email: emailVal,
-            password: passwordVal
-        }),
-        // Adding headers to the request
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
-    })
-    // Converting to JSON
-    .then(response => response.json())
-    // Displaying results to console
-    .then(json => {
-        console.log(json);
-        try{
-            if(json.login){
-                loggedIn = true;
-                receipts = json.receipts;
-                UID = json.bid;
-                stores = json.stores;
-                console.log(stores);
-                openBusinessSession();
-            } else{
-                $(".error").html("Email or password is incorrect");
+        // POST request using fetch()
+        fetch("/business-login", {
+            // Adding method type
+            method: "POST",
+            // Adding body or contents to send
+            body: JSON.stringify({
+                email: emailVal,
+                password: passwordVal
+            }),
+            // Adding headers to the request
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
             }
-        } catch(err) {
-            alert(err); // If there is ANY error here, then send an alert to the browser.
-        }
-    })
-    .catch((error) => {
-        alert(error);
-    });
+        })
+        // Converting to JSON
+        .then(response => response.json())
+        // Displaying results to console
+        .then(json => {
+            console.log(json);
+            try{
+                if(json.login){
+                    loggedIn = true;
+                    receipts = json.receipts;
+                    UID = json.bid;
+                    stores = json.stores;
+                    console.log(stores);
+                    openBusinessSession();
+                } else{
+                    $(".error").html("Email or password is incorrect");
+                }
+            } catch(err) {
+                alert(err); // If there is ANY error here, then send an alert to the browser.
+            }
+        })
+        .catch((error) => {
+            alert(error);
+        });
+    }
 
     event.preventDefault(); // Prevent page from reloading.
 }

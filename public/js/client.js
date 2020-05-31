@@ -182,24 +182,25 @@ function storeAddReceipt(){
 		$(".store-receipt-error").html("Please add an item");
         return;
 	}
-	cid = parseInt($("#cid").val());
+	var cidInt = parseInt($("#cid").val());
 	tax = tax * 100;
 	subtotal = subtotal * 100;
+	var subInt = parseInt(subtotal);
+	var taxInt = parseInt(tax);
 
 	console.log("Sending POST request...");
-
+	//sid : UID, //get set to json.sid
 	fetch("/store-add-receipt",{
 		method: "POST",
 		 body: JSON.stringify({
-		    email : susername,
-			password : spassword,
-            cid : cid,
-			sid : UID,
-			date : receiptDate,
-			tax : tax, // in cents,
-			subtotal : subtotal, // in cents
-			other : "some custom text",
-			items : currentItems
+		    email : susername, //gets set to email val on login
+			password : spassword, //gets set to password val on login
+            cid : cidInt, // gets parsed as an Int	
+			date : receiptDate, //const int = -1
+			tax : taxInt, // in cents, parsed as Float
+			subtotal : subInt, // in cents parsed as Float
+			other : null, //string
+			items : currentItems //array of json 
 
         }),
 
@@ -213,23 +214,22 @@ function storeAddReceipt(){
         try{
             console.log(json);
             if(json.login){
-                console.log("store login true");
-                loggedIn = true;
-               // UID = json.sid;
-               // openStoreSession();
-               // stores.push(UID);
+               itemsResult = "<table><th> Name </th><th> Cost </th><th> Quantity </th>";
+				$(".items-list").html(itemsResult);
+				$(".store-receipt-error").html("");
+				$(".store-receipt-complete").html("Receipt Sent");
+				subtotal = 0.0;
+				document.getElementById('stotalval').innerHTML = subtotal; 
+				document.getElementById('totalval').innerHTML = 0.0; 
             }else{
                 //some error
-                $(".store-error").html("Username already exists");
+                $(".store-receipt-error").html("User does not exist");
             }
         }catch(err) {
             alert(err); // If there is ANY error here, then send an alert to the browser.
         }
     });
-	itemsResult = "<table><th> Name </th><th> Cost </th><th> Quantity </th>";
-	$(".items-list").html(itemsResult);
-	$(".store-receipt-error").html("");
-	$(".store-receipt-complete").html("Receipt Sent");
+	
     event.preventDefault();
 }
 /*
@@ -291,9 +291,9 @@ function storeAddReceiptItem(){
 
 	var completeItem = { name: itemName, unitcost: itemCost, quantity : itemQuantity};
 
-	var itemString = JSON.stringify(completeItem);
+	//var itemString = JSON.stringify(completeItem);
 	
-	currentItems.push(itemString);
+	currentItems.push(completeItem);
 	
 	
 	itemsResult += "<tr><td>" + itemName + "</td><td>" + itemCost + "</td><td>" + itemQuantity + "</td></tr>";

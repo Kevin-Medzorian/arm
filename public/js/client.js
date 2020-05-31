@@ -155,9 +155,9 @@ function storeSignUp(){
 */
 function storeAddReceipt(){
 	$(".store-error").html("");
-	const cid = parseInt($("#cid").val());
+	var cid = $("#cid").val();
 	//const total = $("#total").val();
-	const tax = $("#tax").val();
+	var tax = parseFloat($("#tax").val());
 	const sid = UID;
 	//const subtotalHtml = $("#stotalval");
 	const receiptDate = -1;  //todays date?
@@ -167,9 +167,16 @@ function storeAddReceipt(){
 	console.log(tax);
 
 	if(cid.length === 0){
-		$(".store-error").html("Please enter a Customer ID");
+		$(".store-receipt-error").html("Please enter a Customer ID");
         return;
 	}
+	if(currentItems.length === 0){
+		$(".store-receipt-error").html("Please add an item");
+        return;
+	}
+	cid = parseInt($("#cid").val());
+	tax = tax * 100;
+	subtotal = subtotal * 100;
 
 	console.log("Sending POST request...");
 
@@ -211,7 +218,10 @@ function storeAddReceipt(){
             alert(err); // If there is ANY error here, then send an alert to the browser.
         }
     });
-
+	itemsResult = "<table><th> Name </th><th> Cost </th><th> Quantity </th>";
+	$(".items-list").html(itemsResult);
+	$(".store-receipt-error").html("");
+	$(".store-receipt-complete").html("Receipt Sent");
     event.preventDefault();
 }
 /*
@@ -229,6 +239,48 @@ function storeAddReceiptItem(){
 
 	//currentItems.push(itemName);
 
+	if(itemName.length === 0 || itemCost.length === 0 || itemQuantity.length === 0){
+		$(".store-receipt-error").html("Please complete all fields");
+        return;
+	}
+	if(tax.length == 0){
+		$(".store-receipt-error").html("Please enter the tax amount");
+        return;
+	}
+
+	var subTcurrent = parseFloat(subtotal);
+	var itemCostCurrent = parseFloat(itemCost);
+	var itemQtyCurrent = parseInt(itemQuantity);
+	if(!(itemCostCurrent > 0)){
+		$(".store-receipt-error").html("Invalid item cost");
+        return;
+	}
+	if(!(itemQtyCurrent > 0)){
+		$(".store-receipt-error").html("Invalid item quantity");
+        return;
+	}
+
+	var subTFinal = subTcurrent + (itemCostCurrent*itemQtyCurrent);
+	var subTRounded = subTFinal.toFixed(2);
+	console.log(subTRounded);
+	subtotal = subTRounded;
+
+	var taxF = parseFloat(tax);
+	if(!(taxF >= 0)){
+		$(".store-receipt-error").html("Invalid item tax");
+        return;
+	}
+	var totalV = taxF + subTFinal;
+	var totalVRound = totalV.toFixed(2);
+
+
+
+
+	document.getElementById('stotalval').innerHTML = subTRounded; 
+
+	document.getElementById('totalval').innerHTML = totalVRound; 
+
+
 	var completeItem = { name: itemName, unitcost: itemCost, quantity : itemQuantity};
 
 	var itemString = JSON.stringify(completeItem);
@@ -241,34 +293,7 @@ function storeAddReceiptItem(){
 	//inject into html here
 
 	$(".items-list").html(itemsResult);
-	//$(".items-list").html(<table> <th>Index</th> </table>);
 
-	var subtotalHtml = $("#stotalval");
-
-	//subtotal += itemCost;
-
-	//$("#stotalval").value= "20.0f";
-
-	var subTcurrent = parseFloat(subtotal);
-	var itemCostCurrent = parseFloat(itemCost);
-	var itemQtyCurrent = parseInt(itemQuantity);
-	var subTFinal = subTcurrent + (itemCostCurrent*itemQtyCurrent);
-	var subTRounded = subTFinal.toFixed(2);
-	console.log(subTRounded);
-	subtotal = subTRounded;
-
-	var taxF = parseFloat(tax);
-	var totalV = taxF + subTFinal;
-	var totalVRound = totalV.toFixed(2);
-
-	document.getElementById('stotalval').innerHTML = subTRounded; 
-
-	document.getElementById('totalval').innerHTML = totalVRound; 
-
-	//var subtotalString = "<label for="subtotal">";
-	//<label for="male">Male</label>
-
-	//$(".subtotal-value").html("");
 
 }
 

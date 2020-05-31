@@ -4,7 +4,13 @@ var receipts = null;
 var UID = null;
 var busername = null;
 var bpassword = null;
+var susername = null;
+var spassword = null;
 var stores = [];
+var currentItems = [];
+var itemsResult = "<table><th> Name </th><th> Cost </th><th> Quantity </th>";
+var subtotal = 0.0;
+var total = 0.0;
 
 google.charts.load('current', {'packages':['corechart']});
 
@@ -71,7 +77,7 @@ function customerLogin() {
 */
 function storeSignUp(){
     $(".store-error").html("");
-    const streetVal = $("#store-street").val();
+	const streetVal = $("#store-street").val();
     const cityVal = $("#store-city").val();
     const stateVal = $("#store-state").val();
     const zipCodeVal = $("#store-zipcode").val();
@@ -127,9 +133,17 @@ function storeSignUp(){
             if(json.login){
                 console.log("store login true");
                 loggedIn = true;
-                UID = json.sid;
+                //UID = json.sid;
                 //openStoreSession();
-                stores.push(UID);
+                console.log(UID);
+                stores.push({
+                    sid : json.sid,
+                    street : streetVal,
+                    city : cityVal,
+                    state : stateVal,
+                    zipcode : zipCodeVal
+                });
+
             }else{
                 //some error
                 $(".store-error").html("Email already exists");
@@ -142,6 +156,155 @@ function storeSignUp(){
     event.preventDefault();
 }
 
+/*
+    Called when the business clicks the send receipt button
+    Grabs apppropriate HTML fields
+    Then, makes POST request on "/"
+*/
+function storeAddReceipt(){
+	$(".store-error").html("");
+	var cid = $("#cid").val();
+	//const total = $("#total").val();
+	var tax = parseFloat($("#tax").val());
+	const sid = UID;
+	//const subtotalHtml = $("#stotalval");
+	const receiptDate = -1;  //todays date?
+	console.log(cid);
+	console.log(subtotal);
+	console.log(total);
+	console.log(tax);
+
+	if(cid.length === 0){
+		$(".store-receipt-error").html("Please enter a Customer ID");
+        return;
+	}
+	if(currentItems.length === 0){
+		$(".store-receipt-error").html("Please add an item");
+        return;
+	}
+	cid = parseInt($("#cid").val());
+	tax = tax * 100;
+	subtotal = subtotal * 100;
+
+	console.log("Sending POST request...");
+
+	fetch("/store-add-receipt",{
+		method: "POST",
+		 body: JSON.stringify({
+		    email : susername,
+			password : spassword,
+            cid : cid,
+			sid : UID,
+			date : receiptDate,
+			tax : tax, // in cents,
+			subtotal : subtotal, // in cents
+			other : "some custom text",
+			items : currentItems
+
+        }),
+
+		headers:{
+            "Content-type": "application/json; charset=UTF-8"
+        }
+	})
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        try{
+            console.log(json);
+            if(json.login){
+                console.log("store login true");
+                loggedIn = true;
+               // UID = json.sid;
+               // openStoreSession();
+               // stores.push(UID);
+            }else{
+                //some error
+                $(".store-error").html("Username already exists");
+            }
+        }catch(err) {
+            alert(err); // If there is ANY error here, then send an alert to the browser.
+        }
+    });
+	itemsResult = "<table><th> Name </th><th> Cost </th><th> Quantity </th>";
+	$(".items-list").html(itemsResult);
+	$(".store-receipt-error").html("");
+	$(".store-receipt-complete").html("Receipt Sent");
+    event.preventDefault();
+}
+/*
+    Called when the business clicks the add item button
+    Grabs apppropriate HTML fields
+    Then, adds to item array "/"
+*/
+function storeAddReceiptItem(){
+
+	console.log("adding item!");
+	const itemName = $("#itemName").val();
+	const itemCost = $("#itemCost").val();
+	const itemQuantity = $("#itemQuantity").val();
+	const tax = $("#tax").val();
+
+	//currentItems.push(itemName);
+
+	if(itemName.length === 0 || itemCost.length === 0 || itemQuantity.length === 0){
+		$(".store-receipt-error").html("Please complete all fields");
+        return;
+	}
+	if(tax.length == 0){
+		$(".store-receipt-error").html("Please enter the tax amount");
+        return;
+	}
+
+	var subTcurrent = parseFloat(subtotal);
+	var itemCostCurrent = parseFloat(itemCost);
+	var itemQtyCurrent = parseInt(itemQuantity);
+	if(!(itemCostCurrent > 0)){
+		$(".store-receipt-error").html("Invalid item cost");
+        return;
+	}
+	if(!(itemQtyCurrent > 0)){
+		$(".store-receipt-error").html("Invalid item quantity");
+        return;
+	}
+
+	var subTFinal = subTcurrent + (itemCostCurrent*itemQtyCurrent);
+	var subTRounded = subTFinal.toFixed(2);
+	console.log(subTRounded);
+	subtotal = subTRounded;
+
+	var taxF = parseFloat(tax);
+	if(!(taxF >= 0)){
+		$(".store-receipt-error").html("Invalid item tax");
+        return;
+	}
+	var totalV = taxF + subTFinal;
+	var totalVRound = totalV.toFixed(2);
+
+
+
+
+	document.getElementById('stotalval').innerHTML = subTRounded; 
+
+	document.getElementById('totalval').innerHTML = totalVRound; 
+
+
+	var completeItem = { name: itemName, unitcost: itemCost, quantity : itemQuantity};
+
+	var itemString = JSON.stringify(completeItem);
+	
+	currentItems.push(itemString);
+	
+	
+	itemsResult += "<tr><td>" + itemName + "</td><td>" + itemCost + "</td><td>" + itemQuantity + "</td></tr>";
+
+	//inject into html here
+
+	$(".items-list").html(itemsResult);
+
+
+}
+
 function displayStores(){
     let result = `<table style="background-color: #0b8ca1;">`;
     result += "<th> Index </th>";
@@ -151,7 +314,8 @@ function displayStores(){
     result += "<th> State </th>";
     result += "<th> Zipcode </th>";
     let index = 1;
-     for(let store of stores){
+    console.log(stores);
+    for(let store of stores){
         result += `<tr><td style="text-align:center;">` + index + "</td><td>" + store.sid + "</td><td>" + store.street + "</td><td>" + 
           store.city + "</td><td>" + store.state + "</td><td>" + store.zipcode + "</td></tr>";
         index = index + 1;
@@ -216,8 +380,10 @@ function storeLogin() {
             if(json.login){
                 loggedIn = true;
                // receipts = json.receipts;
-               // UID = json.bid;
-               // stores = json.stores;
+                 UID = json.sid;
+				 susername = emailVal;
+				 spassword = passwordVal;
+                 //stores = json.stores;
               //  console.log(stores);
                 openStoreSession();
             } else{
@@ -535,39 +701,43 @@ function viewReceipt(receiptIndex) {
     //alert(receipt.name);
 
     //get the date
-    var d = new Date(parseInt(receipt.date));
+    var d = new Date(parseInt(receipt.date)); //FIX DATE PARSING
     const dateStr = "" + (d.getMonth() + 1) +"/" + d.getDate() + "/" + d.getFullYear();
 
+    //displays receipt header
     let result = '';
     result += '<h1 class="receipt-center">' + receipt.name + ' ' + dateStr + '</h1>';
     result += '<h4 class="text-center">' + 'STORE ID: ' +receipt.sid +'</h4>' ;
     result += '<table align="center" class="receiptTab" cellspacing="0">';
-    result += '<thead>'
-    result += '<tr class="headings">'
-    result += '<th class="product">Item</td>'
-    result += '<th class="price">Price</td>'
-    result += '<th class="quantity">Quantity</td>'
-    result += '</tr>'
-    result += '</thead>'
-    result += '<tbody>'
+    result += '<thead>';
+    result += '<tr class="headings">';
+    result += '<th class="product">Item</td>';
+    result += '<th class="price">Price</td>';
+    result += '<th class="quantity">Quantity</td>';
+    result += '</tr>';
+    result += '</thead>';
+    result += '<tbody>';
 
+    //displays each item in receipt
     var products = receipt.item;
     for (let index of products){
-        result+=    '<tr>'
-        result+=    '<td class="product">'+ index.name+'</td>'
-        result+=    '<td class="price">'+ index.unitcost +'</td>'
-        result+=    '<td class="quantity">'+ index.quantity +'</td>'
-        result+=    '</tr>'
+        result+=    '<tr>';
+        result+=    '<td class="product">'+ index.name+'</td>';
+        result+=    '<td class="price">'+ index.unitcost +'</td>';
+        result+=    '<td class="quantity">'+ index.quantity +'</td>';
+        result+=    '</tr>';
     }
 
-    result += '</tbody>'
-    result += '</table>'
+    result += '</tbody>';
+    result += '</table>';
 
-    result += '<h4 class="text-center">' + 'Total : ' + receipt.subtotal + '</h4>' 
-    result += '<h4 class="text-center">' + 'Tax : ' + receipt.tax + '</h4>' 
-    result += '<h4 class="text-center">' + 'Amount Due : ' + (receipt.subtotal + receipt.tax) + '</h4>' 
-    result += '<button class="view-all-button" onclick="viewAll()" >View All Receipts</button>'
+    // displays receipt totals
+    result += '<h4 class="text-center">' + 'Total : ' + receipt.subtotal + '</h4>'; 
+    result += '<h4 class="text-center">' + 'Tax : ' + receipt.tax + '</h4>'; 
+    result += '<h4 class="text-center">' + 'Amount Due : ' + (receipt.subtotal + receipt.tax) + '</h4>'; 
+    result += '<button class="view-all-button" onclick="viewAll()" >View All Receipts</button>';
 
+    // erases all receipts screen
     $("#customer-session").hide();
     $('#individual').fadeIn();
     //result += '<h1 class = "text-center">'+ receipt.name + ' ' + dateStr +'</h1>' 
@@ -811,6 +981,7 @@ function adjustNavbar(){
         if(loggedIn){
             $('#top-navbar').hide();
             $('#bot-navbar').fadeIn('fast');
+            $('#bottom-text').hide();
         }
         $('.navbar-nav').css('border-radius', '30px 0px 0px 30px');
         $('.navbar-nav').css('margin-right', '0px');
@@ -819,6 +990,7 @@ function adjustNavbar(){
         if(loggedIn){
             $('#bot-navbar').hide();
             $('#top-navbar').fadeIn('fast');
+            $('#bottom-text').fadeIn('fast');
         }
         $('.navbar-nav').css('border-radius', '4px 4px 4px 30px');
         $('.navbar-nav').css('margin-right', '1vw');

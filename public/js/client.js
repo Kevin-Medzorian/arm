@@ -943,6 +943,7 @@ function adjustNavbar(){
         if(loggedIn){
             $('#top-navbar').hide();
             $('#bot-navbar').fadeIn('fast');
+            $('#bottom-text').hide();
         }
         $('.navbar-nav').css('border-radius', '30px 0px 0px 30px');
         $('.navbar-nav').css('margin-right', '0px');
@@ -951,6 +952,7 @@ function adjustNavbar(){
         if(loggedIn){
             $('#bot-navbar').hide();
             $('#top-navbar').fadeIn('fast');
+            $('#bottom-text').fadeIn('fast');
         }
         $('.navbar-nav').css('border-radius', '4px 4px 4px 30px');
         $('.navbar-nav').css('margin-right', '1vw');

@@ -40,6 +40,15 @@
     </div>
   </div>
 
+  <div id="bottom-text">
+    <div id="team-text" style="position:absolute; padding-left:3px; bottom:0; right:0; width:100%;">
+      Team ARM - UC San Diego - CSE110 Spring '20
+    </div>
+
+    <div id="copyright-text" style="position:absolute; bottom:0; padding-right: 3px; right:0; text-align:right; width:100%;">
+      ARM &copy; 2020-21
+    </div>
+  </div>
 
   <div id="home">
     <!-- This is our home DIV (when we are NOT logged in)-->
@@ -327,26 +336,30 @@
     <!-- Contains our ENTIRE customer-loggedin-session page. -->
 
     <!-- Top-centric NavBar for when we are on Desktop -->
-    <ul class="nav nav-pills fixed-top session-top justify-content-center" id="top-navbar" role="tablist">
+    <ul class="nav nav-pills fixed-top session-top" id="top-navbar" role="tablist">
+
+      <div style="margin-left: 0px; margin-right: 15px; padding-top: 4px;"> <!-- "Receive" logo in our navbar -->
+        <img class="img-fluid d-block home float-left" type="home" src="images/logo-extended3.png" alt="">
+      </div>
+
       <li class="nav-item">
         <!-- UID NavBar button -->
-        <a class="nav-link h3 m-1 active" id="pills-id-tab" data-toggle="pill" href="#id" role="tab" aria-controls="id"
-          aria-selected="true">ID</a>
+        <a class="nav-link h3 m-2 p-1 active" id="pills-id-tab" data-toggle="pill" href="#id" role="tab" aria-controls="id"
+          aria-selected="true">UID</a>
       </li>
       <li class="nav-item">
         <!-- Receipts NavBar button -->
-        <a class="nav-link h3 m-1" id="pills-receipts-tab" data-toggle="pill" href="#receipts" role="tab"
+        <a class="nav-link h3 m-2 p-1" id="pills-receipts-tab" data-toggle="pill" href="#receipts" role="tab"
           aria-controls="receipts" aria-selected="false">Receipts</a>
       </li>
       <li class="nav-item">
         <!-- Track-Spending NavBar button -->
-        <a class="nav-link h3 m-1" id="pills-spending-tab" data-toggle="pill" href="#spending" role="tab"
+        <a class="nav-link h3 m-2 p-1" id="pills-spending-tab" data-toggle="pill" href="#spending" role="tab"
           aria-controls="spending" aria-selected="false">Spending</a>
       </li>
       <li class="nav-item">
-        <!-- Account-Page NavBar button-->
-        <a class="nav-link h3 m-1" id="pills-account-tab" data-toggle="pill" href="#account" role="tab"
-          aria-controls="account" aria-selected="false">Account</a>
+        <!-- Logout NavBar button-->
+        <a class="nav-link h3 m-2 p-1" id="pills-logout-tab" href="/">Logout</a>
       </li>
     </ul>
 
@@ -374,10 +387,9 @@
         </a>
       </li>
       <li class="nav-item h-100">
-        <!-- Account NavBar button w/ logo -->
-        <a class="nav-link h1 p-0 m-0 h-100 rounded-0" id="pills-account-tab" data-toggle="pill" href="#account"
-          role="tab" aria-controls="account" aria-selected="false">
-          <img class="img-fluid tab mb-3" src="images/account.png" />
+        <!-- Logout NavBar button w/ logo -->
+        <a class="nav-link h1 p-0 m-0 h-100 rounded-0" id="pills-account-tab" href="/">
+          <img class="img-fluid tab mb-3" src="images/logout.png"/>
         </a>
       </li>
     </ul>

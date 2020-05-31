@@ -4,6 +4,8 @@ var receipts = null;
 var UID = null;
 var busername = null;
 var bpassword = null;
+var susername = null;
+var spassword = null;
 var stores = [];
 var currentItems = [];
 var itemsResult = "<table><th> Name </th><th> Cost </th><th> Quantity </th>";
@@ -153,13 +155,12 @@ function storeSignUp(){
 */
 function storeAddReceipt(){
 	$(".store-error").html("");
-	const cid = $("#cid").val();
-	
+	const cid = parseInt($("#cid").val());
 	//const total = $("#total").val();
 	const tax = $("#tax").val();
 	const sid = UID;
 	//const subtotalHtml = $("#stotalval");
-	const receiptDate = "6/1/2020";  //todays date?
+	const receiptDate = -1;  //todays date?
 	console.log(cid);
 	console.log(subtotal);
 	console.log(total);
@@ -175,8 +176,10 @@ function storeAddReceipt(){
 	fetch("/store-add-receipt",{
 		method: "POST",
 		 body: JSON.stringify({
+		    email : susername,
+			password : spassword,
             cid : cid,
-			sid : sid,
+			sid : UID,
 			date : receiptDate,
 			tax : tax, // in cents,
 			subtotal : subtotal, // in cents
@@ -343,7 +346,9 @@ function storeLogin() {
             if(json.login){
                 loggedIn = true;
                // receipts = json.receipts;
-               // UID = json.bid;
+                 UID = json.sid;
+				 susername = emailVal;
+				 spassword = passwordVal;
                // stores = json.stores;
               //  console.log(stores);
                 openStoreSession();
@@ -942,6 +947,7 @@ function adjustNavbar(){
         if(loggedIn){
             $('#top-navbar').hide();
             $('#bot-navbar').fadeIn('fast');
+            $('#bottom-text').hide();
         }
         $('.navbar-nav').css('border-radius', '30px 0px 0px 30px');
         $('.navbar-nav').css('margin-right', '0px');
@@ -950,6 +956,7 @@ function adjustNavbar(){
         if(loggedIn){
             $('#bot-navbar').hide();
             $('#top-navbar').fadeIn('fast');
+            $('#bottom-text').fadeIn('fast');
         }
         $('.navbar-nav').css('border-radius', '4px 4px 4px 30px');
         $('.navbar-nav').css('margin-right', '1vw');

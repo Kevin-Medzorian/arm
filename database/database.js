@@ -311,6 +311,7 @@ db.serialize(function () {
           receiptjson.login = true;
           receiptjson.cid = rowin.cid;
           receiptjson.receipts = [];
+          receiptjson.locations = {};
           //receiptjson["receipts"] = {};
           console.log(`[DB]cid: ${rowin.cid}`);
 
@@ -328,6 +329,35 @@ db.serialize(function () {
               // if(!rowrec){
               //   console.log(`[DB]getallreceipts-rec:no receipts`);
               // }
+              console.log(`[DB]Remove this dbeach find sid${rowrec.sid}`);
+              //get locations: mapping sid to a json
+              if(receiptjson.locations[rowrec.sid] === undefined){
+                receiptjson.locations[rowrec.sid] = 1;
+                promises.push(new Promise((resolve, reject)=>{
+                  db.get('select street, city, state, zipcode from State\ where sid = ?',
+                      [rowrec.sid],
+                      (err, rowloc)=>{
+                        if(err){
+                          console.log(`[DB]getallreceiptsGetLocERROR: sid(${rowrec.sid})`);
+                          reject();
+                          return;
+                        }
+                        if(!row1){
+                          console.log(`[DB]getallreceiptsGetLocNone: sid(${rowrec.sid})`);
+                          reject();
+                          return;
+                        }
+                        receipt.location[rowrec.sid] = {
+                          "street":rowloc.street,
+                          "city":rowloc.city,
+                          "state":rowloc.state,
+                          "zipcode":rowloc.zipcode
+                        };
+                        resolve();
+                  });
+                }));
+              }
+
               var receipt = {
                 "rid" : rowrec.rid,
                 "sid" : rowrec.sid,
@@ -405,12 +435,16 @@ db.serialize(function () {
               if(res) res.json({"login":false, "error":"Internal error"});
               return;
             }
+            if(date == -1){
+              date = Date.now();
+            }
+            console.log(`[DB]Date is: ${date}`);
 
             db.run('INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (?,?,?,?,?,?);',
                 [cid,rowsid.sid,date,tax,subtotal,other],
                 (err)=>{
                   if(err){
-                    console.log(`[DB]storeaddreceiptERROR: username${susername}, ${err}`);
+                    console.log(`[DB]storeaddreceiptERROR: username(${susername}), ${err}`);
                     console.log({"login":false, "error":"Internal error"});
                     if(res) res.json({"login":false, "error":"Internal error"});
                     return;

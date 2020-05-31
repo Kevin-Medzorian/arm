@@ -138,7 +138,7 @@ app.post('/store-login', (req, res) => {
       return;
     }
     //database.getsid(req.body.email, req.body.password, res);
-    database.getstorereceipt = (req.body.email, req.body.password, res)=>{
+    database.getstorereceipt = (req.body.email, req.body.password, res);
   } catch(err){
     console.log(err);
     res.json(badinput);
@@ -148,7 +148,6 @@ app.post('/store-login', (req, res) => {
 //====================Add receipts
 app.post('/store-add-receipt', (req, res)=>{
   console.log('store-add-receipt');
-//susername,spasswordhash,cid,date,tax,subtotal,other,items,res
   const body = req.body;
   try{
     if(body.email.length == 0 || body.password == 0){
@@ -347,7 +346,7 @@ if(1==0){
   console.log("Expected \"failure\"  res")
   */
 }
-
+/*
 database.storeaddreceipt('s1@gmail.com', 'c1', 1234, -1, 111, 222, null, 
     [
     {
@@ -357,4 +356,5 @@ database.storeaddreceipt('s1@gmail.com', 'c1', 1234, -1, 111, 222, null,
     }
     ],
     null);
+    */
 //susername,spasswordhash,cid,date,tax,subtotal,other,items,res

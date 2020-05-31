@@ -662,39 +662,43 @@ function viewReceipt(receiptIndex) {
     //alert(receipt.name);
 
     //get the date
-    var d = new Date(parseInt(receipt.date));
+    var d = new Date(parseInt(receipt.date)); //FIX DATE PARSING
     const dateStr = "" + (d.getMonth() + 1) +"/" + d.getDate() + "/" + d.getFullYear();
 
+    //displays receipt header
     let result = '';
     result += '<h1 class="receipt-center">' + receipt.name + ' ' + dateStr + '</h1>';
     result += '<h4 class="text-center">' + 'STORE ID: ' +receipt.sid +'</h4>' ;
     result += '<table align="center" class="receiptTab" cellspacing="0">';
-    result += '<thead>'
-    result += '<tr class="headings">'
-    result += '<th class="product">Item</td>'
-    result += '<th class="price">Price</td>'
-    result += '<th class="quantity">Quantity</td>'
-    result += '</tr>'
-    result += '</thead>'
-    result += '<tbody>'
+    result += '<thead>';
+    result += '<tr class="headings">';
+    result += '<th class="product">Item</td>';
+    result += '<th class="price">Price</td>';
+    result += '<th class="quantity">Quantity</td>';
+    result += '</tr>';
+    result += '</thead>';
+    result += '<tbody>';
 
+    //displays each item in receipt
     var products = receipt.item;
     for (let index of products){
-        result+=    '<tr>'
-        result+=    '<td class="product">'+ index.name+'</td>'
-        result+=    '<td class="price">'+ index.unitcost +'</td>'
-        result+=    '<td class="quantity">'+ index.quantity +'</td>'
-        result+=    '</tr>'
+        result+=    '<tr>';
+        result+=    '<td class="product">'+ index.name+'</td>';
+        result+=    '<td class="price">'+ index.unitcost +'</td>';
+        result+=    '<td class="quantity">'+ index.quantity +'</td>';
+        result+=    '</tr>';
     }
 
-    result += '</tbody>'
-    result += '</table>'
+    result += '</tbody>';
+    result += '</table>';
 
-    result += '<h4 class="text-center">' + 'Total : ' + receipt.subtotal + '</h4>' 
-    result += '<h4 class="text-center">' + 'Tax : ' + receipt.tax + '</h4>' 
-    result += '<h4 class="text-center">' + 'Amount Due : ' + (receipt.subtotal + receipt.tax) + '</h4>' 
-    result += '<button class="view-all-button" onclick="viewAll()" >View All Receipts</button>'
+    // displays receipt totals
+    result += '<h4 class="text-center">' + 'Total : ' + receipt.subtotal + '</h4>'; 
+    result += '<h4 class="text-center">' + 'Tax : ' + receipt.tax + '</h4>'; 
+    result += '<h4 class="text-center">' + 'Amount Due : ' + (receipt.subtotal + receipt.tax) + '</h4>'; 
+    result += '<button class="view-all-button" onclick="viewAll()" >View All Receipts</button>';
 
+    // erases all receipts screen
     $("#customer-session").hide();
     $('#individual').fadeIn();
     //result += '<h1 class = "text-center">'+ receipt.name + ' ' + dateStr +'</h1>' 

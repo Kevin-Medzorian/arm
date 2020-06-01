@@ -44,9 +44,11 @@ h1{
 }
 
 h1.gradient {
-  padding: 5px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  padding-left: 9px;
   background-color: #ffffff;
-  background-image: linear-gradient(to bottom, #ffffff, #5d98ff, #ffffff);
+  background-image: linear-gradient(to bottom, #ffffff, #92baff);
   background-size: 100%;
   background-clip: text;
   -webkit-background-clip: text;
@@ -226,7 +228,11 @@ h1.gradient {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
-
+.chart-div{
+  background-color: #fafafa;
+  border-radius: 15px;
+  padding: 13px;
+}
 .form-login input[type="text"] {
   margin-bottom: 10px;
   opacity: 100%;
@@ -316,10 +322,11 @@ h1.gradient {
   .search-receipts {
     text-align: center;
     margin-top: 10px;
+    width: 100%;
     left: 0;
   }
   .search-receipts input[type=text] {
-    width: 300px;
+    width: 270px;
   }
   .show-all-receipts {
     margin-top: 10px;

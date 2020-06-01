@@ -382,12 +382,9 @@ function storeLogin() {
             try{
                 if(json.login){
                     loggedIn = true;
-                // receipts = json.receipts;
                     UID = json.sid;
                     susername = emailVal;
                     spassword = passwordVal;
-                    //stores = json.stores;
-                //  console.log(stores);
                     openStoreSession();
                 } else{
                     $(".error").html("Email or password is incorrect");
@@ -544,8 +541,11 @@ function businessSignup() {
     console.log(nameVal+emailVal+passwordVal);
     // Ensure password == confirm-password before attempting to signup.
     if(nameVal.length === 0){
+        $(".error").html("Name cannot be empty");
+    }else if(emailVal.length == 0){
         $(".error").html("Email cannot be empty");
-    }else if(checkPasswordConditions(passwordVal,confirmVal)){
+    }
+    else if(checkPasswordConditions(passwordVal,confirmVal)){
         fetch("/business-signup",{
             method: "POST",
             body: JSON.stringify({

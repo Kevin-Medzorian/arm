@@ -582,10 +582,13 @@ After a successfull login response, open the customer session by unhiding/hiding
 Adjusts navbar, then delegates setting up UID and Receipts pages to other functions.
 */
 function openCustomerSession(){
+
     console.log("opencustomersession");
     $("#home").hide(); // Hide our home DIV (this is the one we see whenever we are not logged in).
     $("#customer-session").fadeIn(); // Show our customer-session DIV (customer page).
     adjustNavbar();
+
+    new QRCode(document.getElementById("qrcode-image"), ""+UID);
 
     console.log("Opened customer session.");
 
@@ -983,8 +986,8 @@ function adjustNavbar(){
         if(loggedIn){
             $('#top-navbar').hide();
             $('#bot-navbar').fadeIn('fast');
-            $('#bottom-text').hide();
         }
+        $('.footer').hide();
         $('.navbar-nav').css('border-radius', '30px 0px 0px 30px');
         $('.navbar-nav').css('margin-right', '0px');
         $('.navbar-nav').css('background-color', 'rgba(250,250,250, 0.8)');
@@ -992,8 +995,8 @@ function adjustNavbar(){
         if(loggedIn){
             $('#bot-navbar').hide();
             $('#top-navbar').fadeIn('fast');
-            $('#bottom-text').fadeIn('fast');
         }
+        $('.footer').fadeIn('fast');
         $('.navbar-nav').css('border-radius', '4px 4px 4px 30px');
         $('.navbar-nav').css('margin-right', '1vw');
         $('.navbar-nav').css('background-color', 'transparent');

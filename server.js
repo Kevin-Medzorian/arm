@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const database = require('./database/database.js');
 
 // Port we are running the server on. Can be any free port.
-const port = 4000;
+const port = 3000;
 function sleep(milliseconds) {
   var start = new Date().getTime();
   for (var i = 0; i < 1e7; i++) {

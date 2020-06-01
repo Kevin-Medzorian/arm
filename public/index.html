@@ -445,7 +445,7 @@
       <div class="tab-pane fade" id="receipts" role="tabpanel" aria-labelledby="pills-receipts-tab">
           <!-- Search Box -->
           <span class="search-receipts fixed-top">
-            <input type="text" id="search-input" placeholder="Search...">
+            <input class="form-control d-inline-flex" type="text" id="search-input" placeholder="Search...">
             <button type="submit" id="search-button" onclick="searchReceipt()"><img src="images/search.png"></i></button>
           </span>
 
@@ -478,7 +478,13 @@
         <h1>Current Receipt</h1>
         <hr style="background-color: white; height: 1px; width: 30%;">
         <h2 class="text-left">Items</h2>
-        <div class="items-list"></div> <!-- Item grid -->
+        <div class="items-list">
+          <table>
+            <th class="text-left"> Name </th>
+            <th> Cost </th>
+            <th> Quantity </th>
+          </table>
+        </div> <!-- Item grid -->
         <div class="ml-auto"> <!-- Container for the total tax, subtotal, total cost, etc... -->
           <p class="text-right" id="total-tax">Total Tax: ____</p>
           <p class="text-right" id="subtotal">Subtotal: ____</p>

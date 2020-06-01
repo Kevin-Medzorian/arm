@@ -218,8 +218,8 @@ function storeAddReceipt(){
         try{
             console.log(json);
             if(json.login){
-                /*itemsResult = "<table><th> Name </th><th> Cost </th><th> Quantity </th>";
-				$(".items-list").html(itemsResult);*/
+                itemsResult = "<table><th class=\"text-left\"> Name </th><th> Cost </th><th> Quantity </th>";;
+				$(".items-list").html(itemsResult);
 				$(".store-receipt-error").html("");
 				$(".store-receipt-complete").html("Receipt Sent.");
                 subtotal = 0;
@@ -227,7 +227,7 @@ function storeAddReceipt(){
                 currentItems = [];
                 $("#total-tax").html("Total Tax: ____");
 				$("#subtotal").html("Subtotal: ____"); 
-				$("$total-cost").html("Total Cost: ____"); 
+				$("#total-cost").html("Total Cost: ____"); 
             }else{//bad cid probably
                 if(json.error == "bad cid"){
                     $(".store-receipt-error").html("Invalid Customer ID.");
@@ -292,7 +292,7 @@ function storeAddReceiptItem(){
 	$("#subtotal").html("Subtotal: $"+subtotal.toFixed(2)); 
     $("#total-cost").html("Total Cost: $"+total.toFixed(2));
 
-	var completeItem = { name: itemName, unitcost: itemCost, quantity : itemQuantity, itemtax: taxF };
+	var completeItem = { name: itemName, unitcost: itemCostCurrent*100, quantity : itemQtyCurrent };
 
 	//var itemString = JSON.stringify(completeItem);
     

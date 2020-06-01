@@ -7,7 +7,6 @@ insert into "Itemname"(columns) values (values);
 */
 PRAGMA foreign_keys=ON;
 
-
 drop table Item;
 drop table Receipt;
 drop table Customer;
@@ -41,8 +40,8 @@ CREATE TABLE Receipt(
     cid integer,
     sid integer,
     date integer check(typeof(date) = 'integer'),
-    tax integer check(typeof(date) = 'integer'),
-    subtotal integer check(typeof(date) = 'integer'),
+    tax integer check(typeof(tax) = 'integer'),
+    subtotal integer check(typeof(subtotal) = 'integer'),
     other TEXT,
     FOREIGN KEY(cid) REFERENCES Customer(cid),
     FOREIGN KEY(sid) REFERENCES Store(sid)

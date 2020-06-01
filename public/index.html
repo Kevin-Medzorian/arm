@@ -31,14 +31,10 @@
 
 <body>
   <!--individual receipts page -->
-  <div id = "individual"> 
-    <div class = "individual-receipt">
-      <div class="text-center">
-      
-        <div class="individual-receipt"></div>
-      </div>
-      
+  <div id="individual" style="display:none; text-align:center;"> 
+    <div class = "individual-receipt" style="background-color: rgba(250, 250, 250, 0.8); border-radius: 20px; color: rgb(50,50,50)">
     </div>
+    <button class="btn btn-md btn-primary" onclick="viewAll()">View All Receipts</button>
   </div>
 
   <div id="home">
@@ -478,7 +474,7 @@
         <h1>Current Receipt</h1>
         <hr style="background-color: white; height: 1px; width: 30%;">
         <h2 class="text-left">Items</h2>
-        <div class="items-list">
+        <div class="items-list" style="margin-bottom: 15px;">
           <table>
             <th class="text-left"> Name </th>
             <th> Cost </th>
@@ -504,17 +500,17 @@
           </div>
         </div>
       </div> <!-- End of left-side column for the Current Receipt-->
-      <div class="col-sm ml-5 text-center"> <!-- Column for adding items to receipt-->
+      <div class="col-md ml-5 text-center"> <!-- Column for adding items to receipt-->
         <h1>Add Item</h1>
         <hr style="background-color: white; height: 1px; width: 30%;">
         <div class="row m-0 p-0"> <!-- Begin a Row for name, cost, qty -->
-          <div class="col-8 p-0 m-0"> <!-- Item name -->
+          <div class="col-6 p-0 m-0"> <!-- Item name -->
             <input class="form-control text-left" type="text" id="itemName" name="itemName" placeholder="Item Name"/>
           </div>
-          <div class="col-2 p-0 m-0"> <!-- Item cost -->
+          <div class="col-3 pl-1 pr-1 m-0"> <!-- Item cost -->
             <input class="form-control text-right" type="number" id="itemCost" name="itemCost" step=".01" placeholder="Cost"/>
           </div>
-          <div class="col-2 p-0 m-0"> <!-- Item Quantity-->
+          <div class="col-3 m-0 p-0"> <!-- Item Quantity-->
             <input class="form-control text-right" type="number" id="itemQuantity" name="itemQuantity" placeholder="Qty"/>
           </div>
         </div> <!-- End row for name,cost,qty -->
@@ -541,28 +537,72 @@
 
   <!-- Div that contains our entire business-session page. -->
   <div id="business-session" style="display:none;">
-    <ul class="nav nav-pills fixed-top session-top justify-content-center" id="top-navbar" role="tablist">
+    <ul class="nav nav-pills fixed-top session-top" id="top-navbar" role="tablist">
+
+      <div style="margin-left: 0px; margin-right: 15px; padding-top: 4px;"> <!-- "Receive" logo in our navbar -->
+        <img class="img-fluid d-block home float-left" type="home" src="images/logo-extended3.png" alt="">
+      </div>
+
       <li class="nav-item">
-        <a class="nav-link h3 m-1 active" id="pills-id-tab" data-toggle="pill" href="#manage-stores" role="tab"
+        <a class="nav-link h3 m-2 p-1 active" id="pills-id-tab" data-toggle="pill" href="#manage-stores" role="tab"
           aria-controls="manage-stores" aria-selected="true">Stores</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link h3 m-1" id="pills-receipts-tab" data-toggle="pill" href="#receipts-businesses" role="tab"
+      <!--<li class="nav-item">
+        <a class="nav-link h3 m-2 p-1" id="pills-receipts-tab" data-toggle="pill" href="#receipts-businesses" role="tab"
           aria-controls="receipts-businesses" aria-selected="false">Receipts</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link h3 m-1" id="pills-spending-tab" data-toggle="pill" href="#view-product-statistics" role="tab"
+        <a class="nav-link h3 m-2 p-1" id="pills-spending-tab" data-toggle="pill" href="#view-product-statistics" role="tab"
           aria-controls="view-product-statistics" aria-selected="false">Product Stats</a>
-      </li>
+      </li> -->
       <li class="nav-item">
-        <a class="nav-link h3 m-1" id="pills-account-tab" data-toggle="pill" href="#account-business" role="tab"
-          aria-controls="account-business" aria-selected="false">Profile</a>
+        <!-- Logout NavBar button-->
+        <a class="nav-link h3 m-2 p-1" id="pills-logout-tab" href="/">Logout</a>
       </li>
     </ul>
 
     <div class="tab-pane fade show active mt-5" id="manage-stores" role="tabpanel" aria-labelledby="pills-manage-stores-tab">
+
+      <div class="row"> <!-- We are using a grid system for this page. -->
+        <div class="col-7 pr-5 text-center"> <!-- List of our stores. -->
+          <h1>Current Storefronts</h1>
+          <hr style="background-color: white; height: 1px; width: 30%;">
+          <br/>
+          <div class="show-stores"></div>
+        </div>
+        <div class="col-5 pl-5 text-center"> <!-- List of our stores. -->
+          <h1>Add a Store</h1>
+          <hr style="background-color: white; height: 1px; width: 30%;">
+          <h3 class="text-left">Location</h3>
+          <input type="text" id="store-street" class="form-control mt-1" style="width:100%;" placeholder="Address" autofocus />
+
+          <div class="row p-0"> <!-- Row for city and zipcode -->
+            <div class="col-md p-0">
+              <input type="text" id="store-city" class="form-control mt-2" placeholder="City" />
+            </div>
+            <div class="col-md p-0">
+              <input type="text" id="store-zipcode" class="form-control mt-2" placeholder="Zipcode"  />
+            </div>
+          </div>
+          
+          <input type="text" id="store-state" class="form-control mt-2 w-50" placeholder="State"  />
+          
+          <h3 class="text-left mt-3">Store Login Information</h3>
+          <input type="email" id="store-manager-email" class="form-control mt-1" placeholder="Manager Email" />
+          <input type="password" id="store-password" class="form-control mt-2" placeholder="Password" />
+          <input type="password" id="store-confirm-password" class="form-control mt-2" placeholder="Confirm Password" />
+          <div class="ml-auto float-right">
+            <button class="btn btn-lg btn-primary btn-rounded" id="add-store-btn" style="border-radius: 30px; margin-top: 0.5em;"
+            onclick = "storeSignUp()" href="#" type="submit">Add Store</button>
+          </div>
+        </div>
+      </div>
+      <br/>
+      <div class="store-error text-center"></div>
+
+
       <!--<div class = "h-100 row align-items-center" id="center-texts-store-input"> NEED TO WORK HERE!-->
-      <input type="text" id="store-street" class="form-control mt-3" placeholder="Street" autofocus />
+      <!-- <input type="text" id="store-street" class="form-control mt-3" placeholder="Street" autofocus />
       <input type="text" id="store-city" class="form-control mt-3" placeholder="City" autofocus />
       <input type="text" id="store-state" class="form-control mt-3" placeholder="State" autofocus />
       <input type="text" id="store-zipcode" class="form-control mt-3" placeholder="Zipcode" autofocus />
@@ -574,13 +614,13 @@
             style="border-radius: 30px; margin-top: 0.5em;"
        onclick = "storeSignUp()" href="#addstore" type="submit">Add Store!</button>  <!-- add onclick method in the tag-->
 
-      <div class="store-error"></div>
+     <!-- <div class="store-error"></div>
         <!-- Custom error-text area in case we need to tell the user something (bad login, etc..) -->
 
-        <button class="btn btn-lg btn-primary btn-rounded" id="show-store-btn"
+        <!--<button class="btn btn-lg btn-primary btn-rounded" id="show-store-btn"
         style="border-radius: 30px; margin-top: 0.5em; margin-bottom: 0.5em"
         onclick = "displayStores()" href="#showstore" type="submit">Show Stores!</button>
-      <div class="show-stores" ></div>
+      <div class="show-stores" ></div> -->
 
     </div>
 
@@ -590,14 +630,6 @@
     <div class="tab-pane fade" id="view-product-statistics" role="tabpanel"
       aria-labelledby="pills-product-statistics-tab">
 
-    </div>
-
-    <div class="tab-pane fade" id="account-business" role="tabpanel" aria-labelledby="pills-account-business-tab">
-      <div class="row">
-        <div class="col text-center">
-          <button class="btn btn-primary" onclick = "location.href='/'" >Logout</button>
-        </div>
-      </div>
     </div>
   </div>
 

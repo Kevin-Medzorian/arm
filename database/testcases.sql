@@ -53,9 +53,9 @@ INSERT INTO Business values('test_business', 'test_password', 10000000, 'MgRonal
 INSERT INTO Store values('test_store', 'test_password', 10000000, 10000000, '123 Main St.', 'Mars', 'CA', '314159');
 
 INSERT INTO Business values('test_business_2', 'test_password_2', 10000001, 'SterBucks');
-INSERT INTO Store values('test_store_2', 'test_password2', 10000001, 10000001, '234 Main St.', 'Pluto', 'CA', '173205');
+INSERT INTO Store values('test_store_2', 'test_password_2', 10000001, 10000001, '234 Main St.', 'Pluto', 'CA', '173205');
 
-Insert into Customer values('test_customer_2', 'test_password', 10000001);
+Insert into Customer values('test_customer_2', 'test_password_2', 10000001);
 
 Insert into Customer values('test_customer', 'test_password', 10000000);
 

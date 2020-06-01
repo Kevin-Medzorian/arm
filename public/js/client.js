@@ -161,42 +161,48 @@ function storeSignUp(){
     Then, makes POST request on "/"
 */
 function storeAddReceipt(){
-	$(".store-error").html("");
-	var cid = $("#cid").val();
-	//const total = $("#total").val();
-	var tax = (total-subtotal).toFixed(2);
-	//const subtotalHtml = $("#stotalval");
-	const receiptDate = -1;  //todays date?
-	console.log(cid);
-	console.log(subtotal);
-	console.log(total);
-	console.log(tax);
+    if(currentItems.length == 0){
+		$(".store-receipt-error").html("Please add an item.");
+        return;
+	}
 
+    //const total = $("#total").val();
+    var tax = $("#tax").val();
+    if(tax.length == 0){
+        $(".store-receipt-error").html("Please enter a tax value.");
+        return;
+    }
+	var taxInt = Math.round(100 * (total-subtotal));
+    var subtotalInt = Math.round(100 * subtotal);
+    if(subtotal <= 0){
+        $(".store-receipt-error").html("Please enter items.");
+        return;
+    }
+
+	const receiptDate = -1;  //todays date?
+	
+	console.log(subtotalInt/100);
+    console.log(taxInt/100);
+    var cid = $("#cid").val();
+    console.log(cid);
 	if(cid.length === 0){
 		$(".store-receipt-error").html("Please enter a Customer ID");
         return;
 	}
-	if(currentItems.length === 0){
-		$(".store-receipt-error").html("Please add an item");
-        return;
-	}
+	
 	var cidInt = parseInt($("#cid").val());
-	tax = tax * 100;
-	subtotal = subtotal * 100;
-	var subInt = parseInt(subtotal);
-	var taxInt = parseInt(tax);
 
 	console.log("Sending POST request...");
 	//sid : UID, //get set to json.sid
-	fetch("/store-add-receipt",{
-		method: "POST",
-		 body: JSON.stringify({
+	fetch("/store-add-receipt", {
+		    method: "POST",
+		    body: JSON.stringify({
 		    email : susername, //gets set to email val on login
-            password : spassword, //gets set to password val on login
-            cid : cidInt, // gets parsed as an Int	
+			password : spassword, //gets set to password val on login
+            cid : cidInt, // gets parsed as an Int
 			date : receiptDate, //const int = -1
-			tax : taxInt, // in cents, parsed as Float
-			subtotal : subInt, // in cents parsed as Float
+			tax : taxInt, // in cents
+			subtotal : subtotalInt, // in cents
 			other : null, //string
 			items : currentItems //array of json 
 
@@ -215,13 +221,19 @@ function storeAddReceipt(){
                 /*itemsResult = "<table><th> Name </th><th> Cost </th><th> Quantity </th>";
 				$(".items-list").html(itemsResult);*/
 				$(".store-receipt-error").html("");
-				$(".store-receipt-complete").html("Receipt Sent");
-				subtotal = 0.0;
-				document.getElementById('stotalval').innerHTML = subtotal; 
-				document.getElementById('totalval').innerHTML = 0.0; 
-            }else{
-                //some error
-                $(".store-receipt-error").html("Server returned error: " + json.error);
+				$(".store-receipt-complete").html("Receipt Sent.");
+                subtotal = 0;
+                total = 0;
+                currentItems = [];
+                $("#total-tax").html("Total Tax: ____");
+				$("#subtotal").html("Subtotal: ____"); 
+				$("$total-cost").html("Total Cost: ____"); 
+            }else{//bad cid probably
+                if(json.error == "bad cid"){
+                    $(".store-receipt-error").html("Invalid Customer ID.");
+                } else{
+                    $(".store-receipt-error").html("Server returned error: " + json.error);
+                }
             }
         }catch(err) {
             alert(err); // If there is ANY error here, then send an alert to the browser.
@@ -241,7 +253,7 @@ function storeAddReceiptItem(){
 	const itemName = $("#itemName").val();
 	const itemCost = $("#itemCost").val();
 	const itemQuantity = $("#itemQuantity").val();
-	const tax = $("#tax").val();
+	var tax = $("#tax").val();
 
 	//currentItems.push(itemName);
 
@@ -606,20 +618,24 @@ function openCustomerSession(){
     }
 
     if(receipts){
+        var j;
       for (i=0; i < receipts.length; i++) {
-        var date = new Date(receipts[i].date);
+        var date = new Date(receipts[i].date*1000);
 
         // Check same year
         if (date.getYear() == thisDate.getYear()) {
 
           // Check months
-          var j;
+          
           for (j=0; j < disp.length; j++) {
             if (date.getMonth() == disp[j].index) {
               disp[j].total += receipts[i].subtotal + receipts[i].tax;
             }
           }
         }
+      }
+      for(j = 0; j < disp.length; j++){
+          disp[j].total /= 100;
       }
     }
 
@@ -698,7 +714,7 @@ function viewReceipt(receiptIndex) {
     //alert(receipt.name);
 
     //get the date
-    var d = new Date(parseInt(receipt.date)); //FIX DATE PARSING
+    var d = new Date(receipt.date*1000); //FIX DATE PARSING
     const dateStr = "" + (d.getMonth() + 1) +"/" + d.getDate() + "/" + d.getFullYear();
 
     //displays receipt header
@@ -720,7 +736,7 @@ function viewReceipt(receiptIndex) {
     for (let index of products){
         result+=    '<tr>';
         result+=    '<td class="product">'+ index.name+'</td>';
-        result+=    '<td class="price">'+ index.unitcost +'</td>';
+        result+=    '<td class="price">'+ index.unitcost/100 +'</td>';
         result+=    '<td class="quantity">'+ index.quantity +'</td>';
         result+=    '</tr>';
     }
@@ -729,9 +745,9 @@ function viewReceipt(receiptIndex) {
     result += '</table>';
 
     // displays receipt totals
-    result += '<h4 class="text-center">' + 'Total : ' + receipt.subtotal + '</h4>'; 
-    result += '<h4 class="text-center">' + 'Tax : ' + receipt.tax + '</h4>'; 
-    result += '<h4 class="text-center">' + 'Amount Due : ' + (receipt.subtotal + receipt.tax) + '</h4>'; 
+    result += '<h4 class="text-center">' + 'Subtotal : ' + receipt.subtotal/100 + '</h4>'; 
+    result += '<h4 class="text-center">' + 'Tax : ' + receipt.tax/100 + '</h4>'; 
+    result += '<h4 class="text-center">' + 'Amount Due : ' + (receipt.subtotal + receipt.tax)/100 + '</h4>'; 
     result += '<button class="view-all-button" onclick="viewAll()" >View All Receipts</button>';
 
     // erases all receipts screen
@@ -759,7 +775,7 @@ function showAllReceipts(){
         result += '<div class="row">';
         let index = 0;
         for(let receipt of receipts){ // TODO: limit the number of receipts seen if too many in database
-            var d = new Date(parseInt(receipt.date));
+            var d = new Date(receipt.date*1000);
             const dateStr = "" + (d.getMonth() + 1) +"/" + d.getDate() + "/" + d.getFullYear();
             result += '<div class="col-lg-4 col-md-6 mt-3">';
             result += '<button onclick="viewReceipt(this.value)" class="receipt-list" value=' + index + '>';
@@ -772,7 +788,7 @@ function showAllReceipts(){
             result += '</span>';
             result += '<span class="right">';
             result += '<span class="receipt-list-subtitle">Total: $</span>';
-            const total = receipt.subtotal + receipt.tax;
+            const total = (receipt.subtotal + receipt.tax)/100;
             result += '<span class="receipt-list-subtext">' + total + '</span>';
             result += '</span></button></div>';
 
@@ -815,7 +831,7 @@ function searchReceipt(){
         let result = '<div class="row">';
         let index = 0;
         for(let receipt of receipts){ // TODO: limit the number of receipts seen if too many in database
-            var d = new Date(parseInt(receipt.date));
+            var d = new Date(receipt.date*1000);
             const dateStr = "" + (d.getMonth() + 1) +"/" + d.getDate() + "/" + d.getFullYear();
             // if receipt matches with keyword as a regex
             if (receipt.name.search(regex) != -1 || dateStr.search(regex) != -1) {
@@ -833,7 +849,7 @@ function searchReceipt(){
                 result += '<span class="right">';
                 result += '<span class="receipt-list-subtitle">Total: $</span>';
                 const total = receipt.subtotal + receipt.tax;
-                result += '<span class="receipt-list-subtext">' + total + '</span>';
+                result += '<span class="receipt-list-subtext">' + total/100 + '</span>';
                 result += '</span></button></div>';
             }
             index = index + 1;
@@ -999,3 +1015,4 @@ function adjustNavbar(){
 $(window).resize(function() {
     adjustNavbar();
 });
+

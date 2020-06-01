@@ -138,7 +138,6 @@ app.post('/store-login', (req, res) => {
       return;
     }
     //database.getsid(req.body.email, req.body.password, res);
-    console.log(`${req.body.email}, ${req.body.password}, ${res}`);
     database.getstorereceipt(req.body.email, req.body.password, res);
   } catch(err){
     console.log(err);
@@ -155,8 +154,10 @@ app.post('/store-add-receipt', (req, res)=>{
       res.json({"login":false, "error": errorempty});
       return;
     }
-    if(body.cid <= 0 || typeof(body.cid) != 'number' || typeof(body.date) != 'number'){
-
+    if(typeof(body.cid) != 'number' || body.cid <= 0 || 
+        typeof(body.date) != 'number' || typeof(body.tax) != 'number' ||
+        typeof(body.subtotal) != 'number'){
+      
       res.json(badinput);
       return;
     }
@@ -347,15 +348,28 @@ if(1==0){
   console.log("Expected \"failure\"  res")
   */
 }
-/*
-database.storeaddreceipt('s1@gmail.com', 'c1', 1234, -1, 111, 222, null, 
-    [
-    {
-    "name":"stuff",
-    "quantity":2,
-    "unitcost":301
-    }
-    ],
-    null);
-    */
+
+// database.storeaddreceipt('test_store', 'test_password', 10000000, -1, 111, 222, null, 
+//     [
+//     { name: 'a', unitcost: 1, quantity: 1 },
+//     { name: 'a', unitcost: 1, quantity: 1 },
+//     { name: 'a', unitcost: 1, quantity: 1 },
+//     { name: 'a', unitcost: 1, quantity: 1 },
+//     { name: 'a', unitcost: 1, quantity: 1 },
+//     { name: 'a', unitcost: 1, quantity: 1 },
+//     { name: 'a', unitcost: 1, quantity: 1 }
+//     ],
+//     null);
+
+// database.test(10000003, 10000000, -1, 111, 222, null, 
+//       [
+//       { name: 'q', unitcost: 1, quantity: 1 },
+//       { name: 'q', unitcost: 1, quantity: 1 },
+//       { name: 'q', unitcost: 1, quantity: 1 },
+//       { name: 'q', unitcost: 1, quantity: 1 },
+//       { name: 'q', unitcost: 1, quantity: 1 },
+//       { name: 'q', unitcost: 1, quantity: 1 },
+//       { name: 'q', unitcost: 1, quantity: 1 }
+//       ],
+//       null);
 //susername,spasswordhash,cid,date,tax,subtotal,other,items,res

@@ -8,9 +8,9 @@ var susername = null;
 var spassword = null;
 var stores = [];
 var currentItems = [];
-var itemsResult = "<table><th> Name </th><th> Cost </th><th> Quantity </th>";
-var subtotal = 0;
-var total = 0;
+var itemsResult = "<table><th class=\"text-left\"> Name </th><th> Cost </th><th> Quantity </th>";
+var subtotal = 0.0;
+var total = 0.0;
 
 google.charts.load('current', {'packages':['corechart']});
 
@@ -162,20 +162,20 @@ function storeSignUp(){
 */
 function storeAddReceipt(){
     if(currentItems.length == 0){
-		$(".store-receipt-error").html("Please add an item");
+		$(".store-receipt-error").html("Please add an item.");
         return;
 	}
 
     //const total = $("#total").val();
     var tax = $("#tax").val();
     if(tax.length == 0){
-        $(".store-receipt-error").html("Please enter a tax value");
+        $(".store-receipt-error").html("Please enter a tax value.");
         return;
     }
-	var taxInt = Math.round(100 * parseFloat(tax));
-    var subtotalInt = subtotal;
+	var taxInt = Math.round(100 * (total-subtotal));
+    var subtotalInt = Math.round(100 * subtotal);
     if(subtotal <= 0){
-        $(".store-receipt-error").html("Please enter items");
+        $(".store-receipt-error").html("Please enter items.");
         return;
     }
 
@@ -183,7 +183,6 @@ function storeAddReceipt(){
 	
 	console.log(subtotalInt/100);
     console.log(taxInt/100);
-    total = subtotal+taxInt;
     var cid = $("#cid").val();
     console.log(cid);
 	if(cid.length === 0){
@@ -219,18 +218,19 @@ function storeAddReceipt(){
         try{
             console.log(json);
             if(json.login){
-                itemsResult = "<table><th> Name </th><th> Cost </th><th> Quantity </th>";
-				$(".items-list").html(itemsResult);
+                /*itemsResult = "<table><th> Name </th><th> Cost </th><th> Quantity </th>";
+				$(".items-list").html(itemsResult);*/
 				$(".store-receipt-error").html("");
-				$(".store-receipt-complete").html("Receipt Sent");
+				$(".store-receipt-complete").html("Receipt Sent.");
                 subtotal = 0;
                 total = 0;
                 currentItems = [];
-				document.getElementById('stotalval').innerHTML = subtotal; 
-				document.getElementById('totalval').innerHTML = 0.0; 
+                $("#total-tax").html("Total Tax: ____");
+				$("#subtotal").html("Subtotal: ____"); 
+				$("$total-cost").html("Total Cost: ____"); 
             }else{//bad cid probably
                 if(json.error == "bad cid"){
-                    $(".store-receipt-error").html("Invalid Customer ID");
+                    $(".store-receipt-error").html("Invalid Customer ID.");
                 } else{
                     $(".store-receipt-error").html("Server returned error: " + json.error);
                 }
@@ -258,56 +258,52 @@ function storeAddReceiptItem(){
 	//currentItems.push(itemName);
 
 	if(itemName.length === 0 || itemCost.length === 0 || itemQuantity.length === 0){
-		$(".store-receipt-error").html("Please complete all fields");
+		$(".store-receipt-error").html("Please complete all fields.");
         return;
 	}
 	if(tax.length == 0){
-		tax = 0;
-	}
-
-	var subTcurrent = subtotal;
-	var itemCostCurrent = Math.round(parseFloat(itemCost)* 100);
-	var itemQtyCurrent = parseInt(itemQuantity);
-	if(itemCostCurrent <= 0){
-		$(".store-receipt-error").html("Invalid item cost");
-        return;
-	}
-	if(itemQtyCurrent <= 0){
-		$(".store-receipt-error").html("Invalid item quantity");
+		$(".store-receipt-error").html("Please enter the tax amount.");
         return;
 	}
 
-	var subTFinal = subTcurrent + (itemCostCurrent*itemQtyCurrent);
-
-	console.log(subTFinal);
-	subtotal = subTFinal;
-
-	var taxF = Math.round(parseFloat(tax)*100);
-	if(taxF < 0){
-		$(".store-receipt-error").html("Invalid item tax");
+	var itemCostCurrent = parseFloat(itemCost);
+    var itemQtyCurrent = parseInt(itemQuantity);
+    
+	if(!(itemCostCurrent > 0)){
+		$(".store-receipt-error").html("Invalid item cost.");
         return;
 	}
-	var totalV = taxF + subTFinal;
+	if(!(itemQtyCurrent > 0)){
+		$(".store-receipt-error").html("Invalid item quantity.");
+        return;
+	}
+
+    var taxF = parseFloat(tax);
+	if(!(taxF >= 0)){
+		$(".store-receipt-error").html("Invalid item tax.");
+        return;
+    }
+
+    subtotal = (subtotal+(itemCostCurrent*itemQtyCurrent));
+    total = (total+taxF+(itemCostCurrent*itemQtyCurrent));
 
 
+    $("#total-tax").html("Total Tax: $"+ ((total-subtotal).toFixed(2)));
+	$("#subtotal").html("Subtotal: $"+subtotal.toFixed(2)); 
+    $("#total-cost").html("Total Cost: $"+total.toFixed(2));
 
-	document.getElementById('stotalval').innerHTML = subTFinal/100; 
-
-	document.getElementById('totalval').innerHTML = totalV/100; 
-
-
-	var completeItem = { name: itemName, unitcost: itemCostCurrent, quantity : itemQtyCurrent};
+	var completeItem = { name: itemName, unitcost: itemCost, quantity : itemQuantity, itemtax: taxF };
 
 	//var itemString = JSON.stringify(completeItem);
-	
+    
 	currentItems.push(completeItem);
 	
-	itemsResult += "<tr><td>" + itemName + "</td><td>" + itemCost + "</td><td>" + itemQuantity + "</td></tr>";
+	
+	itemsResult += "<tr><td class=\"text-left\">" + itemName + "</td><td>$" + itemCost + "</td><td>" + itemQuantity + "</td></tr>";
 
 	//inject into html here
 
-    $(".items-list").html(itemsResult);
-    $(".store-receipt-error").html("");
+	$(".items-list").html(itemsResult);
 }
 
 function displayStores(){
@@ -992,10 +988,7 @@ $(document).ready(function () {
     This adjusts the nav-bar to be either top-centric (on desktop) or bottom-centric (on mobile).
 */
 function adjustNavbar(){
-    var width = window.innerWidth;
-
-    if( $('#toggler-icon').is(':visible') || width < 768){
-        console.log("Adjusted to mobile view.");
+    if( $('#toggler-icon').is(':visible') || window.innerWidth < 785){
         if(loggedIn){
             $('#top-navbar').hide();
             $('#bot-navbar').fadeIn('fast');

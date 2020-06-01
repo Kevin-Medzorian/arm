@@ -623,24 +623,22 @@ function openCustomerSession(){
 
     if(receipts){
         var j;
-      for (i=0; i < receipts.length; i++) {
-        var date = new Date(receipts[i].date*1000);
+        for (i=0; i < receipts.length; i++) {
+            var date = new Date(receipts[i].date*1000);
 
-        // Check same year
-        if (date.getYear() == thisDate.getYear()) {
-
-          // Check months
-          
-          for (j=0; j < disp.length; j++) {
-            if (date.getMonth() == disp[j].index) {
-              disp[j].total += receipts[i].subtotal + receipts[i].tax;
+            // Check same year
+            if (date.getYear() == thisDate.getYear()) {
+                // Check months
+                for (j=0; j < disp.length; j++) {
+                    if (date.getMonth() == disp[j].index) {
+                        disp[j].total += receipts[i].subtotal + receipts[i].tax;
+                    }
+                }
             }
-          }
         }
-      }
-      for(j = 0; j < disp.length; j++){
-          disp[j].total /= 100;
-      }
+        for(j = 0; j < disp.length; j++){
+            disp[j].total /= 100;
+        }
     }
 
 

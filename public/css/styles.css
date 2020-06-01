@@ -255,11 +255,13 @@ h1.gradient {
   display: inline-block;
   text-align: right;
   margin-top: 4px;
-  left: 50vw;
-  margin-right: 100px;
+  left: 65vw;
+  /*margin-right: 100px;*/
+  width: 340px;
+  padding: 0px;
 }
 .search-receipts input[type=text] {
-  padding: 6px;
+  padding-right: 6px;
   font-size: 24px;
   outline: black;
   border-radius: 10px;
@@ -276,7 +278,6 @@ h1.gradient {
   cursor: pointer;
   width: 50px;
   height: 50px;
-  margin-right: 16px;
   vertical-align: top;
 }
 
@@ -304,7 +305,8 @@ h1.gradient {
   .search-receipts {
     text-align: center;
     margin-top: 65px;
-    left: 0;
+    left: 30vw;
+    width: 465px;
   }
   .search-receipts button {
     margin-right: 0px;

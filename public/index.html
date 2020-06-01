@@ -461,10 +461,10 @@
       <!-- Receipts page -->
       <div class="tab-pane fade" id="receipts" role="tabpanel" aria-labelledby="pills-receipts-tab">
           <!-- Search Box -->
-          <span class="search-receipts fixed-top">
+          <div class="search-receipts fixed-top">
             <input class="form-control d-inline-flex" type="text" id="search-input" placeholder="Search...">
             <button type="submit" id="search-button" onclick="searchReceipt()"><img src="images/search.png"></i></button>
-          </span>
+          </div>
 
           <!-- All Receipts shown from showAllReceipts in client.js -->
           <div class="show-all-receipts"></div>
@@ -494,20 +494,24 @@
       <div class="col-sm mr-5 text-center"> <!-- Parent column thats shows our Current Receipt-->
         <h1>Current Receipt</h1>
         <hr style="background-color: white; height: 1px; width: 30%;">
-        <h2 class="text-left">Items</h2>
-        <div class="items-list" style="margin-bottom: 15px;">
-          <table>
-            <th class="text-left"> Name </th>
-            <th> Cost </th>
-            <th> Quantity </th>
-          </table>
-        </div> <!-- Item grid -->
-        <div class="ml-auto"> <!-- Container for the total tax, subtotal, total cost, etc... -->
-          <p class="text-right" id="total-tax">Total Tax: ____</p>
-          <p class="text-right" id="subtotal">Subtotal: ____</p>
-          <p class="text-right" id="total-cost">Total Cost: ____</p>
+        <div style="background-color: rgba(42, 143, 201, 0.8); border-radius:15px; padding: 8px;">
+          <h2 class="text-left">Items</h2>
+          <hr style="background-color: white; height: 1px; width: 100%; margin: 2px;">
+          <div class="items-list" style="margin-bottom: 15px;">
+            <table>
+              <th class="text-left"> Name </th>
+              <th> Cost </th>
+              <th> Quantity </th>
+            </table>
+          </div> <!-- Item grid -->
+          <hr style="background-color: white; height: 1px; width: 100%; margin: 2px;">
+          <div class="ml-auto"> <!-- Container for the total tax, subtotal, total cost, etc... -->
+            <p class="text-right" id="total-tax">Total Tax: ____</p>
+            <p class="text-right" id="subtotal">Subtotal: ____</p>
+            <p class="text-right" id="total-cost">Total Cost: ____</p>
+          </div>
         </div>
-        <div class="row m-0 p-0"> <!-- Row containing our CustomerID input field and SEND button-->
+        <div class="row m-0 p-0 mt-2"> <!-- Row containing our CustomerID input field and SEND button-->
           <div class="col-sm m-0 p-0"> <!-- Column for our Customer ID input field-->
             <div class="mr-auto">
               <input class="form-control text-left" type="text" id="cid" name="cid" placeholder="Customer ID"/>
@@ -548,9 +552,9 @@
     <div class="text-center mt-5">
       <div style="color:red;" class="store-receipt-error mt-5"></div> <br/>
       <div style="color:blue;" class="store-receipt-complete mt-5"></div>
-      <span style="display:inline; background-color: #6c757d7c; border-radius: 10px; padding-top: 0px;">
-        <a class="btn btn-md" style="color:white; padding-top: 2px;" href="/">
-          Logout <img src="images/logout-btn.png" style="width:15px;">
+      <span style="display:inline; background-color: #bebebe7c; border-radius: 10px; padding-top: 0px;">
+        <a class="btn btn-md" style="color:white; padding-top: 1px;" href="/">
+          Logout <img src="images/logout-btn.png" style="width:20px; margin-top:-5px; padding-top:-5px;">
         </a>
       </span>
     </div>

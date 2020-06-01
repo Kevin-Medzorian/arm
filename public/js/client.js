@@ -8,7 +8,7 @@ var susername = null;
 var spassword = null;
 var stores = [];
 var currentItems = [];
-var itemsResult = "<table><th> Name </th><th> Cost </th><th> Quantity </th>";
+var itemsResult = "<table><th class=\"text-left\"> Name </th><th> Cost </th><th> Quantity </th>";
 var subtotal = 0.0;
 var total = 0.0;
 
@@ -164,7 +164,7 @@ function storeAddReceipt(){
 	$(".store-error").html("");
 	var cid = $("#cid").val();
 	//const total = $("#total").val();
-	var tax = parseFloat($("#tax").val());
+	var tax = (total-subtotal).toFixed(2);
 	//const subtotalHtml = $("#stotalval");
 	const receiptDate = -1;  //todays date?
 	console.log(cid);
@@ -212,8 +212,8 @@ function storeAddReceipt(){
         try{
             console.log(json);
             if(json.login){
-               itemsResult = "<table><th> Name </th><th> Cost </th><th> Quantity </th>";
-				$(".items-list").html(itemsResult);
+                /*itemsResult = "<table><th> Name </th><th> Cost </th><th> Quantity </th>";
+				$(".items-list").html(itemsResult);*/
 				$(".store-receipt-error").html("");
 				$(".store-receipt-complete").html("Receipt Sent");
 				subtotal = 0.0;
@@ -246,61 +246,52 @@ function storeAddReceiptItem(){
 	//currentItems.push(itemName);
 
 	if(itemName.length === 0 || itemCost.length === 0 || itemQuantity.length === 0){
-		$(".store-receipt-error").html("Please complete all fields");
+		$(".store-receipt-error").html("Please complete all fields.");
         return;
 	}
 	if(tax.length == 0){
-		$(".store-receipt-error").html("Please enter the tax amount");
+		$(".store-receipt-error").html("Please enter the tax amount.");
         return;
 	}
 
-	var subTcurrent = parseFloat(subtotal);
 	var itemCostCurrent = parseFloat(itemCost);
-	var itemQtyCurrent = parseInt(itemQuantity);
+    var itemQtyCurrent = parseInt(itemQuantity);
+    
 	if(!(itemCostCurrent > 0)){
-		$(".store-receipt-error").html("Invalid item cost");
+		$(".store-receipt-error").html("Invalid item cost.");
         return;
 	}
 	if(!(itemQtyCurrent > 0)){
-		$(".store-receipt-error").html("Invalid item quantity");
+		$(".store-receipt-error").html("Invalid item quantity.");
         return;
 	}
 
-	var subTFinal = subTcurrent + (itemCostCurrent*itemQtyCurrent);
-	var subTRounded = subTFinal.toFixed(2);
-	console.log(subTRounded);
-	subtotal = subTRounded;
-
-	var taxF = parseFloat(tax);
+    var taxF = parseFloat(tax);
 	if(!(taxF >= 0)){
-		$(".store-receipt-error").html("Invalid item tax");
+		$(".store-receipt-error").html("Invalid item tax.");
         return;
-	}
-	var totalV = taxF + subTFinal;
-	var totalVRound = totalV.toFixed(2);
+    }
+
+    subtotal = (subtotal+(itemCostCurrent*itemQtyCurrent));
+    total = (total+taxF+(itemCostCurrent*itemQtyCurrent));
 
 
+    $("#total-tax").html("Total Tax: $"+ ((total-subtotal).toFixed(2)));
+	$("#subtotal").html("Subtotal: $"+subtotal.toFixed(2)); 
+    $("#total-cost").html("Total Cost: $"+total.toFixed(2));
 
-
-	document.getElementById('stotalval').innerHTML = subTRounded; 
-
-	document.getElementById('totalval').innerHTML = totalVRound; 
-
-
-	var completeItem = { name: itemName, unitcost: itemCost, quantity : itemQuantity};
+	var completeItem = { name: itemName, unitcost: itemCost, quantity : itemQuantity, itemtax: taxF };
 
 	//var itemString = JSON.stringify(completeItem);
-	
+    
 	currentItems.push(completeItem);
 	
 	
-	itemsResult += "<tr><td>" + itemName + "</td><td>" + itemCost + "</td><td>" + itemQuantity + "</td></tr>";
+	itemsResult += "<tr><td class=\"text-left\">" + itemName + "</td><td>$" + itemCost + "</td><td>" + itemQuantity + "</td></tr>";
 
 	//inject into html here
 
 	$(".items-list").html(itemsResult);
-
-
 }
 
 function displayStores(){
@@ -983,10 +974,7 @@ $(document).ready(function () {
     This adjusts the nav-bar to be either top-centric (on desktop) or bottom-centric (on mobile).
 */
 function adjustNavbar(){
-    var width = window.innerWidth;
-
-    if( $('#toggler-icon').is(':visible') || width < 768){
-        console.log("Adjusted to mobile view.");
+    if( $('#toggler-icon').is(':visible') || window.innerWidth < 785){
         if(loggedIn){
             $('#top-navbar').hide();
             $('#bot-navbar').fadeIn('fast');

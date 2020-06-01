@@ -257,7 +257,7 @@ h1.gradient {
   font-size: 24px;
   outline: black;
   border-radius: 10px;
-  width: 300px;
+  width: 260px;
 }
 
 /*.search-receipts input[type=text]:focus {
@@ -297,7 +297,7 @@ h1.gradient {
 @media screen and (max-width: 1200px) and (min-width: 768px) {
   .search-receipts {
     text-align: center;
-    margin-top: 100px;
+    margin-top: 65px;
     left: 0;
   }
   .search-receipts button {
@@ -319,7 +319,7 @@ h1.gradient {
     left: 0;
   }
   .search-receipts input[type=text] {
-    width: 245px;
+    width: 300px;
   }
   .show-all-receipts {
     margin-top: 10px;
@@ -395,19 +395,28 @@ h1.gradient {
 }
 
 table{
-  font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   border-spacing: 2px;
+  padding: 0px;
+  margin: 0px;
+  width:100%;
 }
 
 th{
-  border: 1px solid black;
+  /*border: 1px solid black;*/
   text-align: center;
-  padding: 8px;
+  padding: 5px;
+  margin: 0px;
+  width: 100%;
+
 }
 
 td{
-  border: 1px solid black;
+ /* border: 1px solid black;*/
   display: table-cell;
+  padding: 5px;
+  margin: 0px;
+  width:100%;
+
   vertical-align: inherit;
 }

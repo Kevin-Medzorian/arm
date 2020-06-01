@@ -248,23 +248,24 @@ h1.gradient {
 .search-receipts {
   display: inline-block;
   text-align: right;
-  margin-top: 10px;
-  left: 75vw;
+  margin-top: 4px;
+  left: 50vw;
+  margin-right: 100px;
 }
 .search-receipts input[type=text] {
   padding: 6px;
   font-size: 24px;
-  border: none;
+  outline: black;
   border-radius: 10px;
-  width: 245px;
+  width: 300px;
 }
 
-.search-receipts input[type=text]:focus {
+/*.search-receipts input[type=text]:focus {
   outline: none;
-}
+}*/
 
 .search-receipts button {
-  background: rgb(200,200,200);
+  background: rgb(250,250,250);
   border-radius: 10px;
   cursor: pointer;
   width: 50px;
@@ -293,10 +294,10 @@ h1.gradient {
 }
 
 /* When the screen is less than 1300px wide, move search to middle below navbar */
-@media screen and (max-width: 1300px) and (min-width: 768px) {
+@media screen and (max-width: 1200px) and (min-width: 768px) {
   .search-receipts {
     text-align: center;
-    margin-top: 70px;
+    margin-top: 100px;
     left: 0;
   }
   .search-receipts button {

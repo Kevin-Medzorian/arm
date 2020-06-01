@@ -155,8 +155,8 @@ app.post('/store-add-receipt', (req, res)=>{
       res.json({"login":false, "error": errorempty});
       return;
     }
-    if(body.cid <= 0 || typeof(body.cid) != 'number' || body.sid <= 0 || typeof(body.sid) !=
-        'number' || typeof(body.date) != 'number'){
+    if(body.cid <= 0 || typeof(body.cid) != 'number' || typeof(body.date) != 'number'){
+
       res.json(badinput);
       return;
     }

@@ -132,7 +132,6 @@ function storeSignUp(){
             console.log(json);
             if(json.login){
                 console.log("store login true");
-                loggedIn = true;
                 //UID = json.sid;
                 //openStoreSession();
                 console.log(UID);
@@ -166,7 +165,6 @@ function storeAddReceipt(){
 	var cid = $("#cid").val();
 	//const total = $("#total").val();
 	var tax = parseFloat($("#tax").val());
-	const sid = UID;
 	//const subtotalHtml = $("#stotalval");
 	const receiptDate = -1;  //todays date?
 	console.log(cid);
@@ -194,7 +192,7 @@ function storeAddReceipt(){
 		method: "POST",
 		 body: JSON.stringify({
 		    email : susername, //gets set to email val on login
-			password : spassword, //gets set to password val on login
+            password : spassword, //gets set to password val on login
             cid : cidInt, // gets parsed as an Int	
 			date : receiptDate, //const int = -1
 			tax : taxInt, // in cents, parsed as Float
@@ -223,7 +221,7 @@ function storeAddReceipt(){
 				document.getElementById('totalval').innerHTML = 0.0; 
             }else{
                 //some error
-                $(".store-receipt-error").html("User does not exist");
+                $(".store-receipt-error").html("Server returned error: " + json.error);
             }
         }catch(err) {
             alert(err); // If there is ANY error here, then send an alert to the browser.
@@ -985,7 +983,10 @@ $(document).ready(function () {
     This adjusts the nav-bar to be either top-centric (on desktop) or bottom-centric (on mobile).
 */
 function adjustNavbar(){
-    if( $('#toggler-icon').is(':visible') || screen.width < 768){
+    var width = window.innerWidth;
+
+    if( $('#toggler-icon').is(':visible') || width < 768){
+        console.log("Adjusted to mobile view.");
         if(loggedIn){
             $('#top-navbar').hide();
             $('#bot-navbar').fadeIn('fast');

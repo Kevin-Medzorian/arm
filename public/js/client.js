@@ -653,7 +653,8 @@ function openCustomerSession(){
     // Set chart options
     var options = {'title':'Monthly Spending',
                    'width':400,
-                   'height':300};
+                   'height':300,
+                    'backgroundColor': '#fafafa'};
 
     // Instantiate and draw our chart, passing in some options.
     var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));

@@ -126,7 +126,7 @@
           </div>
           <div class="col-sm p-5">
             <h2 class="mt-4 mb-5 d-inline-flex text-right">
-              Physical reciepts facilitate the spread of disease.
+              Physical receipts facilitate the spread of disease.
             </h2>
             <p class="text-right">
               Physical receipts act as surface that can transmit diseases from the cashier to the customer. This process is eliminated by using digital receipts.
@@ -445,7 +445,7 @@
       <div class="tab-pane fade" id="receipts" role="tabpanel" aria-labelledby="pills-receipts-tab">
           <!-- Search Box -->
           <span class="search-receipts fixed-top">
-            <input type="text" id="search-input" placeholder="Search...">
+            <input class="form-control d-inline-flex" type="text" id="search-input" placeholder="Search...">
             <button type="submit" id="search-button" onclick="searchReceipt()"><img src="images/search.png"></i></button>
           </span>
 
@@ -473,66 +473,70 @@
 
   <!-- Div that contains our entire store-session page. -->
   <div id="store-session" style = "display:none;">
- 
-  <div>
-    <style>
-        h3 {
-            border: 1px solid black;
-        }
-    </style>
-  </div>
-  <div>
-  </div>
-
-  <h1 style = "color:blue; font-size:300%;">Items:</h1>
-  <hr>
-  <div class="items-list" ></div>
-  <header style = "display:table;  margin:auto;" >
-    <div style ="display:table-cell;">
-		<h2 style = "padding: 45px">Name</h2>
-		<input type="text" id="itemName" name="itemName"><br><br>
-    </div>
-    <div style ="display:table-cell;">
-        <h2 style = "padding: 45px;">Cost</h2>
-		<input type="text" id="itemCost" name="itemCost"><br><br>
-    </div>
-    <div style ="display:table-cell;">
-        <h2 style = "padding: 45px;">Quantity</h2>
-		<input type="text" id="itemQuantity" name="itemQuantity"><br><br>
-    </div>
-  </header>
-  <button class="btn btn-lg btn-primary btn-rounded" id="show-store-btn" style="border-radius: 30px;"
-            onclick = "storeAddReceiptItem()">Add Item</button>
-
-  <header style = "display:table-row-group; float:right;" >
-	<div style ="display:table-row; padding: 35px;">
-		<label for="stotal">Subtotal:</label>
-		<label for="stotalval" id="stotalval">0.00</label><br><br>
-    </div>
-	<div style ="display:table-row; padding: 35px;">
-		<label for="tax">Tax:</label>
-		<input type="text" id="tax" name="tax"><br><br>
-    </div>
-	<div style ="display:table-row; padding: 35px;">
-		<label for="total">Total:</label>
-		<label for="totalval" id="totalval">0.00</label><br><br>
-    </div>
-  </header>
-
-  <header style = "display:table-row-group; float:left" >
-      <div style ="display:table-cell;">
-	    <label for="cid">Customer ID:</label>
-		<input type="text" id="cid" name="cid"><br><br>
+    <div class="row">
+      <div class="col-sm mr-5 text-center"> <!-- Parent column thats shows our Current Receipt-->
+        <h1>Current Receipt</h1>
+        <hr style="background-color: white; height: 1px; width: 30%;">
+        <h2 class="text-left">Items</h2>
+        <div class="items-list">
+          <table>
+            <th class="text-left"> Name </th>
+            <th> Cost </th>
+            <th> Quantity </th>
+          </table>
+        </div> <!-- Item grid -->
+        <div class="ml-auto"> <!-- Container for the total tax, subtotal, total cost, etc... -->
+          <p class="text-right" id="total-tax">Total Tax: ____</p>
+          <p class="text-right" id="subtotal">Subtotal: ____</p>
+          <p class="text-right" id="total-cost">Total Cost: ____</p>
+        </div>
+        <div class="row m-0 p-0"> <!-- Row containing our CustomerID input field and SEND button-->
+          <div class="col-sm m-0 p-0"> <!-- Column for our Customer ID input field-->
+            <div class="mr-auto">
+              <input class="form-control text-left" type="text" id="cid" name="cid" placeholder="Customer ID"/>
+            </div>
+          </div>
+          <div class="col-sm m-0 p-0"> <!-- Column for our Send Receipt button. -->
+            <div class="ml-auto float-right">
+              <button class="btn btn-md btn-primary btn-rounded" id="show-store-btn" style="border-radius: 30px;"
+              onclick="storeAddReceipt()" href="#" type="submit">Send</button> <!-- Send Receipt Button -->
+            </div>
+          </div>
+        </div>
+      </div> <!-- End of left-side column for the Current Receipt-->
+      <div class="col-sm ml-5 text-center"> <!-- Column for adding items to receipt-->
+        <h1>Add Item</h1>
+        <hr style="background-color: white; height: 1px; width: 30%;">
+        <div class="row m-0 p-0"> <!-- Begin a Row for name, cost, qty -->
+          <div class="col-8 p-0 m-0"> <!-- Item name -->
+            <input class="form-control text-left" type="text" id="itemName" name="itemName" placeholder="Item Name"/>
+          </div>
+          <div class="col-2 p-0 m-0"> <!-- Item cost -->
+            <input class="form-control text-right" type="number" id="itemCost" name="itemCost" step=".01" placeholder="Cost"/>
+          </div>
+          <div class="col-2 p-0 m-0"> <!-- Item Quantity-->
+            <input class="form-control text-right" type="number" id="itemQuantity" name="itemQuantity" placeholder="Qty"/>
+          </div>
+        </div> <!-- End row for name,cost,qty -->
+        
+        <div class="container mt-1 p-0"> <!-- Use container class to force use of 'flexbox' styling -->
+          <input class="form-control w-25 ml-auto text-right" type="number" id="tax" name="tax" placeholder="Item Tax"/>
+          <button class="btn mt-1 float-right btn-md btn-primary btn-rounded" id="show-store-btn" style="border-radius: 30px;"
+            onclick="storeAddReceiptItem()">Add Item</button>
+        </div>
       </div>
-	  <div style = "color:red;" class="store-receipt-error"></div>
-        <!-- Custom error-text area in case we need to tell the user something (bad login, etc..) -->
-      <div style ="display:table-cell; float:right">
-           <button class="btn btn-lg btn-primary btn-rounded" id="show-store-btn" style="border-radius: 30px;"
-            onclick = "storeAddReceipt()" href="#showstore" type="submit">Send Receipt</button>
-      </div>
-	   <div style = "color:blue;" class="store-receipt-complete"></div>
-  </header>
+    </div>
 
+    <!-- Custom error-text areas in case we need to tell the user something. -->
+    <div class="text-center mt-5">
+      <div style="color:red;" class="store-receipt-error mt-5"></div> <br/>
+      <div style="color:blue;" class="store-receipt-complete mt-5"></div>
+      <span style="display:inline; background-color: #6c757d7c; border-radius: 10px; padding-top: 0px;">
+        <a class="btn btn-md" style="color:white; padding-top: 2px;" href="/">
+          Logout <img src="images/logout-btn.png" style="width:15px;">
+        </a>
+      </span>
+    </div>
   </div>
 
   <!-- Div that contains our entire business-session page. -->

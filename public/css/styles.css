@@ -248,23 +248,24 @@ h1.gradient {
 .search-receipts {
   display: inline-block;
   text-align: right;
-  margin-top: 10px;
-  left: 75vw;
+  margin-top: 4px;
+  left: 50vw;
+  margin-right: 100px;
 }
 .search-receipts input[type=text] {
   padding: 6px;
   font-size: 24px;
-  border: none;
+  outline: black;
   border-radius: 10px;
-  width: 245px;
+  width: 260px;
 }
 
-.search-receipts input[type=text]:focus {
+/*.search-receipts input[type=text]:focus {
   outline: none;
-}
+}*/
 
 .search-receipts button {
-  background: rgb(200,200,200);
+  background: rgb(250,250,250);
   border-radius: 10px;
   cursor: pointer;
   width: 50px;
@@ -293,10 +294,10 @@ h1.gradient {
 }
 
 /* When the screen is less than 1300px wide, move search to middle below navbar */
-@media screen and (max-width: 1300px) and (min-width: 768px) {
+@media screen and (max-width: 1200px) and (min-width: 768px) {
   .search-receipts {
     text-align: center;
-    margin-top: 70px;
+    margin-top: 65px;
     left: 0;
   }
   .search-receipts button {
@@ -318,7 +319,7 @@ h1.gradient {
     left: 0;
   }
   .search-receipts input[type=text] {
-    width: 245px;
+    width: 300px;
   }
   .show-all-receipts {
     margin-top: 10px;
@@ -344,7 +345,7 @@ h1.gradient {
   text-align: left;
   border-radius: 20px;
   border: none;
-  background-color: rgb(200,200,200);
+  background-color: rgba(250, 250, 250, 0.76);
   height: 100px;
   width: 90%;
   padding: 5px 20px;
@@ -394,19 +395,28 @@ h1.gradient {
 }
 
 table{
-  font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   border-spacing: 2px;
+  padding: 0px;
+  margin: 0px;
+  width:100%;
 }
 
 th{
-  border: 1px solid black;
+  /*border: 1px solid black;*/
   text-align: center;
-  padding: 8px;
+  padding: 5px;
+  margin: 0px;
+  width: 100%;
+
 }
 
 td{
-  border: 1px solid black;
+ /* border: 1px solid black;*/
   display: table-cell;
+  padding: 5px;
+  margin: 0px;
+  width:100%;
+
   vertical-align: inherit;
 }

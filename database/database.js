@@ -417,6 +417,26 @@ db.serialize(function () {
       }));
     };
 
+    module.exports.test = (date)=>{
+      if(date == -1){
+        date = parseInt(Date.now()/1000);
+        console.log(`we have: ${date}, type: ${typeof(date)}`);
+      }
+      db.run('insert into ABC(date) values (?)',
+        [date],
+        function(err){
+          if(err){
+            //console.log(`QUERY: INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (${cid}, ${sid}, ${date}, ${tax}, ${subtotal}, ${other})`);
+
+            console.log(`ERROR: ${err}`);
+            return;
+          }
+          console.log("no error!!!!!!!!!!!!!!!!!!!!!!!!");
+        });
+
+      //db.run('INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (?,?,?,?,?,?)',
+    }
+
     module.exports.storeaddreceipt =
       (susername,spasswordhash,cid,date,tax,subtotal,other,items,res)=>{
       //get sid, add receipt, get rid, add items
@@ -436,10 +456,12 @@ db.serialize(function () {
               if(res) res.json({"login":false, "error":"Internal error"});
               return;
             }
+
             if(date == -1){
-              date = Date.now();
+              //date = 1590976697;//parseInt(Date.now()/1000);
+              date = parseInt(Date.now()/1000);
             }
-            console.log(`[DB]Date is: ${date}`);
+            console.log(`[DB]Date is: (${date})`);
 
             db.get('select 1 from Customer where cid=?', [cid], (err, rowcid)=>{
               if(!rowcid){
@@ -448,12 +470,15 @@ db.serialize(function () {
                 return;
               }
 
-              db.run('INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (?,?,?,?,?,?);',
-                  [cid,rowsid.sid,date,tax,subtotal,other],
-                  (err)=>{
+              db.run('INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (?,?,?,?,?,?)',
+                  [cid, rowsid.sid, date, tax, subtotal, other],
+                  function (err){
+                    console.log(`QUERY: INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (${cid}, ${rowsid.sid}, ${date}, ${tax}, ${subtotal}, ${other});`);
                     if(err){
                       console.log(`[DB]storeaddreceiptERROR: username(${susername}), ${err}`);
                       console.log({"login":false, "error":"Internal error"});
+                      console.log(`cid:${cid}, sid:${rowsid.sid}, date:(${date}), tax:${tax}, subtotal:${subtotal}, other:${other}, ${typeof(date)}`);
+                      console.log(`sid:${typeof(rowsid.sid)}, tax:${typeof(tax)}, subtotal:${typeof(subtotal)}`);
                       if(res) res.json({"login":false, "error":"Internal error"});
                       return;
                     }
@@ -461,7 +486,7 @@ db.serialize(function () {
                     var promises = [];
                     items.forEach(val =>{
                         promises.push(new Promise((resolve, reject)=>{
-                          db.run('insert into Item(?,?,?,?)',
+                          db.run('insert into Item values(?,?,?,?)',
                               [this.lastID,val.name,val.quantity,val.unitcost],
                               (err) =>{
                                 if(err){
@@ -521,13 +546,12 @@ db.serialize(function () {
                   }
                   //this.lastID is the last rowid
 
-
                   var promises = [];
                   items.forEach(val=>{
                     promises.push(new Promise((resolve, reject)=>{
                       db.run('insert into Item values(?,?,?,?)',
                           [this.lastID, val.name, val.quantity, val.unitcost],
-                          (err)=>{
+                          function (err){
                             if(err){
                               console.log(`[DB]customeraddreceipt-ItemERROR: username(${username}), rid(${this.lastID}), ${err}`);
                               if(res) res.json();
@@ -689,6 +713,8 @@ db.serialize(function () {
       });
 
     }
+
+    
 
 });
 

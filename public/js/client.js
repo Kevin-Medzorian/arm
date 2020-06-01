@@ -142,6 +142,7 @@ function storeSignUp(){
                     state : stateVal,
                     zipcode : zipCodeVal
                 });
+                displayStores();
 
             }else{
                 //some error
@@ -307,9 +308,8 @@ function storeAddReceiptItem(){
 }
 
 function displayStores(){
-    let result = `<table style="background-color: #0b8ca1;">`;
-    result += "<th> Index </th>";
-    result += "<th> SID </th>";
+    let result = `<table style="white-space:nowrap; background-color: rgba(42, 143, 201, 0.8); border-radius: 20px; max-width: 100%;">`;
+    result += "<th> Store ID </th>";
     result += "<th> Street </th>";
     result += "<th> City </th>";
     result += "<th> State </th>";
@@ -317,7 +317,7 @@ function displayStores(){
     let index = 1;
     console.log(stores);
     for(let store of stores){
-        result += `<tr><td style="text-align:center;">` + index + "</td><td>" + store.sid + "</td><td>" + store.street + "</td><td>" + 
+        result += `<tr><td style="text-align:center;">` + store.sid + "</td><td>" + store.street + "</td><td>" + 
           store.city + "</td><td>" + store.state + "</td><td>" + store.zipcode + "</td></tr>";
         index = index + 1;
      }
@@ -675,6 +675,7 @@ function openStoreSession(){
 function openBusinessSession(){
     $("#home").hide(); // Hide our home-div (this is the one we see whenever we are not logged in).
     $("#business-session").fadeIn(); // Show our business-session DIV (business page).
+    displayStores();
     adjustNavbar();
 }
 
@@ -714,7 +715,8 @@ function viewReceipt(receiptIndex) {
 
     //displays receipt header
     let result = '';
-    result += '<h1 class="receipt-center">' + receipt.name + ' ' + dateStr + '</h1>';
+    result += '<h1 class="receipt-center">' + receipt.name + '</h1>';
+    result += '<h3 class="text-center">' + dateStr + '</h3>';
     result += '<h4 class="text-center">' + 'STORE ID: ' +receipt.sid +'</h4>' ;
     result += '<table align="center" class="receiptTab" cellspacing="0">';
     result += '<thead>';
@@ -743,7 +745,6 @@ function viewReceipt(receiptIndex) {
     result += '<h4 class="text-center">' + 'Subtotal : ' + receipt.subtotal/100 + '</h4>'; 
     result += '<h4 class="text-center">' + 'Tax : ' + receipt.tax/100 + '</h4>'; 
     result += '<h4 class="text-center">' + 'Amount Due : ' + (receipt.subtotal + receipt.tax)/100 + '</h4>'; 
-    result += '<button class="view-all-button" onclick="viewAll()" >View All Receipts</button>';
 
     // erases all receipts screen
     $("#customer-session").hide();
@@ -755,7 +756,6 @@ function viewReceipt(receiptIndex) {
 function viewAll(){
     $('#individual').hide();
     $("#customer-session").fadeIn();
-
 }
 
 /*

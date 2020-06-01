@@ -23,6 +23,7 @@
   <title>RECEIVE Receipt Manager</title> <!-- Title of Website/Webapp -->
 
   <link href="css/styles.css" rel="stylesheet"> <!-- Custom styles for this template. This file is pretty scary... -->
+  <script src="js/qrcode.min.js"></script> <!-- Our custom client-side javascript -->
   <script src="js/client.js"></script> <!-- Our custom client-side javascript -->
 </head>
 
@@ -37,16 +38,6 @@
         <div class="individual-receipt"></div>
       </div>
       
-    </div>
-  </div>
-
-  <div id="bottom-text">
-    <div id="team-text" style="position:absolute; padding-left:3px; bottom:0; right:0; width:100%;">
-      Team ARM - UC San Diego - CSE110 Spring '20
-    </div>
-
-    <div id="copyright-text" style="position:absolute; bottom:0; padding-right: 3px; right:0; text-align:right; width:100%;">
-      ARM &copy; 2020-21
     </div>
   </div>
 
@@ -91,17 +82,59 @@
     <!-- This is the content area for our home page (not logged-in page) -->
     <div class="text-center">
 
-      <h1 class="mt-4 mb-5 d-inline-flex">
+      <h1 class="mt-4 d-inline-flex">
         Digital Receipts with Elegance.
         <!-- We can add other stuff here (like about us, what we do, who we are, etcc. -->
       </h1>
 
-      <br />
-
-      <img class="img-fluid mt-4 main" src="images/idea-long.png" alt="">
+      <img class="img-fluid main" src="images/idea-long.png" alt=""/>
       <!-- That one logo that has a Receipt -> logoCloud -> User  -->
 
-      </img>
+      <br />
+      <br />
+      <hr style="background-color:white; width:30%; height:1px;">
+      <br />
+      <br />
+
+      <h1 class="text-center mb-5"> Why digitize receipts? </h1>
+      <div class="container"> <!-- Why receipts are better for the environment box. -->
+        <div class="row" style="margin-left: 10vw;">
+          <div class="col-sm">
+            <h2 class="mt-4 mb-5 d-inline-flex text-left">
+              Physical receipts are bad for the environment.
+            </h2>
+            <p class="text-left">
+              Physical receipts are a product of the past, and most end up going to waste. They also pollute our environment and negatively impact the Earth's climate due to CO2 emissions.
+            </p>
+          </div>
+          <div class="col-sm">
+            <img class="img-fluid main" src="images/tree.png" alt=""/>
+          </div>
+        </div>
+      </div>
+
+      <br />
+      <br />
+      <hr style="background-color:white; width:30%; height:1px;">
+      <br />
+      <br />
+
+      <div class="container"> <!-- Why receipts are better for disease control. -->
+        <div class="row" style="margin-right: 10vw;">
+          <div class="col-sm">
+            <img class="img-fluid main" src="images/anti-covid.png" alt=""/>
+          </div>
+          <div class="col-sm p-5">
+            <h2 class="mt-4 mb-5 d-inline-flex text-right">
+              Physical reciepts facilitate the spread of disease.
+            </h2>
+            <p class="text-right">
+              Physical receipts act as surface that can transmit diseases from the cashier to the customer. This process is eliminated by using digital receipts.
+            </p>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- This is where we define our Login form -->
@@ -400,9 +433,9 @@
       <!-- UID Page -->
       <div class="tab-pane fade show active" id="id" role="tabpanel" aria-labelledby="pills-id-tab">
         <div class="container p-0 text-center">
-          <img class="img-fluid qrcode" src="images/example_qrcode.png" id="qrcode-image" />
-          <div class="h2 m-0 mt-5" id="uid-text">
-            @Kevin-Medzorian
+          <div id="qrcode-image"></div>
+          <div class="h1 mt-3" id="uid-text">
+            123456
             <!-- Text area where our UID will be displayed -->
           </div>
         </div>
@@ -563,6 +596,20 @@
       </div>
     </div>
   </div>
+
+
+  <!-- This is our custom footer text with custom css for a fixed-footer -->
+  <footer class="footer">
+    <div id="team-text" style="padding-left:3px; bottom:0; right:0; width:100%;">
+      UC San Diego - CSE110 Spring '20
+    </div>
+  </footer>
+
+  <footer class="footer">
+    <div id="copyright-text" style="bottom:0; padding-right: 3px; right:0; text-align:right; width:100%;">
+      Team ARM &copy; 2020-21
+    </div>
+  </footer>
 
 </body>
 

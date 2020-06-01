@@ -132,7 +132,6 @@ function storeSignUp(){
             console.log(json);
             if(json.login){
                 console.log("store login true");
-                loggedIn = true;
                 //UID = json.sid;
                 //openStoreSession();
                 console.log(UID);
@@ -162,11 +161,23 @@ function storeSignUp(){
     Then, makes POST request on "/"
 */
 function storeAddReceipt(){
-	$(".store-error").html("");
+    if(currentItems.length == 0){
+		$(".store-receipt-error").html("Please add an item");
+        return;
+	}
 
-	//const total = $("#total").val();
-	var taxInt = Math.round(100 * parseFloat($("#tax").val()));
+    //const total = $("#total").val();
+    var tax = $("#tax").val();
+    if(tax.length == 0){
+        $(".store-receipt-error").html("Please enter a tax value");
+        return;
+    }
+	var taxInt = Math.round(100 * parseFloat(tax));
     var subtotalInt = subtotal;
+    if(subtotal <= 0){
+        $(".store-receipt-error").html("Please enter items");
+        return;
+    }
 
 	const receiptDate = -1;  //todays date?
 	
@@ -179,10 +190,7 @@ function storeAddReceipt(){
 		$(".store-receipt-error").html("Please enter a Customer ID");
         return;
 	}
-	if(currentItems.length === 0){
-		$(".store-receipt-error").html("Please add an item");
-        return;
-	}
+	
 	var cidInt = parseInt($("#cid").val());
 
 	console.log("Sending POST request...");
@@ -211,16 +219,21 @@ function storeAddReceipt(){
         try{
             console.log(json);
             if(json.login){
-               itemsResult = "<table><th> Name </th><th> Cost </th><th> Quantity </th>";
+                itemsResult = "<table><th> Name </th><th> Cost </th><th> Quantity </th>";
 				$(".items-list").html(itemsResult);
 				$(".store-receipt-error").html("");
 				$(".store-receipt-complete").html("Receipt Sent");
-				subtotal = 0.0;
+                subtotal = 0;
+                total = 0;
+                currentItems = [];
 				document.getElementById('stotalval').innerHTML = subtotal; 
 				document.getElementById('totalval').innerHTML = 0.0; 
-            }else{
-                //some error
-                $(".store-receipt-error").html("User does not exist");
+            }else{//bad cid probably
+                if(json.error == "bad cid"){
+                    $(".store-receipt-error").html("Invalid Customer ID");
+                } else{
+                    $(".store-receipt-error").html("Server returned error: " + json.error);
+                }
             }
         }catch(err) {
             alert(err); // If there is ANY error here, then send an alert to the browser.
@@ -240,7 +253,7 @@ function storeAddReceiptItem(){
 	const itemName = $("#itemName").val();
 	const itemCost = $("#itemCost").val();
 	const itemQuantity = $("#itemQuantity").val();
-	const tax = $("#tax").val();
+	var tax = $("#tax").val();
 
 	//currentItems.push(itemName);
 
@@ -249,8 +262,7 @@ function storeAddReceiptItem(){
         return;
 	}
 	if(tax.length == 0){
-		$(".store-receipt-error").html("Please enter the tax amount");
-        return;
+		tax = 0;
 	}
 
 	var subTcurrent = subtotal;
@@ -294,7 +306,8 @@ function storeAddReceiptItem(){
 
 	//inject into html here
 
-	$(".items-list").html(itemsResult);
+    $(".items-list").html(itemsResult);
+    $(".store-receipt-error").html("");
 }
 
 function displayStores(){
@@ -577,10 +590,13 @@ After a successfull login response, open the customer session by unhiding/hiding
 Adjusts navbar, then delegates setting up UID and Receipts pages to other functions.
 */
 function openCustomerSession(){
+
     console.log("opencustomersession");
     $("#home").hide(); // Hide our home DIV (this is the one we see whenever we are not logged in).
     $("#customer-session").fadeIn(); // Show our customer-session DIV (customer page).
     adjustNavbar();
+
+    new QRCode(document.getElementById("qrcode-image"), ""+UID);
 
     console.log("Opened customer session.");
 
@@ -606,20 +622,24 @@ function openCustomerSession(){
     }
 
     if(receipts){
+        var j;
       for (i=0; i < receipts.length; i++) {
-        var date = new Date(receipts[i].date);
+        var date = new Date(receipts[i].date*1000);
 
         // Check same year
         if (date.getYear() == thisDate.getYear()) {
 
           // Check months
-          var j;
+          
           for (j=0; j < disp.length; j++) {
             if (date.getMonth() == disp[j].index) {
               disp[j].total += receipts[i].subtotal + receipts[i].tax;
             }
           }
         }
+      }
+      for(j = 0; j < disp.length; j++){
+          disp[j].total /= 100;
       }
     }
 
@@ -815,7 +835,7 @@ function searchReceipt(){
         let result = '<div class="row">';
         let index = 0;
         for(let receipt of receipts){ // TODO: limit the number of receipts seen if too many in database
-            var d = new Date(parseInt(receipt.date));
+            var d = new Date(receipt.date*1000);
             const dateStr = "" + (d.getMonth() + 1) +"/" + d.getDate() + "/" + d.getFullYear();
             // if receipt matches with keyword as a regex
             if (receipt.name.search(regex) != -1 || dateStr.search(regex) != -1) {
@@ -833,7 +853,7 @@ function searchReceipt(){
                 result += '<span class="right">';
                 result += '<span class="receipt-list-subtitle">Total: $</span>';
                 const total = receipt.subtotal + receipt.tax;
-                result += '<span class="receipt-list-subtext">' + total + '</span>';
+                result += '<span class="receipt-list-subtext">' + total/100 + '</span>';
                 result += '</span></button></div>';
             }
             index = index + 1;
@@ -974,12 +994,15 @@ $(document).ready(function () {
     This adjusts the nav-bar to be either top-centric (on desktop) or bottom-centric (on mobile).
 */
 function adjustNavbar(){
-    if( $('#toggler-icon').is(':visible') || screen.width < 768){
+    var width = window.innerWidth;
+
+    if( $('#toggler-icon').is(':visible') || width < 768){
+        console.log("Adjusted to mobile view.");
         if(loggedIn){
             $('#top-navbar').hide();
             $('#bot-navbar').fadeIn('fast');
-            $('#bottom-text').hide();
         }
+        $('.footer').hide();
         $('.navbar-nav').css('border-radius', '30px 0px 0px 30px');
         $('.navbar-nav').css('margin-right', '0px');
         $('.navbar-nav').css('background-color', 'rgba(250,250,250, 0.8)');
@@ -987,8 +1010,8 @@ function adjustNavbar(){
         if(loggedIn){
             $('#bot-navbar').hide();
             $('#top-navbar').fadeIn('fast');
-            $('#bottom-text').fadeIn('fast');
         }
+        $('.footer').fadeIn('fast');
         $('.navbar-nav').css('border-radius', '4px 4px 4px 30px');
         $('.navbar-nav').css('margin-right', '1vw');
         $('.navbar-nav').css('background-color', 'transparent');

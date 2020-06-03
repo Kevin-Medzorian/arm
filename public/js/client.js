@@ -9,8 +9,8 @@ var spassword = null;
 var stores = [];
 var currentItems = [];
 var itemsResult = "<table><th class=\"text-left\"> Name </th><th> Cost </th><th> Quantity </th>";
-var subtotal = 0.0;
-var total = 0.0;
+var subtotal = 0;
+var total = 0;
 
 google.charts.load('current', {'packages':['corechart']});
 
@@ -219,6 +219,7 @@ function storeAddReceipt(){
         try{
             console.log(json);
             if(json.login){
+                $(".store-receipt-error").html("");
                 itemsResult = "<table><th class=\"text-left\"> Name </th><th> Cost </th><th> Quantity </th>";;
 				$(".items-list").html(itemsResult);
 				$(".store-receipt-error").html("");

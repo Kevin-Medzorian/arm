@@ -621,11 +621,12 @@ db.serialize(function () {
       });
     };
     function getreceipt(sid, res){
+      console.log(`getting sid:${sid}`);
       var receiptjson={
         "login":true,
         "receipts":[]
       };
-      db.each('select rid,cid,date,tax,subtotal,other from Record where sid=?',
+      db.each('select rid,cid,date,tax,subtotal,other from Receipt where sid=?',
           [sid],
           (err, rowrec)=>{
             receiptjson.receipts.push({
@@ -637,6 +638,7 @@ db.serialize(function () {
               "other":rowrec.other
             });
       },(err, count)=>{
+        console.log(count);
         console.log(`[DB]getstorereceipt: sid(${sid})`);
         console.log(receiptjson);
         if(res) res.json(receiptjson);

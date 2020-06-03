@@ -181,7 +181,7 @@ function storeAddReceipt(){
     }
 
 	const receiptDate = -1;  //todays date?
-	
+
 	console.log(subtotalInt/100);
     console.log(taxInt/100);
     var cid = $("#cid").val();
@@ -190,9 +190,17 @@ function storeAddReceipt(){
 		$(".store-receipt-error").html("Please enter a Customer ID");
         return;
 	}
-	
+
+    if (isNaN(cid)) {
+		$(".store-receipt-error").html("Invalid Customer ID");
+        return;
+    }
 	var cidInt = parseInt($("#cid").val());
 
+    if (cidInt < 10000000 || cidInt > 99999999) {
+		$(".store-receipt-error").html("Invalid Customer ID");
+        return;
+    }
 	console.log("Sending POST request...");
 	//sid : UID, //get set to json.sid
 	fetch("/store-add-receipt", {
@@ -205,7 +213,7 @@ function storeAddReceipt(){
 			tax : taxInt, // in cents
 			subtotal : subtotalInt, // in cents
 			other : null, //string
-			items : currentItems //array of json 
+			items : currentItems //array of json
 
         }),
 
@@ -228,8 +236,8 @@ function storeAddReceipt(){
                 total = 0;
                 currentItems = [];
                 $("#total-tax").html("Total Tax: ____");
-				$("#subtotal").html("Subtotal: ____"); 
-				$("#total-cost").html("Total Cost: ____"); 
+				$("#subtotal").html("Subtotal: ____");
+				$("#total-cost").html("Total Cost: ____");
             }else{//bad cid probably
                 if(json.error == "bad cid"){
                     $(".store-receipt-error").html("Invalid Customer ID.");
@@ -241,7 +249,7 @@ function storeAddReceipt(){
             alert(err); // If there is ANY error here, then send an alert to the browser.
         }
     });
-	
+
     event.preventDefault();
 }
 /*
@@ -270,7 +278,7 @@ function storeAddReceiptItem(){
 
 	var itemCostCurrent = parseFloat(itemCost);
     var itemQtyCurrent = parseInt(itemQuantity);
-    
+
 	if(!(itemCostCurrent > 0)){
 		$(".store-receipt-error").html("Invalid item cost.");
         return;
@@ -291,16 +299,16 @@ function storeAddReceiptItem(){
 
 
     $("#total-tax").html("Total Tax: $"+ ((total-subtotal).toFixed(2)));
-	$("#subtotal").html("Subtotal: $"+subtotal.toFixed(2)); 
+	$("#subtotal").html("Subtotal: $"+subtotal.toFixed(2));
     $("#total-cost").html("Total Cost: $"+total.toFixed(2));
 
 	var completeItem = { name: itemName, unitcost: itemCostCurrent*100, quantity : itemQtyCurrent };
 
 	//var itemString = JSON.stringify(completeItem);
-    
+
 	currentItems.push(completeItem);
-	
-	
+
+
 	itemsResult += "<tr><td class=\"text-left\">" + itemName + "</td><td>$" + itemCost + "</td><td>" + itemQuantity + "</td></tr>";
 
 	//inject into html here
@@ -318,7 +326,7 @@ function displayStores(){
     let index = 1;
     console.log(stores);
     for(let store of stores){
-        result += `<tr><td style="text-align:center;">` + store.sid + "</td><td>" + store.street + "</td><td>" + 
+        result += `<tr><td style="text-align:center;">` + store.sid + "</td><td>" + store.street + "</td><td>" +
           store.city + "</td><td>" + store.state + "</td><td>" + store.zipcode + "</td></tr>";
         index = index + 1;
      }
@@ -747,14 +755,14 @@ function viewReceipt(receiptIndex) {
     result += '</table>';
 
     // displays receipt totals
-    result += '<h4 class="text-center">' + 'Subtotal : ' + receipt.subtotal/100 + '</h4>'; 
-    result += '<h4 class="text-center">' + 'Tax : ' + receipt.tax/100 + '</h4>'; 
-    result += '<h4 class="text-center">' + 'Amount Due : ' + (receipt.subtotal + receipt.tax)/100 + '</h4>'; 
+    result += '<h4 class="text-center">' + 'Subtotal : ' + receipt.subtotal/100 + '</h4>';
+    result += '<h4 class="text-center">' + 'Tax : ' + receipt.tax/100 + '</h4>';
+    result += '<h4 class="text-center">' + 'Amount Due : ' + (receipt.subtotal + receipt.tax)/100 + '</h4>';
 
     // erases all receipts screen
     $("#customer-session").hide();
     $('#individual').fadeIn();
-    //result += '<h1 class = "text-center">'+ receipt.name + ' ' + dateStr +'</h1>' 
+    //result += '<h1 class = "text-center">'+ receipt.name + ' ' + dateStr +'</h1>'
     $(".individual-receipt").html(result);
 }
 
@@ -926,44 +934,44 @@ $(document).ready(function () {
         $('#business-login-text').html("");
     });
 
-    
+
     // Set up enter function for search receipt bar
-    $("#search-input").keypress(function(event) { 
-        if (event.keyCode === 13) { 
-            $("#search-button").click(); 
-        } 
-    }); 
+    $("#search-input").keypress(function(event) {
+        if (event.keyCode === 13) {
+            $("#search-button").click();
+        }
+    });
 
     // Set up enter function for login
-    $("#customer-email-login").keypress(function(event) { 
-        if (event.keyCode === 13) { 
-            $("#customer-login-button").click(); 
-        } 
+    $("#customer-email-login").keypress(function(event) {
+        if (event.keyCode === 13) {
+            $("#customer-login-button").click();
+        }
     });
-    $("#customer-password-login").keypress(function(event) { 
-        if (event.keyCode === 13) { 
-            $("#customer-login-button").click(); 
-        } 
+    $("#customer-password-login").keypress(function(event) {
+        if (event.keyCode === 13) {
+            $("#customer-login-button").click();
+        }
     });
-    $("#business-email-login").keypress(function(event) { 
-        if (event.keyCode === 13) { 
-            $("#business-login-button").click(); 
-        } 
+    $("#business-email-login").keypress(function(event) {
+        if (event.keyCode === 13) {
+            $("#business-login-button").click();
+        }
     });
-    $("#business-password-login").keypress(function(event) { 
-        if (event.keyCode === 13) { 
-            $("#business-login-button").click(); 
-        } 
+    $("#business-password-login").keypress(function(event) {
+        if (event.keyCode === 13) {
+            $("#business-login-button").click();
+        }
     });
-    $("#store-email-login").keypress(function(event) { 
-        if (event.keyCode === 13) { 
-            $("#store-login-button").click(); 
-        } 
+    $("#store-email-login").keypress(function(event) {
+        if (event.keyCode === 13) {
+            $("#store-login-button").click();
+        }
     });
-    $("#store-password-login").keypress(function(event) { 
-        if (event.keyCode === 13) { 
-            $("#store-login-button").click(); 
-        } 
+    $("#store-password-login").keypress(function(event) {
+        if (event.keyCode === 13) {
+            $("#store-login-button").click();
+        }
     });
 
     $('#toggler').on('click', function(){

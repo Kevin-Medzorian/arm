@@ -277,13 +277,13 @@ function storeAddReceiptItem(){
 	}
 
 	var itemCostCurrent = parseFloat(itemCost);
-    var itemQtyCurrent = parseInt(itemQuantity);
+    var itemQtyCurrent = parseFloat(itemQuantity);
 
 	if(!(itemCostCurrent > 0)){
 		$(".store-receipt-error").html("Invalid item cost.");
         return;
 	}
-	if(!(itemQtyCurrent > 0)){
+	if(!Number.isInteger(itemQtyCurrent) || !(itemQtyCurrent > 0)){
 		$(".store-receipt-error").html("Invalid item quantity.");
         return;
 	}
@@ -309,9 +309,10 @@ function storeAddReceiptItem(){
 	currentItems.push(completeItem);
 
 
-	itemsResult += "<tr><td class=\"text-left\">" + itemName + "</td><td>$" + itemCost + "</td><td>" + itemQuantity + "</td></tr>";
+	itemsResult += "<tr><td class=\"text-left\">" + itemName + "</td><td>$" + itemCostCurrent + "</td><td>" + itemQtyCurrent + "</td></tr>";
 
 	//inject into html here
+	$(".store-receipt-error").html("");
 
 	$(".items-list").html(itemsResult);
 }

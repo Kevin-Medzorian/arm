@@ -155,12 +155,22 @@ app.post('/store-add-receipt', (req, res)=>{
       return;
     }
     if(typeof(body.cid) != 'number' || body.cid <= 0 || 
-        typeof(body.date) != 'number' || typeof(body.tax) != 'number' ||
-        typeof(body.subtotal) != 'number'){
-      
+        typeof(body.date) != 'number' ||
+        typeof(body.tax) != 'number' || body.tax < 0 ||
+        typeof(body.subtotal) != 'number' || body.subtotal < 0){
+
       res.json(badinput);
       return;
     }
+    for(item of body.items){
+      if( typeof(item.unitcost) != 'number' ||
+          typeof(item.quantity) != 'number' || item.quantity <= 0){
+
+        res.json(badinput);
+        return;
+      }
+    }
+
     database.storeaddreceipt(
         body.email,
         body.password,
@@ -222,7 +232,7 @@ app.post('/business-get-item', (req, res)=>{
         res.json(badinput);
         return;
       }
-      database.getbusinessitem(req.body.usermame, req.body.password, req.body.rid,
+      database.getbusinessitem(req.body.email, req.body.password, req.body.rid,
           res);
 
     } catch(err){
@@ -243,7 +253,7 @@ app.post('/store-get-item', (req, res)=>{
         res.json(badinput);
         return;
       }
-      database.getstoreitem(req.body.usermame, req.body.password, req.body.rid,
+      database.getstoreitem(req.body.email, req.body.password, req.body.rid,
           res);
 
     } catch(err){

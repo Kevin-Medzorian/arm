@@ -5,10 +5,9 @@
 //jshint.com for nice coding checks
 const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('./database/arm-data.db');
-db.get("PRAGMA foreign_keys = ON");
+db.run("PRAGMA foreign_keys = ON");
 console.log("[DB]\tInitialized sqlite3 Database");
 
-const util = require('util');
 
 // Ensures that asynchronous db statements wait until their completion before proceeding
 db.serialize(function () {
@@ -417,25 +416,6 @@ db.serialize(function () {
       }));
     };
 
-    module.exports.test = (date)=>{
-      if(date == -1){
-        date = parseInt(Date.now()/1000);
-        console.log(`we have: ${date}, type: ${typeof(date)}`);
-      }
-      db.run('insert into ABC(date) values (?)',
-        [date],
-        function(err){
-          if(err){
-            //console.log(`QUERY: INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (${cid}, ${sid}, ${date}, ${tax}, ${subtotal}, ${other})`);
-
-            console.log(`ERROR: ${err}`);
-            return;
-          }
-          console.log("no error!!!!!!!!!!!!!!!!!!!!!!!!");
-        });
-
-      //db.run('INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (?,?,?,?,?,?)',
-    }
 
     module.exports.storeaddreceipt =
       (susername,spasswordhash,cid,date,tax,subtotal,other,items,res)=>{
@@ -458,7 +438,6 @@ db.serialize(function () {
             }
 
             if(date == -1){
-              //date = 1590976697;//parseInt(Date.now()/1000);
               date = parseInt(Date.now()/1000);
             }
             console.log(`[DB]Date is: (${date})`);
@@ -473,7 +452,6 @@ db.serialize(function () {
               db.run('INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (?,?,?,?,?,?)',
                   [cid, rowsid.sid, date, tax, subtotal, other],
                   function (err){
-                    console.log(`QUERY: INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (${cid}, ${rowsid.sid}, ${date}, ${tax}, ${subtotal}, ${other});`);
                     if(err){
                       console.log(`[DB]storeaddreceiptERROR: username(${susername}), ${err}`);
                       console.log({"login":false, "error":"Internal error"});
@@ -715,8 +693,6 @@ db.serialize(function () {
       });
 
     }
-
-    
 
 });
 

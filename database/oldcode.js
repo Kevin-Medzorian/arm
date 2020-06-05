@@ -197,3 +197,22 @@
             console.log(`injection rows: ${count}`);
           });
     }*/
+    module.exports.test = (date)=>{
+      if(date == -1){
+        date = parseInt(Date.now()/1000);
+        console.log(`we have: ${date}, type: ${typeof(date)}`);
+      }
+      db.run('insert into ABC(date) values (?)',
+        [date],
+        function(err){
+          if(err){
+            //console.log(`QUERY: INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (${cid}, ${sid}, ${date}, ${tax}, ${subtotal}, ${other})`);
+
+            console.log(`ERROR: ${err}`);
+            return;
+          }
+          console.log("no error!!!!!!!!!!!!!!!!!!!!!!!!");
+        });
+
+      //db.run('INSERT INTO Receipt(cid,sid,date,tax,subtotal,other) VALUES (?,?,?,?,?,?)',
+    }

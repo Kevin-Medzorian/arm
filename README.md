@@ -11,12 +11,16 @@ MacOS: `$ brew install node`
 
 Windows: `$ cinst nodejs.install`
 
-## Step 2: Clone the Repository.
+## Step 2: Install NPM (Node Package Manager):
+
+Please go [here](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) for instructions.
+
+## Step 3: Clone the Repository.
 ```
 $ git clone https://github.com/Kevin-Medzorian/arm.git
 ```
 
-## Step 3: Install the dependencies.
+## Step 4: Install the dependencies.
 Ubuntu/Mac:
 ```
 $ cd path/to/arm/folder

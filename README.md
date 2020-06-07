@@ -28,6 +28,8 @@ $ npm install
 ```
 This will install all the dependencies listed in package.json (including express, sqlite3, etc...)
 
+For Windows, you can use any bash-like terminal (Git Bash, WSL, etc...)
+
 # Running the server:
 To start the webserver, run ` npm start ` or ` node server.js ` in the 'arm' directory.
 

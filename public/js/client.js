@@ -259,6 +259,7 @@ function storeAddReceipt(){
 */
 function storeAddReceiptItem(){
 
+	$(".store-receipt-complete").html("");
 	console.log("adding item!");
 	const itemName = $("#itemName").val();
 	const itemCost = $("#itemCost").val();

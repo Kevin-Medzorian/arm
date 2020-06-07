@@ -34,7 +34,8 @@ For Windows, you can use any bash-like terminal (Git Bash, WSL, etc...)
 To start the webserver, run ` npm start ` or ` node server.js ` in the 'arm' directory.
 
 # Viewing the website:
-Once started, the website can be viewed at [localhost:3000](http://localhost:3000/) or [127.0.0.1:3000](http://127.0.0.1:3000/)
+Once started, the website can be viewed at [localhost:3000](http://localhost:3000/) or [127.0.0.1:3000](http://127.0.0.1:3000/).
+To view on a mobile device, please enable network discovery, and navigate to your-computer-name:3000.
 
 # Getting started with development:
 Make sure to develop on the `develop` branch.

@@ -28,7 +28,7 @@ This will install all the dependencies listed in package.json (including express
 To start the webserver, run ` npm start ` or ` node server.js ` in the 'arm' directory.
 
 # Viewing the website:
-Once started, the website can be viewed at [localhost:4000](http://localhost:4000/)
+Once started, the website can be viewed at [localhost:3000](http://localhost:3000/) or [127.0.0.1:3000](http://127.0.0.1:3000/)
 
 # Getting started with development:
 Make sure to develop on the `develop` branch.
@@ -37,7 +37,7 @@ VSCode can also be helpful for organized development.
 
 [Express.js basics](https://expressjs.com/en/starter/installing.html)
 
-[sqlite3 databases in Node.js](https://www.sqlitetutorial.net/sqlite-nodejs/)
+[Sqlite3 and Node.js API](https://github.com/mapbox/node-sqlite3/wiki/API#databasegetsql-param--callback)
 
-
+[Sqlite3 and Node.js tutorial](https://www.sqlitetutorial.net/sqlite-nodejs/)
 

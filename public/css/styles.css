@@ -229,9 +229,13 @@ h1.gradient {
   border-bottom-left-radius: 0;
 }
 .chart-div{
-  background-color: #fafafa;
-  border-radius: 15px;
-  padding: 13px;
+  /*
+  margin: 0;
+  padding: 0;*/
+  /*display: block;*/
+  /*background-color: #fafafa;*/
+  /*border-radius: 15px;*/
+  /*padding: 13px;*/
 }
 .form-login input[type="text"] {
   margin-bottom: 10px;

@@ -12,7 +12,8 @@ var itemsResult = "<table><th class=\"text-left\"> Name </th><th> Cost </th><th>
 var subtotal = 0;
 var total = 0;
 
-google.charts.load('current', {'packages':['corechart']});
+/*used for charts: 'current' version doesn't work so using version 45*/
+google.charts.load('45', {'packages':['corechart']});
 
 /*
     Called whenever the customer "login!" button is clicked.
@@ -27,7 +28,7 @@ function customerLogin() {
     const passwordVal = $("#customer-password-login").val();
     if(emailVal.length == 0 || passwordVal.length == 0){
         $(".error").html("Email and password should not be empty");
-    }else{
+    } else{
         console.log("Sending POST request...");
 
         // POST request using fetch()  on "/customer-login"
@@ -77,7 +78,7 @@ function customerLogin() {
 */
 function storeSignUp(){
     $(".store-error").html("");
-	const streetVal = $("#store-street").val();
+    const streetVal = $("#store-street").val();
     const cityVal = $("#store-city").val();
     const stateVal = $("#store-state").val();
     const zipCodeVal = $("#store-zipcode").val();
@@ -163,9 +164,9 @@ function storeSignUp(){
 */
 function storeAddReceipt(){
     if(currentItems.length == 0){
-		$(".store-receipt-error").html("Please add an item.");
+        $(".store-receipt-error").html("Please add an item.");
         return;
-	}
+    }
 
     //const total = $("#total").val();
     var tax = $("#tax").val();
@@ -173,54 +174,54 @@ function storeAddReceipt(){
         $(".store-receipt-error").html("Please enter a tax value.");
         return;
     }
-	var taxInt = Math.round(100 * (total-subtotal));
+    var taxInt = Math.round(100 * (total-subtotal));
     var subtotalInt = Math.round(100 * subtotal);
     if(subtotal <= 0){
         $(".store-receipt-error").html("Please enter items.");
         return;
     }
 
-	const receiptDate = -1;  //todays date?
+    const receiptDate = -1;  //todays date?
 
-	console.log(subtotalInt/100);
+    console.log(subtotalInt/100);
     console.log(taxInt/100);
     var cid = $("#cid").val();
     console.log(cid);
-	if(cid.length === 0){
-		$(".store-receipt-error").html("Please enter a Customer ID");
+    if(cid.length === 0){
+        $(".store-receipt-error").html("Please enter a Customer ID");
         return;
-	}
+    }
 
     if (isNaN(cid)) {
-		$(".store-receipt-error").html("Invalid Customer ID");
+        $(".store-receipt-error").html("Invalid Customer ID");
         return;
     }
-	var cidInt = parseInt($("#cid").val());
+    var cidInt = parseInt($("#cid").val());
 
     if (cidInt < 10000000 || cidInt > 99999999) {
-		$(".store-receipt-error").html("Invalid Customer ID");
+        $(".store-receipt-error").html("Invalid Customer ID");
         return;
     }
-	console.log("Sending POST request...");
-	//sid : UID, //get set to json.sid
-	fetch("/store-add-receipt", {
-		    method: "POST",
-		    body: JSON.stringify({
-		    email : susername, //gets set to email val on login
-			password : spassword, //gets set to password val on login
+    console.log("Sending POST request...");
+    //sid : UID, //get set to json.sid
+    fetch("/store-add-receipt", {
+            method: "POST",
+            body: JSON.stringify({
+            email : susername, //gets set to email val on login
+            password : spassword, //gets set to password val on login
             cid : cidInt, // gets parsed as an Int
-			date : receiptDate, //const int = -1
-			tax : taxInt, // in cents
-			subtotal : subtotalInt, // in cents
-			other : null, //string
-			items : currentItems //array of json
+            date : receiptDate, //const int = -1
+            tax : taxInt, // in cents
+            subtotal : subtotalInt, // in cents
+            other : null, //string
+            items : currentItems //array of json
 
         }),
 
-		headers:{
+        headers:{
             "Content-type": "application/json; charset=UTF-8"
         }
-	})
+    })
     .then(response => response.json())
     .then(json => {
         console.log(json);
@@ -229,15 +230,15 @@ function storeAddReceipt(){
             if(json.login){
                 $(".store-receipt-error").html("");
                 itemsResult = "<table><th class=\"text-left\"> Name </th><th> Cost </th><th> Quantity </th>";;
-				$(".items-list").html(itemsResult);
-				$(".store-receipt-error").html("");
-				$(".store-receipt-complete").html("Receipt Sent.");
+                $(".items-list").html(itemsResult);
+                $(".store-receipt-error").html("");
+                $(".store-receipt-complete").html("Receipt Sent.");
                 subtotal = 0;
                 total = 0;
                 currentItems = [];
                 $("#total-tax").html("Total Tax: ____");
-				$("#subtotal").html("Subtotal: ____");
-				$("#total-cost").html("Total Cost: ____");
+                $("#subtotal").html("Subtotal: ____");
+                $("#total-cost").html("Total Cost: ____");
             }else{//bad cid probably
                 if(json.error == "bad cid"){
                     $(".store-receipt-error").html("Invalid Customer ID.");
@@ -259,39 +260,39 @@ function storeAddReceipt(){
 */
 function storeAddReceiptItem(){
 
-	$(".store-receipt-complete").html("");
-	console.log("adding item!");
-	const itemName = $("#itemName").val();
-	const itemCost = $("#itemCost").val();
-	const itemQuantity = $("#itemQuantity").val();
-	var tax = $("#tax").val();
+    $(".store-receipt-complete").html("");
+    console.log("adding item!");
+    const itemName = $("#itemName").val();
+    const itemCost = $("#itemCost").val();
+    const itemQuantity = $("#itemQuantity").val();
+    var tax = $("#tax").val();
 
-	//currentItems.push(itemName);
+    //currentItems.push(itemName);
 
-	if(itemName.length === 0 || itemCost.length === 0 || itemQuantity.length === 0){
-		$(".store-receipt-error").html("Please complete all fields.");
+    if(itemName.length === 0 || itemCost.length === 0 || itemQuantity.length === 0){
+        $(".store-receipt-error").html("Please complete all fields.");
         return;
-	}
-	if(tax.length == 0){
-		$(".store-receipt-error").html("Please enter the tax amount.");
+    }
+    if(tax.length == 0){
+        $(".store-receipt-error").html("Please enter the tax amount.");
         return;
-	}
+    }
 
-	var itemCostCurrent = parseFloat(itemCost);
+    var itemCostCurrent = parseFloat(itemCost);
     var itemQtyCurrent = parseFloat(itemQuantity);
 
-	if(!(itemCostCurrent > 0)){
-		$(".store-receipt-error").html("Invalid item cost.");
+    if(!(itemCostCurrent > 0)){
+        $(".store-receipt-error").html("Invalid item cost.");
         return;
-	}
-	if(!Number.isInteger(itemQtyCurrent) || !(itemQtyCurrent > 0)){
-		$(".store-receipt-error").html("Invalid item quantity.");
+    }
+    if(!Number.isInteger(itemQtyCurrent) || !(itemQtyCurrent > 0)){
+        $(".store-receipt-error").html("Invalid item quantity.");
         return;
-	}
+    }
 
     var taxF = parseFloat(tax);
-	if(!(taxF >= 0)){
-		$(".store-receipt-error").html("Invalid item tax.");
+    if(!(taxF >= 0)){
+        $(".store-receipt-error").html("Invalid item tax.");
         return;
     }
 
@@ -300,22 +301,22 @@ function storeAddReceiptItem(){
 
 
     $("#total-tax").html("Total Tax: $"+ ((total-subtotal).toFixed(2)));
-	$("#subtotal").html("Subtotal: $"+subtotal.toFixed(2));
+    $("#subtotal").html("Subtotal: $"+subtotal.toFixed(2));
     $("#total-cost").html("Total Cost: $"+total.toFixed(2));
 
-	var completeItem = { name: itemName, unitcost: itemCostCurrent*100, quantity : itemQtyCurrent };
+    var completeItem = { name: itemName, unitcost: itemCostCurrent*100, quantity : itemQtyCurrent };
 
-	//var itemString = JSON.stringify(completeItem);
+    //var itemString = JSON.stringify(completeItem);
 
-	currentItems.push(completeItem);
+    currentItems.push(completeItem);
 
 
-	itemsResult += "<tr><td class=\"text-left\">" + itemName + "</td><td>$" + itemCostCurrent + "</td><td>" + itemQtyCurrent + "</td></tr>";
+    itemsResult += "<tr><td class=\"text-left\">" + itemName + "</td><td>$" + itemCostCurrent + "</td><td>" + itemQtyCurrent + "</td></tr>";
 
-	//inject into html here
-	$(".store-receipt-error").html("");
+    //inject into html here
+    $(".store-receipt-error").html("");
 
-	$(".items-list").html(itemsResult);
+    $(".items-list").html(itemsResult);
 }
 
 function displayStores(){
@@ -331,7 +332,7 @@ function displayStores(){
         result += `<tr><td style="text-align:center;">` + store.sid + "</td><td>" + store.street + "</td><td>" +
           store.city + "</td><td>" + store.state + "</td><td>" + store.zipcode + "</td></tr>";
         index = index + 1;
-     }
+    }
     /* result += "</table>";
      console.log("result");
      console.log(result);*/
@@ -351,7 +352,7 @@ function displayStores(){
      <td>94</td>\
    </tr>\
  </table>"*/
-     $(".show-stores").html(result);
+    $(".show-stores").html(result);
 }
 
 /*
@@ -368,7 +369,7 @@ function storeLogin() {
     const passwordVal = $("#store-password-login").val();
     if(emailVal.length === 0 || passwordVal.length === 0){
         $(".error").html("Email and password should not be empty");
-    }else{
+    } else{
         console.log("Sending POST request...");
 
         // POST request using fetch()  on "/store-login"
@@ -610,7 +611,7 @@ function openCustomerSession(){
     // Set up our UID-text to be equal to our UID
     $("#uid-text").html(UID);
     showAllReceipts();
-
+    /*
     const months = ["January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"];
     var disp = [];
@@ -668,9 +669,141 @@ function openCustomerSession(){
                     'backgroundColor': '#fafafa'};
 
     // Instantiate and draw our chart, passing in some options.
-    var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+    var chart = new google.visualization.ColumnChart(document.getElementById('chart_div1'));
     chart.draw(data, options);
+    */
+    google.setOnLoadCallback(drawChart1);
+    function drawChart1() {
+        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+
+        var date = new Date();
+        var thismonth = date.getMonth();
+        var thisyear = date.getYear();
+
+        var furthestdate = new Date();
+        if (thismonth > 3) {
+          furthestdate.setMonth(thismonth - 3);
+        } else {
+          furthestdate.setFullYear(furthestdate.getFullYear() - 1);
+          furthestdate.setMonth(thismonth - 3 + 12);
+        }
+        furthestdate.setDate(0);
+        furthestdate.setHours(0);
+        furthestdate.setMinutes(0);
+        furthestdate.setSeconds(0);
+        furthestdate.setMilliseconds(0);
+
+        var backsecond = Math.round(furthestdate.getTime() / 1000);
+        //console.log(backsecond);
+
+
+        var values = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        receipts.forEach(val => {
+          //val is a json
+          var curdate;
+          if (val.date >= backsecond) {
+            curdate = new Date(val.date * 1000);
+            if(curdate.getMonth() <= thismonth || (curdate.getFullYear() + 1 == thisyear)){
+              values[curdate.getMonth()] += val.subtotal + val.tax;
+            }
+          }
+        });
+
+        var i;
+        for (i = 0; i < 12; i++) {
+          values[i] /= 100;
+        }
+
+        var rows = [];
+        var ticks = []
+        for (i = 4; i >= 0; i--) {
+          rows.push([{
+            v: 4 - i,
+            f: months[(thismonth - i + 12) % 12]
+          }, values[(thismonth - i + 12) % 12]]);
+          //console.log(months[(thismonth - i + 12) % 12] + values[(thismonth - i + 12) % 12]);
+          ticks.push({
+            v: 4 - i,
+            f: months[(thismonth - i + 12) % 12]
+          });
+        }
+
+
+        var custdata1 = new google.visualization.DataTable();
+        custdata1.addColumn('number', 'Month');
+        custdata1.addColumn('number', 'Dollars');
+        /*custdata1.addRows([
+          [{
+            v: 0,
+            f: 'Jan'
+          }, 1000],
+          [{
+            v: 1,
+            f: 'Feb'
+          }, 1170],
+          [{
+            v: 2,
+            f: 'Mar'
+          }, 660],
+          [{
+            v: 3,
+            f: 'Apr'
+          }, 1030]
+        ]);*/
+        custdata1.addRows(rows);
+
+        var custoptions1 = {
+          width: 600,
+          heigh: 800,
+          chartArea: {
+            width: "70%",
+            height: "70%"
+          },
+          curveType: 'function',
+          title: 'Spending over the last 5 months',
+
+          hAxis: {
+            title: 'Month',
+            titleTextStyle: {
+              color: '#333'
+            },
+            baseline: -1,
+            gridlines: {
+              color: '#f3f3f3',
+              count: 5
+            },
+            "ticks": ticks,
+            /*ticks: [{
+              v: 0,
+              f: 'Jan'
+            }, {
+              v: 1,
+              f: 'Feb'
+            }, {
+              v: 2,
+              f: 'Mar'
+            }, {
+              v: 3,
+              f: 'Apr'
+            }]*/
+            /*
+            slantedText:true,
+            slantedTextAngle:-45*/
+          },
+          vAxis: {
+            title: 'Dollars',
+            minValue: 0,
+            gridlines: {
+              color: '#f3f3f3',
+              count: 5
+            }
+          }
+        };
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div1'));
+        //google.visualization.AreaChart(document.getElementById('chart_div1'));
+        chart.draw(custdata1, custoptions1);
+    }
 }
 
 /*

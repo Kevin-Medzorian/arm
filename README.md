@@ -5,11 +5,11 @@ This is a repository for a Spring 2020 CSE110 project.
 ## Step 1: Install Node.js: 
 If you want a Node.js installer, go [here.](https://nodejs.org/en/download/) Otherwise,
 
-Ubuntu: `$ sudo apt-get install -y nodejs`
+Ubuntu:\t\t$ sudo apt-get install -y nodejs`
 
-MacOS: `$ brew install node`
+MacOS:\t\t$ brew install node`
 
-Windows: `$ cinst nodejs.install`
+Windows:\t\t$ cinst nodejs.install`
 
 ## Step 2: Install NPM (Node Package Manager):
 

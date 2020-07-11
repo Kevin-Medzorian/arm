@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const database = require('./database/database.js');
 
 // Port we are running the server on. Can be any free port.
-const port = 3000;
+const port = process.env.PORT || 5000
 function sleep(milliseconds) {
   var start = new Date().getTime();
   for (var i = 0; i < 1e7; i++) {
@@ -154,7 +154,7 @@ app.post('/store-add-receipt', (req, res)=>{
       res.json({"login":false, "error": errorempty});
       return;
     }
-    if(typeof(body.cid) != 'number' || body.cid <= 0 || 
+    if(typeof(body.cid) != 'number' || body.cid <= 0 ||
         typeof(body.date) != 'number' ||
         typeof(body.tax) != 'number' || body.tax < 0 ||
         typeof(body.subtotal) != 'number' || body.subtotal < 0){
@@ -181,7 +181,7 @@ app.post('/store-add-receipt', (req, res)=>{
         body.other,
         body.items,
         res
-        ); 
+        );
   } catch(err){
     console.log(err);
     res.json(badinput);
@@ -359,7 +359,7 @@ if(1==0){
   */
 }
 
-// database.storeaddreceipt('test_store', 'test_password', 10000000, -1, 111, 222, null, 
+// database.storeaddreceipt('test_store', 'test_password', 10000000, -1, 111, 222, null,
 //     [
 //     { name: 'a', unitcost: 1, quantity: 1 },
 //     { name: 'a', unitcost: 1, quantity: 1 },
@@ -371,7 +371,7 @@ if(1==0){
 //     ],
 //     null);
 
-// database.test(10000003, 10000000, -1, 111, 222, null, 
+// database.test(10000003, 10000000, -1, 111, 222, null,
 //       [
 //       { name: 'q', unitcost: 1, quantity: 1 },
 //       { name: 'q', unitcost: 1, quantity: 1 },

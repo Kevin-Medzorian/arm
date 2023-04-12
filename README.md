@@ -1,7 +1,8 @@
 # ARM - Receive Reciept Manager
 This is a repository for a Spring 2020 CSE110 project.
 
-# Hosted here: https://receive-kevinmedzor.b4a.run/#
+# Live Site Locations:
+(Kevin Medzorian) Back4App Url: https://receive-kevinmedzor.b4a.run/#
 Please limit your activity on this site.
 It is hosted using the free plan on Back4App, which provides limited resources + request activity per month.
 

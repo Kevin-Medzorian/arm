@@ -10,5 +10,8 @@ COPY . /app
 # Install the application dependencies
 RUN npm install
 
+# Open Port 5000
+EXPOSE 5000/tcp
+
 # Define the entry point for the container
 CMD ["npm", "start"]

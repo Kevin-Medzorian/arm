@@ -383,7 +383,3 @@ if(1==0){
 //       ],
 //       null);
 //susername,spasswordhash,cid,date,tax,subtotal,other,items,res
-
-
-// For Vercel web hosting to work:
-module.exports = app;

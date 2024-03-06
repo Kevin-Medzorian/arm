@@ -16,7 +16,7 @@
 # Define the entry point for the container
 # CMD ["npm", "start"]
 
-FROM node:21
+FROM node:20
 WORKDIR /app
 COPY ["package.json", "package-lock.json*", "./"]
 RUN npm install

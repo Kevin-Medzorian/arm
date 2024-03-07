@@ -1,6 +1,6 @@
 // [WEBSERVER FILE]
 var corsOptions = {
-  origin: 'https://receive.pages.dev/',
+  origin: 'https://receive-arm.pages.dev/',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 

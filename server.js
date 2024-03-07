@@ -25,7 +25,7 @@ function sleep(milliseconds) {
 
 // Create the ExpressJS object
 var app = express();
-
+app.options('*', cors(corsOptions));
 app.use(bodyParser.json()); // for parsing application/json requests
 
 // Give everyone access to our static directory 'public'

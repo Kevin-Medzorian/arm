@@ -2,7 +2,7 @@
 This is a repository for a Spring 2020 CSE110 project.
 
 # Live Site Locations:
-(Kevin Medzorian) Back4App Url: https://receive-kevinmedzor.b4a.run/#
+(Kevin Medzorian) Back4App Url: https://receive-arm.pages.dev/
 
 Please limit your activity on this site.
 

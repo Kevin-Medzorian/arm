@@ -1,6 +1,6 @@
 // [WEBSERVER FILE]
 var corsOptions = {
-  origin: 'https://receive-arm.pages.dev/',
+  origin: 'https://receive-arm.pages.dev',
   preflightContinue: true,
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
@@ -25,7 +25,7 @@ function sleep(milliseconds) {
 
 // Create the ExpressJS object
 var app = express();
-
+app.options('*', cors(corsOptions));
 app.use(bodyParser.json()); // for parsing application/json requests
 
 // Give everyone access to our static directory 'public'

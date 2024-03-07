@@ -30,22 +30,6 @@ app.get('/', function (req, res) {
         res.sendFile('./public/index.html');
 });
 
-// Handle POST request for login
-// => req is the object for the requesting party (the client-side information)
-// => res is the response object we are sending back to the client.
-/*
-app.post('/login', function (req, res) {
-        // req.body is now a loaded JSON structure, and **should** contain variables 'email' and 'password'
-        // => We can verify whether this is the case later.... TODO
-
-        console.log("[WEBSERVER]\tIP address (" + req.connection.remoteAddress +
-                ") tried to login with email (" + req.body.email +
-                ") and password (" + req.body.password + ").")
-
-        // Generic success message sent back to the client (its enforced that we have to send a response)
-        res.send("Generic success!");
-});*/
-
 app.listen(port, () => {
         console.log(`[WEBSERVER]\tServer active on port ${port}`);
 });

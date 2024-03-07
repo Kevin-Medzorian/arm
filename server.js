@@ -1,7 +1,12 @@
 // [WEBSERVER FILE]
+var corsOptions = {
+  origin: 'https://receive.pages.dev/',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
 // Define custom package imports
 const express = require('express');
+const cors = require('cors')
 const bodyParser = require('body-parser');
 // Database import from the database folder
 const database = require('./database/database.js');
@@ -40,7 +45,7 @@ const emptyerror = {"login":false, errorempty};
 const badinput = {"login":false, "error": "bad input"};
 //==================SIGN UP REQUESTS
 // Adds a customer to the database
-app.post('/customer-signup', (req, res) => {
+app.post('/customer-signup', cors(corsOptions), (req, res) => {
   console.log(`customer-signup`);
   try{
     if(req.body.email.length == 0 || req.body.password.length == 0){
@@ -53,7 +58,7 @@ app.post('/customer-signup', (req, res) => {
     res.json(badinput);
   }
 });
-app.post('/business-signup', (req, res) => {
+app.post('/business-signup', cors(corsOptions), (req, res) => {
   console.log('business-signup');
   try{
     if(req.body.email.length == 0 || req.body.password.length == 0 ||
@@ -67,7 +72,7 @@ app.post('/business-signup', (req, res) => {
     res.json(badinput);
   }
 });
-app.post('/store-signup', (req, res)=>{
+app.post('/store-signup', cors(corsOptions), (req, res)=>{
   console.log('store-signup');
   const body = req.body;
   try{
@@ -85,7 +90,7 @@ app.post('/store-signup', (req, res)=>{
 });
 
 //==================LOGIN REQUESTS
-app.post('/customer-login', (req, res) => {
+app.post('/customer-login', cors(corsOptions), (req, res) => {
   //json: {'email':'', 'password': ''}
   console.log(`/customer-login`);
   try{
@@ -99,7 +104,7 @@ app.post('/customer-login', (req, res) => {
     res.json(badinput);
   }
 });
-app.post('/business-login', (req, res) => {
+app.post('/business-login', cors(corsOptions), (req, res) => {
   console.log(`/business-login`);
   try{
     //json: {'email':'', 'password': ''}
@@ -113,7 +118,7 @@ app.post('/business-login', (req, res) => {
     res.json(badinput);
   }
 });
-app.post('/store-login', (req, res) => {
+app.post('/store-login', cors(corsOptions), (req, res) => {
   console.log(`/store-login`);
   try{
     //json: {'email':'', 'password': ''}
@@ -130,7 +135,7 @@ app.post('/store-login', (req, res) => {
 });
 
 //====================Add receipts
-app.post('/store-add-receipt', (req, res)=>{
+app.post('/store-add-receipt', cors(corsOptions), (req, res)=>{
   console.log('store-add-receipt');
   const body = req.body;
   try{
@@ -172,7 +177,7 @@ app.post('/store-add-receipt', (req, res)=>{
   }
   console.log(body);
 });
-app.post('/customer-add-receipt', (req, res)=>{
+app.post('/customer-add-receipt', cors(corsOptions), (req, res)=>{
   console.log('customer-add-receipt');
   const body=req.body;
 
@@ -205,7 +210,7 @@ app.post('/customer-add-receipt', (req, res)=>{
 
 
 //=====================Get individual receipts
-app.post('/business-get-item', (req, res)=>{
+app.post('/business-get-item', cors(corsOptions), (req, res)=>{
     try{
       if(req.body.email.length == 0 || req.body.password == 0 ||
           !req.body.rid){
@@ -226,7 +231,7 @@ app.post('/business-get-item', (req, res)=>{
 
 
 });
-app.post('/store-get-item', (req, res)=>{
+app.post('/store-get-item', cors(corsOptions), (req, res)=>{
     try{
       if(req.body.email.length == 0 || req.body.password == 0 ||
           !req.body.rid){

@@ -1,4 +1,4 @@
-
+const API_URL = "https://receive-kevinmedzor.b4a.run"; // Set this to URL of the WebAPI.
 var loggedIn = false;
 var receipts = null;
 var UID = null;
@@ -32,7 +32,7 @@ function customerLogin() {
         console.log("Sending POST request...");
 
         // POST request using fetch()  on "/customer-login"
-        fetch("/customer-login", {
+        fetch(API_URL + "/customer-login", {
             // Adding method type
             method: "POST",
             // Adding body or contents to send
@@ -109,7 +109,7 @@ function storeSignUp(){
    // console.log(confirmVal);
     console.log("Sending POST request...");
 
-    fetch("/store-signup",{
+    fetch(API_URL + "/store-signup",{
         method: "POST",
         body: JSON.stringify({
             busername : busername,
@@ -204,7 +204,7 @@ function storeAddReceipt(){
     }
     console.log("Sending POST request...");
     //sid : UID, //get set to json.sid
-    fetch("/store-add-receipt", {
+    fetch(API_URL + "/store-add-receipt", {
             method: "POST",
             body: JSON.stringify({
             email : susername, //gets set to email val on login
@@ -373,7 +373,7 @@ function storeLogin() {
         console.log("Sending POST request...");
 
         // POST request using fetch()  on "/store-login"
-        fetch("/store-login", {
+        fetch(API_URL + "/store-login", {
             // Adding method type
             method: "POST",
             // Adding body or contents to send
@@ -432,7 +432,7 @@ function businessLogin() {
         console.log("Sending POST request...");
 
         // POST request using fetch()
-        fetch("/business-login", {
+        fetch(API_URL + "/business-login", {
             // Adding method type
             method: "POST",
             // Adding body or contents to send
@@ -499,7 +499,7 @@ function customerSignup() {
     if(emailVal.length === 0){
         $(".error").html("Email cannot be empty");
     }else if(checkPasswordConditions(passwordVal,confirmVal)){
-        fetch("/customer-signup",{
+        fetch(API_URL + "/customer-signup",{
             method: "POST",
             body: JSON.stringify({
                 email : emailVal,
@@ -558,7 +558,7 @@ function businessSignup() {
         $(".error").html("Email cannot be empty");
     }
     else if(checkPasswordConditions(passwordVal,confirmVal)){
-        fetch("/business-signup",{
+        fetch(API_URL + "/business-signup",{
             method: "POST",
             body: JSON.stringify({
                 name : nameVal,
